@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/sudo0272/bhsjp#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "express-subdomain": "^1.0.5"
   }
 }
