@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/sudo0272/bhsjp/issues"
   },
-  "homepage": "https://github.com/sudo0272/bhsjp#readme"
+  "homepage": "https://github.com/sudo0272/bhsjp#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
