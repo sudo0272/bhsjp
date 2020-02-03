@@ -1,0 +1,19 @@
+{
+  "name": "bhsjp",
+  "version": "1.0.0",
+  "description": "By Hong SeJung Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sudo0272/bhsjp.git"
+  },
+  "author": "Hong SeJung",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sudo0272/bhsjp/issues"
+  },
+  "homepage": "https://github.com/sudo0272/bhsjp#readme"
+}
