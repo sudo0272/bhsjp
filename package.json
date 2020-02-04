@@ -17,8 +17,11 @@
   },
   "homepage": "https://github.com/sudo0272/bhsjp#readme",
   "dependencies": {
+    "@types/express": "^4.17.2",
+    "common-js": "^0.3.8",
     "express": "^4.17.1",
     "express-subdomain": "^1.0.5",
-    "pug": "^2.0.4"
+    "pug": "^2.0.4",
+    "sass": "^1.25.0"
   }
 }
