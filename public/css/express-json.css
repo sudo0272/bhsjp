@@ -1,0 +1,19 @@
+@charset "UTF-8";
+.json-keys {
+  color: #1e90ff;
+  font-weight: bold;
+}
+
+.json-values {
+  color: #aa5500;
+}
+
+.space-4::before {
+  content: "    ";
+}
+
+.space-8::before {
+  content: "        ";
+}
+
+/*# sourceMappingURL=express-json.css.map */

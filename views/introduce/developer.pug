@@ -1,0 +1,54 @@
+extends ../layout
+
+block css
+    link(href='/css/express-json.min.css' rel='stylesheet')
+    link(href='/css/code.min.css' rel='stylesheet')
+    style.
+
+block html
+    div.d-flex.flex-row.justify-content-center
+        div.line
+            each _, i in Array(14)
+                div.text-right= i + 1
+        div
+            div
+                div: span {
+                div
+                    span.space-4.json-keys "name"
+                    span :&nbsp;{
+                    div
+                        span.space-8.json-keys "english"
+                        span :&nbsp;
+                        span.json-values "Hong&nbsp;SeJung"
+                    div
+                        span.space-8.json-keys "korean"
+                        span :&nbsp;
+                        span.json-values "홍세정"
+                    div: span.space-4 },
+                div
+                    div &nbsp;
+                    span.space-4.json-keys "accounts"
+                    span :&nbsp;{
+                    div
+                        span.space-8.json-keys "github"
+                        span :&nbsp;
+                        span.json-values "sudo0272"
+                    div
+                        span.space-8
+                        span.json-keys "twitter"
+                        span :&nbsp;
+                        span.json-values "@uFAbe4PoKZ3SLAQ"
+                    div
+                        span.space-8
+                        span.json-keys "facebook"
+                        span :&nbsp;
+                        span.json-values "100018310620315"
+                    div: span.space-4 },
+                div
+                    div &nbsp;
+                    span.space-4
+                    span.json-keys "age"
+                    span :&nbsp;
+                    span.json-values 18
+
+                div: span }

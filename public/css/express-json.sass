@@ -1,0 +1,14 @@
+$spaceCharacterCode: '\00a0'
+
+.json-keys
+  color: #1e90ff
+  font-weight: bold
+
+.json-values
+  color: #aa5500
+
+.space-4::before
+  content: '#{$spaceCharacterCode}#{$spaceCharacterCode}#{$spaceCharacterCode}#{$spaceCharacterCode}'
+
+.space-8::before
+  content: '#{$spaceCharacterCode}#{$spaceCharacterCode}#{$spaceCharacterCode}#{$spaceCharacterCode}#{$spaceCharacterCode}#{$spaceCharacterCode}#{$spaceCharacterCode}#{$spaceCharacterCode}'
