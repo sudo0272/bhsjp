@@ -1,4 +1,4 @@
-const express = require('express');
+import express from 'express';
 
 const PORT: number = 80;
 
@@ -8,7 +8,7 @@ app.set('view engine', 'pug');
 
 app.use(express.static('public'));
 
-app.get('/', (req, res) => {
+app.get('/', (req: express.Request, res: express.Response) => {
     res.render('index', {title: 'Welcome to By Hong SeJung Project'});
 });
 

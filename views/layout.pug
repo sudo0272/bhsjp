@@ -1,3 +1,5 @@
+- const BASE_URL = 'bhsjp.com';
+- const PROTOCOL = 'http'
 html
     head
         title #{title} | BHSJP
@@ -18,8 +20,8 @@ html
                         span.top-menus(data-is-opened='false') Introduce
 
                         ul.sub-menus
-                            a: li Project
-                            a: li Developer
+                            a(href=PROTOCOL + '://introduce.' + BASE_URL + '/project'):   li Project
+                            a(href=PROTOCOL + '://introduce.' + BASE_URL + '/developer'): li Developer
             #contents.d-flex.flex-column
                 div
                     h1.text-center #{title}
