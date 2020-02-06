@@ -23,7 +23,7 @@ const app = express();
 app.set('view engine', 'pug');
 
 app.use(express.static('public'));
-app.use(subdomain('introduce', routes.introduce));
+app.use(subdomain('introduce.bhsjp', routes.introduce));
 
 app.get('/', (req: express.Request, res: express.Response) => {
     res.render('index', {title: 'Welcome to By Hong SeJung Project'});
