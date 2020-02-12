@@ -21,7 +21,9 @@ introduceRouter.get('/developer', (req, res) => {
 });
 
 introduceRouter.get('/*', (req, res) => {
-    res.render('errors/404');
+    res.render('errors/404', {
+        'title': '404 Not Found'
+    });
 });
 
 module.exports = {
