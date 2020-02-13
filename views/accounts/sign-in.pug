@@ -1,0 +1,15 @@
+extends ../layout
+
+block css
+    link(href='/css/sign-in-up-form.min.css' rel='stylesheet')
+
+block js
+    script(src='/js/togglePassword.min.js')
+
+block html
+    div#sign-in-form-container.d-flex.flex-column
+        div: input#id.sign-in-form(type='text' placeholder='아이디' autocomplete='off')
+        div
+            input#password.sign-in-form(type='password' placeholder='비밀번호' autocomplete='off')
+            include ../includes/passwordToggleButton
+        div.text-center: button#submit-button 로그인
