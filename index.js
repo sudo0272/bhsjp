@@ -26,7 +26,9 @@ app.use(express.static('public'));
 app.use(subdomain('introduce.bhsjp', routes.introduce));
 
 app.get('/', (req, res) => {
-    res.render('index', {title: 'Welcome to By Hong SeJung Project'});
+    res.render('index', {
+        title: 'BHSJP 대문'
+    });
 });
 
 const server = https.createServer(certificationData, app);

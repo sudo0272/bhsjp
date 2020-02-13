@@ -9,22 +9,22 @@ block html
     pre
         -
             let temp = JSON.stringify({
-                name: {
-                    english: 'Hong SeJung',
-                    korean: '홍세정'
+                '이름': {
+                    '영문': 'Hong SeJung',
+                    '한글': '홍세정'
                 },
 
-                accounts: {
+                '계정': {
                     github: 'sudo0272',
                     twitter: '@uFAbe4PoKZ3SLAQ',
                     facebook: '100018310620315'
                 },
 
-                age: 18,
+                '나이': 18,
 
-                projects: {
-                    whenIWasYoung: 'Gone after reinstalling OS...',
-                    onGitHub: [
+                '프로젝트': {
+                    'github 전': '날아감',
+                    'github 후': [
                         'ArgumentParserCPP',
                         'bhsjp',
                         'BullsAndCows',
@@ -42,15 +42,15 @@ block html
                     ]
                 },
 
-                prizes: {
+                '상': {
                     "2019 전국 고등학생 공공데이터 활용 경진대회": {
-                        team: "CBDS",
-                        topic: "농산물 가격 안정화 정책",
-                        rank: "2"
+                        '팀': "CBDS",
+                        '주제': "농산물 가격 안정화 정책",
+                        '랭크': "2"
                     }
                 },
 
-                favouriteLicense: 'MIT'
+                '가장 좋아하는 라이선스': 'MIT'
             }, null, 4);
         code.language-json= temp
 

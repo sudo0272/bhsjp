@@ -4,19 +4,19 @@ const introduceRouter = express.Router();
 
 introduceRouter.get('/', (req, res) => {
     res.render('introduce/index', {
-        title: 'Introduce'
+        title: '소개'
     });
 });
 
 introduceRouter.get('/project', (req, res) => {
     res.render('introduce/project', {
-        title: 'Introducing Project'
+        title: '프로젝트 소개'
     });
 });
 
 introduceRouter.get('/developer', (req, res) => {
     res.render('introduce/developer', {
-        title: 'Introducing Developer'
+        title: '개발자 소개'
     });
 });
 
