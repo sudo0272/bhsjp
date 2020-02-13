@@ -5,7 +5,8 @@ const path = require('path');
 const https = require('https');
 
 const routes = {
-    introduce: require('./routes/introduce').router
+    introduce: require('./routes/introduce').router,
+    accounts: require('./routes/accounts').router
 };
 
 const certificationDataPath = 'certbot/config/live/bhsjp.kro.kr/';
@@ -24,6 +25,7 @@ app.set('view engine', 'pug');
 
 app.use(express.static('public'));
 app.use(subdomain('introduce.bhsjp', routes.introduce));
+app.use(subdomain('accounts.bhsjp', routes.accounts));
 
 app.get('/', (req, res) => {
     res.render('index', {

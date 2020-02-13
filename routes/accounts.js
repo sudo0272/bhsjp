@@ -1,0 +1,34 @@
+const express = require('express');
+
+const accountsRouter = express.Router();
+
+accountsRouter.get('/', (req, res) => {
+    res.render('accounts/index', {
+        title: '계정'
+    });
+});
+
+accountsRouter.get('/sign-in', (req, res) => {
+    res.render('accounts-sign-in', {
+        title: '로그인'
+    });
+});
+
+accountsRouter.get('/sign-up', (req, res) => {
+    res.render('accounts/sign-up', {
+        title: '회원가입'
+    });
+});
+
+accountsRouter.get('/sign-out', (req, res) => {
+});
+
+accountsRouter.get('/*', (req, res) => {
+    res.render('errors/404', {
+        'title': '404 Not Found'
+    });
+});
+
+module.exports = {
+    router: accountsRouter
+};
