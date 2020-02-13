@@ -9,7 +9,7 @@ accountsRouter.get('/', (req, res) => {
 });
 
 accountsRouter.get('/sign-in', (req, res) => {
-    res.render('accounts-sign-in', {
+    res.render('accounts/sign-in', {
         title: '로그인'
     });
 });
