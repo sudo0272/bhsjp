@@ -1,19 +1,34 @@
 extends ../layout
 
 block css
-    link(href='/css/sign-in-up-form.min.css' rel='stylesheet')
+    link(href='/css/accounts.min.css' rel='stylesheet')
 
 block js
     script(src='/js/togglePassword.min.js')
     script(src='/js/limitInput.min.js')
+    script(src='/js/fetchSignIn.min.js')
     script.
-        limitInput(document.getElementById('id'), /[^\w]/g);
-        limitInput(document.getElementById('password'), /[^\w !-\/:-@\[-`{-~]/g);
+        const accountId = document.getElementById('account-id');
+        const accountPassword = document.getElementById('account-password');
+        const passwordToggle = document.getElementById('password-toggle');
+        const passwordToggleIcon = passwordToggle.getElementsByTagName('i')[0];
+        const accountFormContainer = document.getElementById('account-form-container');
+
+        limitInput(accountId, /[^\w]/g);
+        limitInput(accountPassword, /[^\w !-\/:-@\[-`{-~]/g);
+
+        togglePassword(passwordToggle, passwordToggleIcon, accountPassword);
+
+        accountFormContainer.addEventListener('submit', e => {
+            e.preventDefault();
+
+            fetchSignIn();
+        });
 
 block html
-    form#sign-in-form-container.d-flex.flex-column
-        div: input#id.sign-in-form(type='text' placeholder='아이디' name='id' autocomplete='off' pattern='\\w{1,10}' title='1자리에서 10자리의 영문 혹은 숫자를 입력해주세요' required)
+    form#account-form-container.d-flex.flex-column
+        div: input#account-id.account-form(type='text' placeholder='아이디' name='id' autocomplete='off' minlength='1' maxlength='10' title='1자리에서 10자리의 영문 혹은 숫자를 입력해주세요' required)
         div
-            input#password.sign-in-form(type='password' placeholder='비밀번호' name='password' autocomplete='off' pattern='[\\w !-\\/:-@\\[-`{-~]{4,}' title='최소 4글자의 영문 혹은 숫자, 특수문자를 입력해주세요' required)
+            input#account-password.account-form(type='password' placeholder='비밀번호' name='password' autocomplete='off' minlength='4' title='최소 4글자의 영문 혹은 숫자, 특수문자를 입력해주세요' required)
             include ../includes/passwordToggleButton
-        div.text-center: input#submit-button(type='submit' value='로그인')
+        div.text-center: input#account-submit-button(type='submit' value='로그인')
