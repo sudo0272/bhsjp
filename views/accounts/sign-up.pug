@@ -27,7 +27,7 @@ block js
 
 block html
     form#account-form-container.d-flex.flex-column
-        div: input#account-id.account-form(type='text' placeholder='아이디' name='id' autocomplete='off' pattern='\\w{1,10}' title='1자리에서 10자리의 영문 혹은 숫자를 입력해주세요' required)
+        div: input#account-id.account-form(type='text' placeholder='아이디' name='id' autocomplete='off' minlength='1' maxlength='10' title='1자리에서 10자리의 영문 혹은 숫자를 입력해주세요' required)
         div
             input#account-password.account-form(type='password' placeholder='비밀번호' name='password' autocomplete='off' minlength='4' title='최소 4글자의 영문 혹은 숫자, 특수문자를 입력해주세요' required)
             include ../includes/passwordToggleButton
