@@ -58,7 +58,7 @@ accountsRouter.post('/create-account', (req, res) => {
         res.send('email-length-short');
     } else if (email.length > 320) {
         res.send('email-length-long');
-    } else if (email.match(/^[^@]{,64}@[^@]{,255}$/) === null) {
+    } else if (email.match(/^[^@]{1,64}@[^@]{1,255}$/) === null) {
         res.send('email-template-not-match');
     } else {
         res.send('ok');
