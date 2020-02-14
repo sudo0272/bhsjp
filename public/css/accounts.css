@@ -1,13 +1,13 @@
-#sign-in-form-container > div {
+#account-form-container > div {
   margin: 5px;
 }
 
-.sign-in-form::placeholder {
+.account-form::placeholder {
   opacity: 0.3;
   color: #aaaaaa;
 }
 
-.sign-in-form {
+.account-form {
   background-color: #181818;
   border: none;
   font-size: 24px;
@@ -25,10 +25,10 @@
   outline: none;
 }
 
-#submit-button {
+#account-submit-button {
   background-color: #181818;
   border: none;
   color: #aaaaaa;
 }
 
-/*# sourceMappingURL=sign-in-up-form.css.map */
+/*# sourceMappingURL=accounts.css.map */
