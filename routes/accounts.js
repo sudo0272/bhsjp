@@ -65,6 +65,27 @@ accountsRouter.post('/create-account', (req, res) => {
     }
 });
 
+accountsRouter.post('/check-account', (req, res) => {
+    const id = req.body.id;
+    const password = req.body.password;
+
+    if (id === undefined) {
+        res.send('no-id');
+    } else if (id.length < 1) {
+        res.send('id-length-short');
+    } else if (id.length > 10) {
+        res.send('id-length-long');
+    } else if (id.match(/^\w{1,10}$/g) === null) {
+        res.send('id-template-not-match');
+    } else if (password === undefined) {
+        res.send('no-password');
+    } else if (password.length < 4) {
+        res.send('password-length-short');
+    } else {
+        res.send('ok');
+    }
+});
+
 accountsRouter.get('/sign-out', (req, res) => {
 });
 
