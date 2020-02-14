@@ -17,4 +17,5 @@ block html
             input#password.sign-in-form(type='password' placeholder='비밀번호' name='password' autocomplete='off' pattern='[\\w !-\\/:-@\\[-`{-~]{4,}' title='최소 4글자의 영문 혹은 숫자, 특수문자를 입력해주세요' required)
             include ../includes/passwordToggleButton
         div: input#nickname.sign-in-form(type='text' placeholder='닉네임' name='nickname' autocomplete='off')
+        div: input#email.sign-in-form(type='email' placeholder='이메일' name='email' autocomplete='on')
         div.text-center: input#submit-button(type='submit' value='회원가입')
