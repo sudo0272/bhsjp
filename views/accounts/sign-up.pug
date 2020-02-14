@@ -14,12 +14,12 @@ block js
         const accountEmail = document.getElementById('account-email');
         const passwordToggle = document.getElementById('password-toggle');
         const passwordToggleIcon = passwordToggle.getElementsByTagName('i')[0];
-        const signInFormContainer = document.getElementById('account-form-container');
+        const accountFormContainer = document.getElementById('account-form-container');
 
         limitInput(accountId, /[^\w]/g);
         limitInput(accountPassword, /[^\w !-\/:-@\[-`{-~]/g);
         togglePassword(passwordToggle, passwordToggleIcon, accountPassword);
-        signInFormContainer.addEventListener('submit', e => {
+        accountFormContainer.addEventListener('submit', e => {
             e.preventDefault();
 
             fetchSignUp();
