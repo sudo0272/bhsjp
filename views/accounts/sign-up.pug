@@ -5,12 +5,16 @@ block css
 
 block js
     script(src='/js/togglePassword.min.js')
+    script(src='/js/limitInput.min.js')
+    script.
+        limitInput(document.getElementById('id'), /[^\w]/g);
+        limitInput(document.getElementById('password'), /[^\w !-\/:-@\[-`{-~]/g);
 
 block html
-    div#sign-in-form-container.d-flex.flex-column
-        div: input#id.sign-in-form(type='text' placeholder='아이디' autocomplete='off')
+    form#sign-in-form-container.d-flex.flex-column
+        div: input#id.sign-in-form(type='text' placeholder='아이디' name='id' autocomplete='off' pattern='\\w{1,10}' title='1자리에서 10자리의 영문 혹은 숫자를 입력해주세요' required)
         div
-            input#password.sign-in-form(type='password' placeholder='비밀번호' autocomplete='off')
+            input#password.sign-in-form(type='password' placeholder='비밀번호' name='password' autocomplete='off' pattern='[\\w !-\\/:-@\\[-`{-~]{4,}' title='최소 4글자의 영문 혹은 숫자, 특수문자를 입력해주세요' required)
             include ../includes/passwordToggleButton
-        div: input#nickname.sign-in-form(type='text' placeholder='닉네임' autocomplete='off')
-        div.text-center: button#submit-button 회원가입
+        div: input#nickname.sign-in-form(type='text' placeholder='닉네임' name='nickname' autocomplete='off')
+        div.text-center: input#submit-button(type='submit' value='회원가입')
