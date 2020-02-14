@@ -1,4 +1,4 @@
-function togglePassword(passwordToggle, passwordToggleIcon, target) {
+const togglePassword = (passwordToggle, passwordToggleIcon, target) => {
     passwordToggle.addEventListener('click', () => {
         if (passwordToggle.dataset.isShowing === 'true') {
             passwordToggleIcon.innerHTML = 'radio_button_unchecked';
@@ -10,4 +10,4 @@ function togglePassword(passwordToggle, passwordToggleIcon, target) {
             passwordToggle.dataset.isShowing = 'true';
         }
     });
-}
+};

@@ -1,4 +1,4 @@
-function toggleSubMenu(e, topMenuIcon, subMenu) {
+const toggleSubMenu = (e, topMenuIcon, subMenu) => {
     const eTargetDataset = e.target.dataset;
 
     if (eTargetDataset !== null) {
@@ -12,4 +12,4 @@ function toggleSubMenu(e, topMenuIcon, subMenu) {
             eTargetDataset.isOpened = 'true';
         }
     }
-}
+};
