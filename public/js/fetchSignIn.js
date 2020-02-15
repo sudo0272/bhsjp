@@ -18,6 +18,7 @@ const fetchSignIn = () => {
             case 'id-template-not-match': alert('아이디는 영문 혹은 숫자만 가능합니다'); break;
             case 'no-password': alert('비밀번호가 존재하지 않습니다'); break;
             case 'password-length-short': alert('비밀번호의 길이는 4자리 이상입니다'); break;
+            case 'wrong': alert('아이디 또는 비밀번호가 잘못되었습니다'); break;
             case 'ok': alert('로그인이 완료되었습니다');
         }
     });

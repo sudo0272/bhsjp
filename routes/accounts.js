@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const doIdExist = require('../controllers/doIdExist').doIdExist;
+const doAccountExist = require('../controllers/doAccountExist').doAccountExist;
 const createAccount = require('../controllers/createAccount').createAccount;
 
 const accountsRouter = express.Router();
@@ -92,7 +93,13 @@ accountsRouter.post('/check-account', (req, res) => {
     } else if (password.length < 4) {
         res.send('password-length-short');
     } else {
-        res.send('ok');
+        doAccountExist(id, password, accountExistence => {
+            if (accountExistence) {
+                res.send('ok');
+            } else {
+                res.send('wrong');
+            }
+        });
     }
 });
 
