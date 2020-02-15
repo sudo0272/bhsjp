@@ -21,6 +21,7 @@
     "body-parser": "^1.19.0",
     "common-js": "^0.3.8",
     "express": "^4.17.1",
+    "express-session": "^1.17.0",
     "express-subdomain": "^1.0.5",
     "js-sha512": "^0.8.0",
     "js-string-escape": "^1.0.1",
