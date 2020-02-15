@@ -1,13 +1,8 @@
 function createAccount(id, password, nickname, email) {
     const mysql = require('mysql');
     const jsStringEscape = require('js-string-escape');
-
-    const connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: getSqlPassword(),
-        database: 'bhsjp'
-    });
+    const getMysqlConnectionData = require('/models/getMysqlConnectionData').getMysqlConnectionData;
+    const connection = mysql.createConnection(getMysqlConnectionData());
 
     connection.connect();
 

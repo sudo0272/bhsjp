@@ -1,3 +1,0 @@
-function getSqlPassword() {
-    return '<HackerSeJung0272>';
-}
