@@ -1,0 +1,11 @@
+const fs = require('fs');
+const path = require('path');
+const sessionData = JSON.parse(fs.readFileSync(path.join(__dirname, 'sessionData.json')));
+
+function getSessionData() {
+    return sessionData;
+}
+
+module.exports = {
+    getSessionData: getSessionData
+};

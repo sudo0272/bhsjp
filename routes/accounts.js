@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const doIdExist = require('../controllers/doIdExist').doIdExist;
 const doAccountExist = require('../controllers/doAccountExist').doAccountExist;
 const createAccount = require('../controllers/createAccount').createAccount;
+const expressSession = require('express-session');
+const getSessionData = require('../models/getSessionData').getSessionData;
 
 const accountsRouter = express.Router();
 
@@ -12,6 +14,8 @@ accountsRouter.use(bodyParser.urlencoded({
 
 accountsRouter.use(bodyParser.json());
 accountsRouter.use(bodyParser.raw());
+
+accountsRouter.use(expressSession(getSessionData()));
 
 accountsRouter.get('/', (req, res) => {
     res.render('accounts/index', {
@@ -93,9 +97,20 @@ accountsRouter.post('/check-account', (req, res) => {
     } else if (password.length < 4) {
         res.send('password-length-short');
     } else {
-        doAccountExist(id, password, accountExistence => {
-            if (accountExistence) {
-                res.send('ok');
+        doAccountExist(id, password, accountData => {
+            if (accountData) {
+                if (req.session.user) {
+                    res.send('already-signed-in');
+                } else {
+                    req.session.user = {
+                        id: accountData.id,
+                        password: accountData.password,
+                        nickname: accountData.nickname,
+                        email: accountData.email
+                    };
+
+                    res.send('ok');
+                }
             } else {
                 res.send('wrong');
             }
@@ -103,7 +118,18 @@ accountsRouter.post('/check-account', (req, res) => {
     }
 });
 
-accountsRouter.get('/sign-out', (req, res) => {
+accountsRouter.post('/sign-out', (req, res) => {
+    if (req.session.user) {
+        req.session.destroy(error => {
+            if (error) {
+                res.send('cannot-sign-out');
+            } else {
+                res.send('ok');
+            }
+        });
+    } else {
+        res.send('not-signed-in');
+    }
 });
 
 accountsRouter.get('/*', (req, res) => {

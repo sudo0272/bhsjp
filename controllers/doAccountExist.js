@@ -5,14 +5,14 @@ function doAccountExist(id, password, callback) {
 
     connection.connect();
 
-    connection.query('SELECT COUNT(1) FROM accounts WHERE `id`=? AND `password`=?', [id, password], (error, results, fields) => {
+    connection.query('SELECT * FROM accounts WHERE `id`=? AND `password`=?', [id, password], (error, results, fields) => {
         if (error) {
             throw error;
         }
 
         connection.end();
 
-        callback(results[0]['COUNT(1)']);
+        callback(results[0]);
     });
 }
 
