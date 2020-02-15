@@ -3,6 +3,8 @@ const subdomain = require('express-subdomain');
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
+const expressSession = require('express-session');
+const getSessionData = require('./models/getSessionData').getSessionData;
 
 const routes = {
     introduce: require('./routes/introduce').router,
@@ -27,9 +29,12 @@ app.use(express.static('public'));
 app.use(subdomain('introduce.bhsjp', routes.introduce));
 app.use(subdomain('accounts.bhsjp', routes.accounts));
 
+app.use(expressSession(getSessionData()));
+
 app.get('/', (req, res) => {
     res.render('index', {
-        title: 'BHSJP 대문'
+        title: 'BHSJP 대문',
+        isSignedIn: !!req.session.user
     });
 });
 

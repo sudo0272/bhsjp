@@ -19,19 +19,22 @@ accountsRouter.use(expressSession(getSessionData()));
 
 accountsRouter.get('/', (req, res) => {
     res.render('accounts/index', {
-        title: '계정'
+        title: '계정',
+        isSignedIn: !!req.session.user
     });
 });
 
 accountsRouter.get('/sign-in', (req, res) => {
     res.render('accounts/sign-in', {
-        title: '로그인'
+        title: '로그인',
+        isSignedIn: !!req.session.user
     });
 });
 
 accountsRouter.get('/sign-up', (req, res) => {
     res.render('accounts/sign-up', {
-        title: '회원가입'
+        title: '회원가입',
+        isSignedIn: !!req.session.user
     });
 });
 
@@ -134,7 +137,8 @@ accountsRouter.post('/sign-out', (req, res) => {
 
 accountsRouter.get('/*', (req, res) => {
     res.render('errors/404', {
-        'title': '404 Not Found'
+        'title': '404 Not Found',
+        'isSignedIn': req.session.user
     });
 });
 

@@ -24,6 +24,19 @@ html
                         ul.sub-menus
                             a(href=PROTOCOL + '://introduce.' + BASE_URL + '/project'):   li 프로젝트
                             a(href=PROTOCOL + '://introduce.' + BASE_URL + '/developer'): li 개발자
+
+                    li
+                        i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right
+                        span.top-menus(data-is-opened='false') 계정
+
+                        if isSignedIn
+                            ul.sub-menus
+                                a(href='#'): li 로그아웃
+                        else
+                            ul.sub-menus
+                                a(href=PROTOCOL + '://accounts.' + BASE_URL + '/sign-in'): li 로그인
+                                a(href=PROTOCOL + '://accounts.' + BASE_URL + '/sign-up'): li 회원가입
+
             #contents.d-flex.flex-column
                 div
                     h1.text-center #{title}
