@@ -27,7 +27,8 @@ const fetchSignUp = () => {
             case 'email-length-short':
             case 'email-length-long': alert('이메일의 길이는 @을 포함하여 3자리에서 320자리입니다'); break;
             case 'email-template-not-match': alert('이메일의 형식이 맞지 않습니다'); break;
-            case 'ok': alert('회원가입이 완료되었습니다');
+            case 'id-already-exists': alert('이미 존재하는 아이디입니다'); break;
+            case 'ok': alert('회원가입이 완료되었습니다'); break;
         }
     });
 };

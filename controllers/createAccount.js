@@ -1,7 +1,7 @@
-function createAccount(id, password, nickname, email) {
+function createAccount(id, password, nickname, email, callback) {
     const mysql = require('mysql');
     const jsStringEscape = require('js-string-escape');
-    const getMysqlConnectionData = require('/models/getMysqlConnectionData').getMysqlConnectionData;
+    const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMysqlConnectionData;
     const connection = mysql.createConnection(getMysqlConnectionData());
 
     connection.connect();
@@ -14,8 +14,14 @@ function createAccount(id, password, nickname, email) {
     ], (error, result, fields) => {
             if (error) {
                 throw error;
+            } else {
+                callback();
             }
     });
 
     connection.end();
 }
+
+module.exports = {
+    createAccount: createAccount
+};

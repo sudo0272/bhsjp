@@ -1,5 +1,6 @@
 const fs = require('fs');
-const mysqlConnectionData = JSON.parse(fs.readFileSync('./mysqlConnectionData.json'));
+const path = require('path');
+const mysqlConnectionData = JSON.parse(fs.readFileSync(path.join(__dirname, './mysqlConnectionData.json')));
 
 function getMysqlConnectionData() {
     return mysqlConnectionData;

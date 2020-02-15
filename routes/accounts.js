@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const doIdExist = require('../controllers/doIdExist').doIdExist;
+const createAccount = require('../controllers/createAccount').createAccount;
 
 const accountsRouter = express.Router();
 
@@ -61,7 +63,15 @@ accountsRouter.post('/create-account', (req, res) => {
     } else if (email.match(/^[^@]{1,64}@[^@]{1,255}$/) === null) {
         res.send('email-template-not-match');
     } else {
-        res.send('ok');
+        doIdExist(id, idExistence => {
+            if (idExistence) {
+                res.send('id-already-exists');
+            } else {
+                createAccount(id, password, nickname, email, () => {
+                    res.send('ok');
+                });
+            }
+        });
     }
 });
 
