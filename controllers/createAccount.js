@@ -11,12 +11,12 @@ function createAccount(id, password, nickname, email) {
 
     connection.connect();
 
-    connection.query("INSERT INTO `accounts` VALUES (" +
-        jsStringEscape(id) + ", "  +
-        encryptPassword(password) + ", " +
-        jsStringEscape(nickname) + ", " +
-        jsStringEscape(email) + ");",
-        (error, result, fields) => {
+    connection.query("INSERT INTO `accounts` (`id`, `password`, `nickname`, `email`) VALUES (?, ?, ?, ?)", [
+        jsStringEscape(id),
+        jsStringEscape(password),
+        jsStringEscape(nickname),
+        jsStringEscape(email)
+    ], (error, result, fields) => {
             if (error) {
                 throw error;
             }
