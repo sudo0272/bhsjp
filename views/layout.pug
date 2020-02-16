@@ -57,9 +57,10 @@ html
         script(src='/js/menu.min.js')
         script(src='/js/fetchSignOut.min.js')
 
-        script.
-            document.getElementById('sign-out').addEventListener('click', () => {
-                fetchSignOut();
-            });
+        if isSignedIn
+            script.
+                document.getElementById('sign-out').addEventListener('click', () => {
+                    fetchSignOut();
+                });
 
         block js
