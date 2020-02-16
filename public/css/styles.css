@@ -12,4 +12,10 @@ body {
   margin: 50px;
 }
 
+#logo {
+  margin: 10px 0 0 60px !important;
+  width: 80px;
+  height: 20px;
+}
+
 /*# sourceMappingURL=styles.css.map */
