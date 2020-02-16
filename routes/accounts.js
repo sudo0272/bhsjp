@@ -29,7 +29,7 @@ accountsRouter.use(expressSession({
         secure: true,
         domain: "bhsjp.kro.kr",
         httpOnly: true,
-        maxAge: 3600000
+        maxAge: 1000 * 60 * 60 * 24
     }
 }));
 
