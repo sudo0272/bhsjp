@@ -22,5 +22,9 @@ const fetchSignIn = () => {
             case 'already-signed-in': alert('이미 로그인되어있습니다'); break;
             case 'ok': alert('로그인이 완료되었습니다');
         }
+    }).catch(err => {
+        console.error(err);
+
+        alert('서버와 통신할 수 없습니다.\n다시 시도해주세요');
     });
 };

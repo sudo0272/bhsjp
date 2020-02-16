@@ -35,5 +35,9 @@ const fetchSignUp = () => {
 
                 break;
         }
+    }).catch(err => {
+        console.error(err);
+
+        alert('서버와 통신할 수 없습니다.\n다시 시도해주세요');
     });
 };
