@@ -4,8 +4,14 @@ const doIdExist = require('../controllers/doIdExist').doIdExist;
 const doAccountExist = require('../controllers/doAccountExist').doAccountExist;
 const createAccount = require('../controllers/createAccount').createAccount;
 const expressSession = require('express-session');
+const cors = require('cors');
 const RedisStore = require('connect-redis')(expressSession);
 const redisClient = require('../models/getRedisClient').getRedisClient();
+const corsWhiteList = [
+    'https://bhsjp.kro.kr',
+    'https://introduce.bhsjp.kro.kr',
+    'https://accounts.bhsjp.kro.kr'
+];
 
 const accountsRouter = express.Router();
 
@@ -149,7 +155,15 @@ accountsRouter.post('/check-account', (req, res) => {
     }
 });
 
-accountsRouter.post('/sign-out', (req, res) => {
+accountsRouter.post('/sign-out', cors({
+    origin: (origin, callback) => {
+        if (corsWhiteList.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+}), (req, res) => {
     if (req.session.user) {
         req.session.destroy(error => {
             if (error) {
