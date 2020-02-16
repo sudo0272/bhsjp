@@ -11,7 +11,7 @@ const corsWhiteList = [
     'https://bhsjp.kro.kr',
     'https://introduce.bhsjp.kro.kr',
     'https://accounts.bhsjp.kro.kr',
-    'https://community.hsjp.kro.kr'
+    'https://community.bhsjp.kro.kr'
 ];
 
 const accountsRouter = express.Router();
