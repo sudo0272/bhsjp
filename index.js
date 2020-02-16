@@ -1,10 +1,12 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const subdomain = require('express-subdomain');
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const expressSession = require('express-session');
-const getSessionData = require('./models/getSessionData').getSessionData;
+const RedisStore = require('connect-redis')(expressSession);
+const redisClient = require('./models/getRedisClient').getRedisClient();
 
 const routes = {
     introduce: require('./routes/introduce').router,
@@ -29,7 +31,37 @@ app.use(express.static('public'));
 app.use(subdomain('introduce.bhsjp', routes.introduce));
 app.use(subdomain('accounts.bhsjp', routes.accounts));
 
-app.use(expressSession(getSessionData()));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
+app.use(bodyParser.json());
+app.use(bodyParser.raw());
+
+app.use(expressSession({
+    secret: "f%*JNsNn!tFfdqog#Ba7oITKgLW0YYKOm1ARil6MW#BKlmMSrC@LSZnA5E#0!EY63#R%U!NH1#PM4AV80PVDGQDuQbHgZ%&5BEN",
+    resave: false,
+    saveUninitialized: true,
+    store: new RedisStore({
+        client: redisClient,
+        resave: false,
+        saveUninitialized: true
+    }),
+    cookie: {
+        secure: true,
+        domain: "bhsjp.kro.kr",
+        httpOnly: true,
+        maxAge: 3600000
+    }
+}));
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+    next();
+})
 
 app.get('/', (req, res) => {
     res.render('index', {

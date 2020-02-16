@@ -4,7 +4,8 @@ const doIdExist = require('../controllers/doIdExist').doIdExist;
 const doAccountExist = require('../controllers/doAccountExist').doAccountExist;
 const createAccount = require('../controllers/createAccount').createAccount;
 const expressSession = require('express-session');
-const getSessionData = require('../models/getSessionData').getSessionData;
+const RedisStore = require('connect-redis')(expressSession);
+const redisClient = require('../models/getRedisClient').getRedisClient();
 
 const accountsRouter = express.Router();
 
@@ -15,7 +16,22 @@ accountsRouter.use(bodyParser.urlencoded({
 accountsRouter.use(bodyParser.json());
 accountsRouter.use(bodyParser.raw());
 
-accountsRouter.use(expressSession(getSessionData()));
+accountsRouter.use(expressSession({
+    secret: "f%*JNsNn!tFfdqog#Ba7oITKgLW0YYKOm1ARil6MW#BKlmMSrC@LSZnA5E#0!EY63#R%U!NH1#PM4AV80PVDGQDuQbHgZ%&5BEN",
+    resave: false,
+    saveUninitialized: true,
+    store: new RedisStore({
+        client: redisClient,
+        resave: false,
+        saveUninitialized: true
+    }),
+    cookie: {
+        secure: true,
+        domain: "bhsjp.kro.kr",
+        httpOnly: true,
+        maxAge: 3600000
+    }
+}));
 
 accountsRouter.get('/', (req, res) => {
     res.render('accounts/index', {
