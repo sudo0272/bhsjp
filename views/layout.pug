@@ -34,7 +34,7 @@ html
 
                         if isSignedIn
                             ul.sub-menus
-                                a(href='#'): li 로그아웃
+                                a#sign-out(href='#'): li 로그아웃
                         else
                             ul.sub-menus
                                 a(href=PROTOCOL + '://accounts.' + BASE_URL + '/sign-in'): li 로그인
@@ -55,5 +55,11 @@ html
         script(src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js')
         script(src='/js/toggleSubMenu.min.js')
         script(src='/js/menu.min.js')
+        script(src='/js/fetchSignOut.min.js')
+
+        script.
+            document.getElementById('sign-out').addEventListener('click', () => {
+                fetchSignOut();
+            });
 
         block js
