@@ -10,7 +10,8 @@ const redisClient = require('./models/getRedisClient').getRedisClient();
 
 const routes = {
     introduce: require('./routes/introduce').router,
-    accounts: require('./routes/accounts').router
+    accounts: require('./routes/accounts').router,
+    community: require('./routes/community').router
 };
 
 const certificationDataPath = 'certbot/config/live/bhsjp.kro.kr/';
@@ -30,6 +31,7 @@ app.set('view engine', 'pug');
 app.use(express.static('public'));
 app.use(subdomain('introduce.bhsjp', routes.introduce));
 app.use(subdomain('accounts.bhsjp', routes.accounts));
+app.use(subdomain('community.bhsjp', routes.community));
 
 app.use(bodyParser.urlencoded({
     extended: true

@@ -10,7 +10,8 @@ const redisClient = require('../models/getRedisClient').getRedisClient();
 const corsWhiteList = [
     'https://bhsjp.kro.kr',
     'https://introduce.bhsjp.kro.kr',
-    'https://accounts.bhsjp.kro.kr'
+    'https://accounts.bhsjp.kro.kr',
+    'https://communityb.hsjp.kro.kr'
 ];
 
 const accountsRouter = express.Router();
