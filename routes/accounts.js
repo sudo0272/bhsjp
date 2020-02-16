@@ -11,7 +11,7 @@ const corsWhiteList = [
     'https://bhsjp.kro.kr',
     'https://introduce.bhsjp.kro.kr',
     'https://accounts.bhsjp.kro.kr',
-    'https://communityb.hsjp.kro.kr'
+    'https://community.hsjp.kro.kr'
 ];
 
 const accountsRouter = express.Router();
@@ -42,10 +42,7 @@ accountsRouter.use(expressSession({
 }));
 
 accountsRouter.all('/*', (req, res, next) => {
-    res.header('Access-Control-Allow-Origin', [
-        'https://introduce.bhsjp.kro.kr',
-        'https://bhsjp.kro.kr'
-    ]);
+    res.header('Access-Control-Allow-Origin', corsWhiteList);
     res.header('Access-Control-Allow-Headers', 'X-Requested-With');
     res.header('Access-Control-Allow-Credentials', 'true');
 
