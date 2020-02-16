@@ -1,9 +1,14 @@
 const fetchSignOut = () => {
-    fetch('/sign-out', {
-        method: 'post'
+    fetch('https://accounts.bhsjp.kro.kr/sign-out', {
+        method: 'post',
+        mode: 'cors',
+        credentials: 'include'
     }).then(res => {
+        console.log(res);
         return res.text();
     }).then(text => {
+        alert(text);
+        console.log(text);
         switch (text) {
             case 'cannot-sign-out': alert('로그아웃 할 수 없습니다'); break;
             case 'not-signed-in': alert('로그인되어있지 않습니다'); break;

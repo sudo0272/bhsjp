@@ -49,7 +49,8 @@ app.use(expressSession({
     }),
     cookie: {
         secure: true,
-        domain: "bhsjp.kro.kr",
+        name: '.bhsjp.kro.kr',
+        domain: 'bhsjp.kro.kr',
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24
     }
