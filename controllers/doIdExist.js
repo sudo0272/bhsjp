@@ -1,11 +1,14 @@
-function doIdExist(id, callback) {
-    const mysql = require('mysql');
-    const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMysqlConnectionData;
-    const connection = mysql.createConnection(getMysqlConnectionData());
+const mysql = require('mysql');
+const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMysqlConnectionData;
+const connection = mysql.createConnection(getMysqlConnectionData());
+const jsStringEscape = require('js-string-escape');
 
+function doIdExist(id, callback) {
     connection.connect();
 
-    connection.query('SELECT COUNT(1) FROM accounts WHERE `id`=?', [id], (error, results, fields) => {
+    connection.query('SELECT COUNT(1) FROM accounts WHERE `id`=?', [
+        jsStringEscape(id)
+    ], (error, results, fields) => {
         if (error) {
             throw error;
         }
