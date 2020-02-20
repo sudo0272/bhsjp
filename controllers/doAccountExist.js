@@ -2,21 +2,17 @@ const mysql = require('mysql');
 const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMysqlConnectionData;
 const connection = mysql.createConnection(getMysqlConnectionData());
 const jsStringEscape = require('js-string-escape');
-const sha512 = require('js-sha512').sha512;
-const getSha512Salt = require('../models/getSha512Salt').getSha512Salt;
+const encryptSha512 = require('../models/encryptSha512').encryptSha512;
+const encryptAes256 = require('../models/encryptAes256').encryptAes256;
 
 function doAccountExist(id, password, callback) {
-    connection.connect();
-
     connection.query('SELECT * FROM accounts WHERE `id`=? AND `password`=?', [
-        jsStringEscape(id),
-        sha512(getSha512Salt() + jsStringEscape(password))
+        encryptAes256(jsStringEscape(id)),
+        encryptSha512(password)
     ], (error, results, fields) => {
         if (error) {
             throw error;
         }
-
-        connection.end();
 
         callback(results[0]);
     });
