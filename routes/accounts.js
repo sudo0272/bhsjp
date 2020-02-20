@@ -149,7 +149,9 @@ accountsRouter.post('/check-account', (req, res) => {
                     res.send('ok');
                 }
             } else {
-                res.send('wrong');
+                setTimeout(() => {
+                    res.send('wrong');
+                }, 1000);
             }
         });
     }
