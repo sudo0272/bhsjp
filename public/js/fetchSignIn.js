@@ -1,4 +1,4 @@
-const fetchSignIn = () => {
+const fetchSignIn = callback => {
     fetch('/check-account', {
         method: 'post',
         headers: {
@@ -11,6 +11,8 @@ const fetchSignIn = () => {
     }).then(res => {
         return res.text();
     }).then(text => {
+        callback();
+
         switch (text) {
             case 'no-id': alert('아이디가 존재하지 않습니다'); break;
             case 'id-length-short':
@@ -23,6 +25,8 @@ const fetchSignIn = () => {
             case 'ok': alert('로그인이 완료되었습니다');
         }
     }).catch(err => {
+        callback();
+
         console.error(err);
 
         alert('서버와 통신할 수 없습니다.\n다시 시도해주세요');

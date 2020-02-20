@@ -25,9 +25,11 @@
   outline: none;
 }
 
-#account-submit-button {
+#account-submit {
   background-color: #181818;
   border: none;
+}
+#account-submit > span {
   color: #aaaaaa;
 }
 

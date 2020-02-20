@@ -2,6 +2,15 @@ extends ../layout
 
 block css
     link(href='/css/accounts.min.css' rel='stylesheet')
+    link(href='/css/animation/rotating.min.css' rel='stylesheet')
+
+block html
+    form#account-form-container.d-flex.flex-column
+        div: input#account-id.account-form(type='text' placeholder='아이디' name='id' autocomplete='off' minlength='1' maxlength='10' title='1자리에서 10자리의 영문 혹은 숫자를 입력해주세요' required)
+        div
+            input#account-password.account-form(type='password' placeholder='비밀번호' name='password' autocomplete='off' minlength='4' title='최소 4글자의 영문 혹은 숫자, 특수문자를 입력해주세요' required)
+            include ../includes/passwordToggleButton
+        div.text-center: button#account-submit: span 로그인
 
 block js
     script(src='/js/togglePassword.min.js')
@@ -13,22 +22,32 @@ block js
         const passwordToggle = document.getElementById('password-toggle');
         const passwordToggleIcon = passwordToggle.getElementsByTagName('i')[0];
         const accountFormContainer = document.getElementById('account-form-container');
+        const accountSubmit = document.getElementById('account-submit');
+        const accountSubmitText = accountSubmit.getElementsByTagName('span')[0];
 
-        limitInput(accountId, /[^\w]/g);
-        limitInput(accountPassword, /[^\w !-\/:-@\[-`{-~]/g);
+        document.addEventListener('DOMContentLoaded', () => {
+            limitInput(accountId, /[^\w]/g);
+            limitInput(accountPassword, /[^\w !-\/:-@\[-`{-~]/g);
 
-        togglePassword(passwordToggle, passwordToggleIcon, accountPassword);
+            togglePassword(passwordToggle, passwordToggleIcon, accountPassword);
 
-        accountFormContainer.addEventListener('submit', e => {
-            e.preventDefault();
+            accountFormContainer.addEventListener('submit', e => {
+                e.preventDefault();
 
-            fetchSignIn();
+                accountSubmitText.classList.add('material-icons');
+                accountSubmitText.classList.add('animated');
+                accountSubmitText.classList.add('rotating');
+                accountSubmitText.innerText = 'refresh';
+                accountSubmit.disabled = true;
+
+                console.log('clicked');
+
+                fetchSignIn(() => {
+                    accountSubmitText.classList.remove('material-icons');
+                    accountSubmitText.classList.remove('animated');
+                    accountSubmitText.classList.remove('rotating');
+                    accountSubmitText.innerText = '로그인';
+                    accountSubmit.disabled = false;
+                });
+            });
         });
-
-block html
-    form#account-form-container.d-flex.flex-column
-        div: input#account-id.account-form(type='text' placeholder='아이디' name='id' autocomplete='off' minlength='1' maxlength='10' title='1자리에서 10자리의 영문 혹은 숫자를 입력해주세요' required)
-        div
-            input#account-password.account-form(type='password' placeholder='비밀번호' name='password' autocomplete='off' minlength='4' title='최소 4글자의 영문 혹은 숫자, 특수문자를 입력해주세요' required)
-            include ../includes/passwordToggleButton
-        div.text-center: input#account-submit-button(type='submit' value='로그인')
