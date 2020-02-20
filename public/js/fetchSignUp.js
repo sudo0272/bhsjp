@@ -29,8 +29,8 @@ const fetchSignUp = () => {
             case 'email-template-not-match': alert('이메일의 형식이 맞지 않습니다'); break;
             case 'id-already-exists': alert('이미 존재하는 아이디입니다'); break;
             case 'ok':
-                alert('회원가입이 완료되었습니다');
-                alert('로그인해주세요');
+                alert('회원가입이 완료되었습니다\n로그인해주세요');
+
                 location.href = '/sign-in';
 
                 break;
