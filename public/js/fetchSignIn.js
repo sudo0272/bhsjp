@@ -22,7 +22,12 @@ const fetchSignIn = callback => {
             case 'password-length-short': alert('비밀번호의 길이는 4자리 이상입니다'); break;
             case 'wrong': alert('아이디 또는 비밀번호가 잘못되었습니다'); break;
             case 'already-signed-in': alert('이미 로그인되어있습니다'); break;
-            case 'ok': alert('로그인이 완료되었습니다');
+            case 'ok':
+                alert('로그인이 완료되었습니다\n메인 페이지로 이동합니다');
+
+                location.href = 'https://bhsjp.kro.kr';
+
+                break;
         }
     }).catch(err => {
         callback();
