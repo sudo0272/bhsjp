@@ -5,6 +5,7 @@ const RedisStore = require('connect-redis')(expressSession);
 const redisClient = require('../models/getRedisClient').getRedisClient();
 const getPostList = require('../controllers/getPostList').getPostList;
 const getPostCount = require('../controllers/getPostCount').getPostCount;
+const getPostTitle = require('../controllers/getPostTitle').getPostTitle;
 
 const communityRouter = express.Router();
 
@@ -77,10 +78,17 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
     }
 });
 
-communityRouter.get('/read-post', (req, res) => {
-    // TODO: check if user has signed in
-    // if user has signed in: add comment area
-    // else: write `sign in to write comment`
+communityRouter.get('/read-post/:postId', (req, res) => {
+    const postId = req.params.postId;
+    if (postId.match(/^\d+$/)) {
+        getPostTitle(postId, title => {
+            res.render('community/read-post', {
+                title: title,
+                isSignedIn: req.session.user,
+                postId: postId
+            });
+        });
+    }
 });
 
 communityRouter.get('/write-post', (req, res) => {

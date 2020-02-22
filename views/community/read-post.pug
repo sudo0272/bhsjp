@@ -1,0 +1,21 @@
+extends ../layout
+
+block html
+
+
+    // comment
+    if isSignedIn
+        #quill-toolbar
+        #quill-editor
+
+block js
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js')
+
+    // comment
+    if isSignedIn
+        script.
+            let quill = new Quill('#quill-editor', {
+                modules: {
+                    toolbar: '#quill-toolbar'
+                }
+            });
