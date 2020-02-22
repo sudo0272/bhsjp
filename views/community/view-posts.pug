@@ -1,0 +1,17 @@
+extends ../layout
+
+block html
+    each i in postItems
+        div
+            a(href='https://community.bhsjp.kro.kr/read-post/' + i.index)
+                if i.password !== null
+                    i.material-icons lock
+                =i.title
+    .d-flex.flex-row
+        if postListCount > 0
+            a(href='https://community.bhsjp.kro.kr/view-posts/' + (postListCount - 1))
+                i.material-icons keyboard_arrow_left
+
+        if (postListCount + 1) * 20 + 1 <= postCount
+            a(href='https://community.bhsjp.kro.kr/view-posts/' + (postListCount + 1))
+                i.material-icons keyboard_arrow_right

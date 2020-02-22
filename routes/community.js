@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const expressSession = require('express-session');
 const RedisStore = require('connect-redis')(expressSession);
 const redisClient = require('../models/getRedisClient').getRedisClient();
+const getPostList = require('../controllers/getPostList').getPostList;
+const getPostCount = require('../controllers/getPostCount').getPostCount;
 
 const communityRouter = express.Router();
 
@@ -38,8 +40,41 @@ communityRouter.get('/', (req, res) => {
     });
 });
 
-communityRouter.get('/view-posts', (req, res) => {
-    // TODO: get data from db and render page
+communityRouter.get('/view-posts/:postListCount', (req, res) => {
+    if (req.params.postListCount !== undefined) {
+        if (req.params.postListCount.match(/^\d+$/)) {
+            const postListCount = parseInt(req.params.postListCount);
+
+            getPostList(postListCount, postItems => {
+                if (postItems.length > 0) {
+                    getPostCount(postCount => {
+                        res.render('community/view-posts', {
+                            title: '글 보기',
+                            isSignedIn: !!req.session.user,
+                            postItems: postItems,
+                            postListCount: postListCount,
+                            postCount: postCount
+                        });
+                    });
+                } else {
+                    res.render('errors/404', {
+                        'title': '404 Not Found',
+                        'isSignedIn': req.session.user
+                    });
+                }
+            });
+        } else {
+            res.render('errors/404', {
+                'title': '404 Not Found',
+                'isSignedIn': req.session.user
+            });
+        }
+    } else {
+        res.render('errors/404', {
+            'title': '404 Not Found',
+            'isSignedIn': req.session.user
+        });
+    }
 });
 
 communityRouter.get('/read-post', (req, res) => {

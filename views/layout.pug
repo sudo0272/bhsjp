@@ -30,6 +30,16 @@ html
 
                     li
                         i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right
+                        span.top-menus(data-is-opened='false') 커뮤니티
+
+                        ul.sub-menus
+                            a(href=PROTOCOL + '://community.' + BASE_URL + '/view-posts'): li 글 보기
+
+                            if isSignedIn
+                                a(href=PROTOCOL + '://community.' + BASE_URL + '/write-post'): li 글 쓰기
+
+                    li
+                        i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right
                         span.top-menus(data-is-opened='false') 계정
 
                         if isSignedIn
@@ -43,7 +53,7 @@ html
             #contents.d-flex.flex-column
                 div
                     h1.text-center #{title}
-                //block html
+
                 div
                     #main.d-flex.flex-column.align-items-center
                         block html
