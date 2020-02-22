@@ -12,7 +12,7 @@ function getPostTitle(index, callback) {
             throw error;
         }
 
-        callback(result[0].title);
+        callback(result);
     });
 }
 

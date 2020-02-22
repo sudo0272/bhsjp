@@ -80,13 +80,26 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
 
 communityRouter.get('/read-post/:postId', (req, res) => {
     const postId = req.params.postId;
+
     if (postId.match(/^\d+$/)) {
-        getPostTitle(postId, title => {
-            res.render('community/read-post', {
-                title: title,
-                isSignedIn: req.session.user,
-                postId: postId
-            });
+        getPostTitle(postId, result => {
+            if (result.length > 0) {
+                res.render('community/read-post', {
+                    title: title,
+                    isSignedIn: req.session.user,
+                    postId: postId
+                });
+            } else {
+                res.render('errors/404', {
+                    'title': '404 Not Found',
+                    'isSignedIn': req.session.user
+                });
+            }
+        });
+    } else {
+        res.render('errors/404', {
+            'title': '404 Not Found',
+            'isSignedIn': req.session.user
         });
     }
 });
