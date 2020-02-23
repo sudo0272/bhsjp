@@ -107,7 +107,7 @@ accountsRouter.post('/create-account', (req, res) => {
         doIdExist(id)
         .then(() => {
             res.send('id-already-exists');
-        }).reject(() => {
+        }, () => {
             createAccount(id, password, nickname, email)
             .then(() => {
                 res.send('ok');
@@ -152,7 +152,7 @@ accountsRouter.post('/check-account', (req, res) => {
 
                 res.send('ok');
             }
-        }).reject(() => {
+        }, () => {
             setTimeout(() => {
                 res.send('wrong');
             }, 1000);

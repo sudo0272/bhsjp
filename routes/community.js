@@ -68,7 +68,7 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
                         isSignedIn: !!req.session.user
                     });
                 });
-            }).reject(reason => {
+            }, reason => {
                 res.render('errors/404', {
                     'title': '404 Not Found',
                     'isSignedIn': req.session.user
@@ -106,7 +106,7 @@ communityRouter.get('/read-post/:postId', (req, res) => {
                 isSignedIn: req.session.user,
                 postId: postId
             });
-        }).reject(reason => {
+        }, reason => {
             res.render('errors/404', {
                 'title': '404 Not Found',
                 'isSignedIn': req.session.user
@@ -145,7 +145,7 @@ communityRouter.post('/get-post', (req, res) => {
                         content: result[0].content
                     }
                 });
-            }).reject(reason => {
+            }, reason => {
                 res.send({
                     result: 'no-post'
                 });
@@ -161,7 +161,7 @@ communityRouter.post('/get-post', (req, res) => {
                 result: 'wrong'
             });
         }
-    }).reject(reason => {
+    }, reason => {
         res.send({
             result: 'no-post'
         });
@@ -175,7 +175,10 @@ communityRouter.post('/get-post', (req, res) => {
 });
 
 communityRouter.get('/new-post', (req, res) => {
-    // TODO: check if user has signed in
+    res.render('community/new-post', {
+        title: '새 글 작성',
+        isSignedIn: !!req.session.user
+    });
 });
 
 communityRouter.get('/fix-post', (req, res) => {
