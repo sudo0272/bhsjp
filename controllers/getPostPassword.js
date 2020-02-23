@@ -2,17 +2,23 @@ const mysql = require('mysql');
 const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMysqlConnectionData;
 const connection = mysql.createConnection(getMysqlConnectionData());
 
-function getPostPassword(postId, callback) {
-    connection.query("SELECT `password`\n" +
-                            "FROM `posts`\n" +
-                            "WHERE `index`=?;", [
-        postId
-    ], (error, result, fields) => {
-        if (error) {
-            throw error;
-        }
+function getPostPassword(postId) {
+    return new Promise((resolve, reject) => {
+        connection.query("SELECT `password`\n" +
+                                "FROM `posts`\n" +
+                                "WHERE `index`=?;", [
+            postId
+        ], (error, result, fields) => {
+            if (error) {
+                throw error;
+            }
 
-        callback(result);
+            if (result.length > 0) {
+                resolve(result[0].password);
+            } else {
+                reject('no-row');
+            }
+        });
     });
 }
 

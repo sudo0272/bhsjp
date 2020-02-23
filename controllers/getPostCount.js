@@ -2,14 +2,16 @@ const mysql = require('mysql');
 const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMysqlConnectionData;
 const connection = mysql.createConnection(getMysqlConnectionData());
 
-function getPostCount(callback) {
-    connection.query("SELECT COUNT(1) count\n" +
-                            "FROM `posts`;", (error, result, fields) => {
-        if (error) {
-            throw error;
-        }
-
-        callback(result[0].count);
+function getPostCount() {
+    return new Promise(resolve => {
+        connection.query("SELECT COUNT(1) count\n" +
+                                "FROM `posts`;", (error, result, fields) => {
+            if (error) {
+                throw error;
+            } else {
+                resolve(result[0].count);
+            }
+        });
     });
 }
 

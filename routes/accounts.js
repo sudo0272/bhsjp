@@ -104,15 +104,19 @@ accountsRouter.post('/create-account', (req, res) => {
     } else if (email.match(/^[^@]{1,64}@[^@]{1,255}$/) === null) {
         res.send('email-template-not-match');
     } else {
-        doIdExist(id, idExistence => {
-            if (idExistence) {
-                res.send('id-already-exists');
-            } else {
-                createAccount(id, password, nickname, email, () => {
-                    res.send('ok');
-                });
-            }
-        });
+        doIdExist(id)
+        .then(() => {
+            res.send('id-already-exists');
+        }).reject(() => {
+            createAccount(id, password, nickname, email)
+            .then(() => {
+                res.send('ok');
+            }).catch(error => {
+                console.error(error);
+
+                res.send('error');
+            });
+        })
     }
 });
 
@@ -133,26 +137,29 @@ accountsRouter.post('/check-account', (req, res) => {
     } else if (password.length < 4) {
         res.send('password-length-short');
     } else {
-        doAccountExist(id, password, accountData => {
-            if (accountData) {
-                if (req.session.user) {
-                    res.send('already-signed-in');
-                } else {
-                    req.session.user = {
-                        id: decryptAes256(accountData.id),
-                        nickname: decryptAes256(accountData.nickname),
-                        email: decryptAes256(accountData.email)
-                    };
-
-                    console.log(req.session.user);
-
-                    res.send('ok');
-                }
+        doAccountExist(id, password)
+        .then(accountData => {
+            if (req.session.user) {
+                res.send('already-signed-in');
             } else {
-                setTimeout(() => {
-                    res.send('wrong');
-                }, 1000);
+                req.session.user = {
+                    id: decryptAes256(accountData.id),
+                    nickname: decryptAes256(accountData.nickname),
+                    email: decryptAes256(accountData.email)
+                };
+
+                console.log(req.session.user);
+
+                res.send('ok');
             }
+        }).reject(() => {
+            setTimeout(() => {
+                res.send('wrong');
+            }, 1000);
+        }).catch(error => {
+            console.error(error);
+
+            res.send('error');
         });
     }
 });

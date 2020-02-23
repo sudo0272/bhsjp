@@ -3,7 +3,7 @@ const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMy
 const connection = mysql.createConnection(getMysqlConnectionData());
 
 function getPost(postId) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         connection.query("SELECT `accounts`.`nickname`, `posts`.`date`, `posts`.`content`\n" +
                                 "FROM `posts`\n" +
                                 "LEFT JOIN `accounts`\n" +
@@ -15,7 +15,11 @@ function getPost(postId) {
                 throw error;
             }
 
-            resolve(result);
+            if (result.length > 0) {
+                resolve(result);
+            } else {
+                reject('no-row');
+            }
         });
     });
 }

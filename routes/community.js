@@ -49,23 +49,37 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
         if (req.params.postListCount.match(/^\d+$/)) {
             const postListCount = parseInt(req.params.postListCount);
 
-            getPostList(postListCount, postItems => {
-                if (postItems.length > 0) {
-                    getPostCount(postCount => {
-                        res.render('community/view-posts', {
-                            title: '글 보기',
-                            isSignedIn: !!req.session.user,
-                            postItems: postItems,
-                            postListCount: postListCount,
-                            postCount: postCount
-                        });
+            getPostList(postListCount)
+            .then(postItems => {
+                getPostCount()
+                .then(postCount => {
+                    res.render('community/view-posts', {
+                        title: '글 보기',
+                        isSignedIn: !!req.session.user,
+                        postItems: postItems,
+                        postListCount: postListCount,
+                        postCount: postCount
                     });
-                } else {
-                    res.render('errors/404', {
-                        'title': '404 Not Found',
-                        'isSignedIn': req.session.user
+                }).catch(error => {
+                    console.error(error);
+
+                    res.render('errors/500', {
+                        title: '500 Internal Server Error',
+                        isSignedIn: !!req.session.user
                     });
-                }
+                });
+            }).reject(reason => {
+                res.render('errors/404', {
+                    'title': '404 Not Found',
+                    'isSignedIn': req.session.user
+                });
+            }).catch(error => {
+                console.error(error);
+
+                res.render('errors/500', {
+                    title: '500 Internal Server Error',
+                    isSignedIn: !!req.session.user
+                });
             });
         } else {
             res.render('errors/404', {
@@ -85,19 +99,25 @@ communityRouter.get('/read-post/:postId', (req, res) => {
     const postId = req.params.postId;
 
     if (postId.match(/^\d+$/)) {
-        getPostTitle(postId, result => {
-            if (result.length > 0) {
-                res.render('community/read-post', {
-                    title: result[0].title,
-                    isSignedIn: req.session.user,
-                    postId: postId
-                });
-            } else {
-                res.render('errors/404', {
-                    'title': '404 Not Found',
-                    'isSignedIn': req.session.user
-                });
-            }
+        getPostTitle(postId)
+        .then(title => {
+            res.render('community/read-post', {
+                title: title,
+                isSignedIn: req.session.user,
+                postId: postId
+            });
+        }).reject(reason => {
+            res.render('errors/404', {
+                'title': '404 Not Found',
+                'isSignedIn': req.session.user
+            });
+        }).catch(error => {
+            console.error(error);
+
+            res.render('errors/500', {
+                title: '500 Internal Server Error',
+                isSignedIn: !!req.session.user
+            });
         });
     } else {
         res.render('errors/404', {
@@ -109,37 +129,48 @@ communityRouter.get('/read-post/:postId', (req, res) => {
 
 communityRouter.post('/get-post', (req, res) => {
     const postId = req.body.postId;
-    const password = req.body.password;
+    const userPassword = req.body.password;
 
     console.log('postId:', postId);
 
-    getPostPassword(postId, result => {
-        if (result.length > 0) {
-            if (result[0].password === null || result[0].password === encryptSha512(password)) {
-                getPost(postId).then(result => {
-                    res.send({
-                        result: 'right',
-                        data: {
-                            nickname: result[0].nickname,
-                            date: result[0].date,
-                            content: result[0].content
-                        }
-                    });
-                }).catch(error => {
-                    res.send('error');
-
-                    console.error(error);
-                });
-            } else {
+    getPostPassword(postId)
+    .then(dbPassword => {
+        if (dbPassword === null || dbPassword === encryptSha512(userPassword)) {
+            getPost(postId).then(result => {
                 res.send({
-                    result: 'wrong'
+                    result: 'right',
+                    data: {
+                        nickname: result[0].nickname,
+                        date: result[0].date,
+                        content: result[0].content
+                    }
                 });
-            }
+            }).reject(reason => {
+                res.send({
+                    result: 'no-post'
+                });
+            }).catch(error => {
+                console.error(error);
+
+                res.send({
+                    result: 'no-post'
+                });
+            });
         } else {
             res.send({
-                result: 'no-post'
+                result: 'wrong'
             });
         }
+    }).reject(reason => {
+        res.send({
+            result: 'no-post'
+        });
+    }).catch(error => {
+        console.error(error);
+
+        res.send({
+            result: 'no-post'
+        });
     });
 });
 
