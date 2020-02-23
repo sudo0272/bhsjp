@@ -1,22 +1,23 @@
 input {
-  background-color: #181818;
+  background-color: #aaaaaa;
   border: none;
   font-size: 24px;
-  color: #aaaaaa;
+  color: #141414;
   padding: 5px;
 }
 input::placeholder {
   opacity: 0.3;
-  color: #aaaaaa;
+  color: #141414;
 }
-input [type=submit] {
-  background-color: #181818;
+input[type=submit] {
+  background-color: #aaaaaa;
   border: none;
+  width: 100%;
 }
 
 .password-toggle {
   background-color: transparent;
-  color: #aaaaaa;
+  color: #141414;
   font-size: 24px;
   border: none;
   margin-left: -40px;

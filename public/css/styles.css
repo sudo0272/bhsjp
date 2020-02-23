@@ -1,6 +1,6 @@
 body {
-  background-color: #141414;
-  color: #aaa;
+  background-color: #dddddd;
+  color: #141414;
 }
 
 #contents {
@@ -14,8 +14,7 @@ body {
 
 #logo {
   margin: 10px 0 0 60px !important;
-  width: 80px;
-  height: 20px;
+  font-size: 30px;
 }
 
 /*# sourceMappingURL=styles.css.map */

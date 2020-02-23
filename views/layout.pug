@@ -12,14 +12,14 @@ html
         link(href='https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.1.0/css/vex-theme-plain.min.css' rel='stylesheet')
         link(href='https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.1.0/css/vex.min.css' rel='stylesheet')
         link(href='/css/highlightjs-themes/tomorrow-night.min.css' rel='stylesheet')
+        link(href='/css/input.min.css' rel='stylesheet')
         block css
 
     body
         i#menu-icon.material-icons menu
         #container.d-flex.flex-row
             nav#menu-bar(data-is-opened='false')
-                a(href=PROTOCOL + '://' + BASE_URL title='홈페이지로')
-                    img#logo(src='/images/logo.png')
+                a#logo(href=PROTOCOL + '://' + BASE_URL title='홈페이지로') BHSJP
 
                 ul
                     li
