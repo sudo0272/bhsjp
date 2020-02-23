@@ -1,9 +1,5 @@
 extends ../layout
 
-block css
-    link(href='https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.1.0/css/vex-theme-default.min.css' rel='stylesheet')
-    link(href='https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.1.0/css/vex.min.css' rel='stylesheet')
-
 block html
     .d-flex.flex-row
         div
@@ -22,8 +18,6 @@ block html
         #quill-editor
 
 block js
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js')
-    script(src='https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.1.0/js/vex.min.js')
     script(src='/js/fetchPost.min.js')
 
     script.

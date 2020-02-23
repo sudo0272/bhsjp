@@ -26,7 +26,6 @@ const fetchPost = (postId, password) => {
                     input: `
                         <input name="password" type="password">
                     `,
-                    className: 'vex-theme-plain',
                     callback: (data) => {
                         fetchPost(postId, data.password);
                     }
@@ -35,17 +34,13 @@ const fetchPost = (postId, password) => {
                 break;
 
             case 'error':
-                vex.dialog.open({
-                    message: '에러가 발생했습니다',
-                    className: 'vex-theme-plain'
-                });
+                vex.dialog.alert('서버 에러가 발생했습니다');
 
                 vex.dialog.open({
                     message: '비밀번호를 입력해주세요',
                     input: `
                         <input name="password" type="password">
                     `,
-                    className: 'vex-theme-plain',
                     callback: (data) => {
                         fetchPost(postId, data.password);
                     }
