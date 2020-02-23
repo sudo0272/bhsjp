@@ -175,7 +175,11 @@ communityRouter.post('/get-post', (req, res) => {
 });
 
 communityRouter.get('/write-post', (req, res) => {
-    // TODO: check if user has signed in and what the user wants; create post or update post, and render page
+    // TODO: check if user has signed in
+});
+
+communityRouter.get('/fix-post', (req, res) => {
+    // TODO: check if user has signed in
 });
 
 communityRouter.post('/create-post', (req, res) => {
