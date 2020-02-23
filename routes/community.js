@@ -174,7 +174,7 @@ communityRouter.post('/get-post', (req, res) => {
     });
 });
 
-communityRouter.get('/write-post', (req, res) => {
+communityRouter.get('/new-post', (req, res) => {
     // TODO: check if user has signed in
 });
 
