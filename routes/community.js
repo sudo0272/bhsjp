@@ -6,6 +6,9 @@ const redisClient = require('../models/getRedisClient').getRedisClient();
 const getPostList = require('../controllers/getPostList').getPostList;
 const getPostCount = require('../controllers/getPostCount').getPostCount;
 const getPostTitle = require('../controllers/getPostTitle').getPostTitle;
+const getPostPassword = require('../controllers/getPostPassword').getPostPassword;
+const getPost = require('../controllers/getPost').getPost;
+const encryptSha512 = require('../models/encryptSha512').encryptSha512;
 
 const communityRouter = express.Router();
 
@@ -85,7 +88,7 @@ communityRouter.get('/read-post/:postId', (req, res) => {
         getPostTitle(postId, result => {
             if (result.length > 0) {
                 res.render('community/read-post', {
-                    title: title,
+                    title: result[0].title,
                     isSignedIn: req.session.user,
                     postId: postId
                 });
@@ -102,6 +105,42 @@ communityRouter.get('/read-post/:postId', (req, res) => {
             'isSignedIn': req.session.user
         });
     }
+});
+
+communityRouter.post('/get-post', (req, res) => {
+    const postId = req.body.postId;
+    const password = req.body.password;
+
+    console.log('postId:', postId);
+
+    getPostPassword(postId, result => {
+        if (result.length > 0) {
+            if (result[0].password === null || result[0].password === encryptSha512(password)) {
+                getPost(postId).then(result => {
+                    res.send({
+                        result: 'right',
+                        data: {
+                            nickname: result[0].nickname,
+                            date: result[0].date,
+                            content: result[0].content
+                        }
+                    });
+                }).catch(error => {
+                    res.send('error');
+
+                    console.error(error);
+                });
+            } else {
+                res.send({
+                    result: 'wrong'
+                });
+            }
+        } else {
+            res.send({
+                result: 'no-post'
+            });
+        }
+    });
 });
 
 communityRouter.get('/write-post', (req, res) => {

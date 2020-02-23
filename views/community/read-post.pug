@@ -1,7 +1,20 @@
 extends ../layout
 
-block html
+block css
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.1.0/css/vex-theme-default.min.css' rel='stylesheet')
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.1.0/css/vex.min.css' rel='stylesheet')
 
+block html
+    .d-flex.flex-row
+        div
+            i.material-icons account_box
+            span#post-nickname
+
+        div
+            i.material-icons access_time
+            span#post-date
+
+    #post-content
 
     // comment
     if isSignedIn
@@ -10,6 +23,15 @@ block html
 
 block js
     script(src='https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/vex-js/4.1.0/js/vex.min.js')
+    script(src='/js/fetchPost.js')
+
+    script.
+        const postNickname = document.getElementById('post-nickname');
+        const postDate = document.getElementById('post-date');
+        const postContent = document.getElementById('post-content');
+
+        fetchPost(#{postId}, null);
 
     // comment
     if isSignedIn
