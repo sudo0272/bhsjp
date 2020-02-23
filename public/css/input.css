@@ -1,0 +1,28 @@
+input {
+  background-color: #181818;
+  border: none;
+  font-size: 24px;
+  color: #aaaaaa;
+  padding: 5px;
+}
+input::placeholder {
+  opacity: 0.3;
+  color: #aaaaaa;
+}
+input [type=submit] {
+  background-color: #181818;
+  border: none;
+}
+
+.password-toggle {
+  background-color: transparent;
+  color: #aaaaaa;
+  font-size: 24px;
+  border: none;
+  margin-left: -40px;
+}
+.password-toggle:focus {
+  outline: none;
+}
+
+/*# sourceMappingURL=input.css.map */
