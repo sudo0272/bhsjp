@@ -1,0 +1,46 @@
+extends ../layout
+
+block css
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.min.css' rel='stylesheet')
+    link(href='/css/quill-custom.min.css' rel='stylesheet')
+
+block html
+    if isSignedIn
+        .d-flex.flex-column.input-container
+            input#post-id(type='text' placeholder='제목' required)
+
+            div
+                input#post-password(type='password' placeholder='비밀번호')
+                include ../includes/passwordToggleButton
+
+        div#editor-container
+            #editor
+
+        block submit
+
+block js
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js')
+    script(src='/js/limitInput.min.js')
+    script(src='/js/togglePassword.min.js')
+
+    if isSignedIn
+        script.
+            const postPassword = document.getElementById('post-password');
+            const passwordToggle = document.getElementById('password-toggle');
+            const passwordToggleIcon = passwordToggle.getElementsByTagName('i')[0];
+
+            const quill = new Quill('#editor', {
+                placeholder: '글 내용',
+                theme: 'snow'
+            });
+
+            limitInput(postPassword, /[^\w !-\/:-@\[-`{-~]/g);
+            togglePassword(passwordToggle, passwordToggleIcon, postPassword);
+    else
+        script.
+            vex.dialog.alert({
+                unsafeMessage: '로그인되지 않았습니다\n로그인 페이지로 이동합니다',
+                callback: () => {
+                    location.href = 'https://accounts.bhsjp.kro.kr/sign-in'
+                }
+            });
