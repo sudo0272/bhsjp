@@ -182,7 +182,10 @@ communityRouter.get('/new-post', (req, res) => {
 });
 
 communityRouter.get('/fix-post', (req, res) => {
-    // TODO: check if user has signed in
+    res.render('community/fix-post', {
+        title: '새 글 수정',
+        isSignedIn: !!req.session.user
+    });
 });
 
 communityRouter.post('/create-post', (req, res) => {
