@@ -36,10 +36,10 @@ html
                         span.top-menus(data-is-opened='false') 커뮤니티
 
                         ul.sub-menus
-                            a(href=PROTOCOL + '://community.' + BASE_URL + '/view-posts'): li 글 보기
+                            a(href=PROTOCOL + '://community.' + BASE_URL + '/view-posts/0'): li 글 보기
 
                             if isSignedIn
-                                a(href=PROTOCOL + '://community.' + BASE_URL + '/write-post'): li 글 쓰기
+                                a(href=PROTOCOL + '://community.' + BASE_URL + '/new-post'): li 글 쓰기
 
                     li
                         i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right
