@@ -17,4 +17,8 @@ body {
   font-size: 30px;
 }
 
+form {
+  width: 100%;
+}
+
 /*# sourceMappingURL=styles.css.map */
