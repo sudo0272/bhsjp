@@ -15,6 +15,8 @@ block js
     script(src='/js/togglePassword.min.js')
     script(src='/js/limitInput.min.js')
     script(src='/js/fetchSignIn.min.js')
+    script(src='/js/enableWaitButton.min.js')
+    script(src='/js/disableWaitButton.min.js')
     script.
         const accountId = document.getElementById('account-id');
         const accountPassword = document.getElementById('account-password');
@@ -32,19 +34,9 @@ block js
         accountFormContainer.addEventListener('submit', e => {
             e.preventDefault();
 
-            accountSubmitText.classList.add('material-icons');
-            accountSubmitText.classList.add('animated');
-            accountSubmitText.classList.add('rotating');
-            accountSubmitText.innerText = 'refresh';
-            accountSubmit.disabled = true;
-
-            console.log('clicked');
+            enableWaitButton(accountSubmit, accountSubmitText);
 
             fetchSignIn(() => {
-                accountSubmitText.classList.remove('material-icons');
-                accountSubmitText.classList.remove('animated');
-                accountSubmitText.classList.remove('rotating');
-                accountSubmitText.innerText = '로그인';
-                accountSubmit.disabled = false;
+                disableWaitButton(accountSubmit, accountSubmitText, '로그인');
             });
         });
