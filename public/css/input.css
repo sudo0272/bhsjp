@@ -1,5 +1,9 @@
+.input-container {
+  border: 2px #141414 solid;
+}
+
 input {
-  background-color: #aaaaaa;
+  background-color: transparent;
   border: none;
   font-size: 24px;
   color: #141414;

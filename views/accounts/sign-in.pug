@@ -4,8 +4,8 @@ block css
     link(href='/css/animation/rotating.min.css' rel='stylesheet')
 
 block html
-    .d-flex.flex-column
-        div: input#account-id(type='text' placeholder='아이디' name='id' autocomplete='off' minlength='1' maxlength='10' title='1자리에서 10자리의 영문 혹은 숫자를 입력해주세요' required)
+    .d-flex.flex-column.input-container
+        input#account-id(type='text' placeholder='아이디' name='id' autocomplete='off' minlength='1' maxlength='10' title='1자리에서 10자리의 영문 혹은 숫자를 입력해주세요' required)
         div
             input#account-password(type='password' placeholder='비밀번호' name='password' autocomplete='off' minlength='4' title='최소 4글자의 영문 혹은 숫자, 특수문자를 입력해주세요' required)
             include ../includes/passwordToggleButton

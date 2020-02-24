@@ -1,0 +1,11 @@
+#editor-container {
+  width: 80%;
+  flex: 1 50%;
+  margin-top: 10px;
+}
+
+#editor {
+  height: 50vh;
+}
+
+/*# sourceMappingURL=quill-custom.css.map */
