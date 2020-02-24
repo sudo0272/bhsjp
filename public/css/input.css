@@ -13,20 +13,26 @@ input::placeholder {
   opacity: 0.3;
   color: #141414;
 }
-input[type=submit] {
+
+button.submit {
+  font-size: 24px;
+  color: #141414;
+  padding: 5px;
   background-color: #aaaaaa;
   border: none;
   width: 100%;
+  user-select: none;
 }
 
-.password-toggle {
+#password-toggle {
   background-color: transparent;
   color: #141414;
   font-size: 24px;
   border: none;
   margin-left: -40px;
+  user-select: none;
 }
-.password-toggle:focus {
+#password-toggle:focus {
   outline: none;
 }
 

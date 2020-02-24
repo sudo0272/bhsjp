@@ -16,17 +16,22 @@ input
     opacity: .3
     color: $font-color
 
-  &[type=submit]
-    background-color: $background-color
-    border: none
-    width: 100%
+button.submit
+  font-size: $font-size
+  color: $font-color
+  padding: 5px
+  background-color: $background-color
+  border: none
+  width: 100%
+  user-select: none
 
-.password-toggle
+#password-toggle
   background-color: transparent
   color: $font-color
   font-size: $font-size
   border: none
   margin-left: -40px
+  user-select: none
 
   &:focus
     outline: none

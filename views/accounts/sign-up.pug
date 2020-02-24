@@ -12,6 +12,8 @@ block js
         const passwordToggle = document.getElementById('password-toggle');
         const passwordToggleIcon = passwordToggle.getElementsByTagName('i')[0];
         const accountFormContainer = document.getElementById('account-form-container');
+        const accountSubmit = document.getElementById('account-submit');
+        const accountSubmitText = accountSubmit.getElementsByTagName('span')[0];
 
         limitInput(accountId, /[^\w]/g);
         limitInput(accountPassword, /[^\w !-\/:-@\[-`{-~]/g);
@@ -19,7 +21,21 @@ block js
         accountFormContainer.addEventListener('submit', e => {
             e.preventDefault();
 
-            fetchSignUp();
+            accountSubmitText.classList.add('material-icons');
+            accountSubmitText.classList.add('animated');
+            accountSubmitText.classList.add('rotating');
+            accountSubmitText.innerText = 'refresh';
+            accountSubmit.disabled = true;
+
+            console.log('clicked');
+
+            fetchSignUp(() => {
+                accountSubmitText.classList.remove('material-icons');
+                accountSubmitText.classList.remove('animated');
+                accountSubmitText.classList.remove('rotating');
+                accountSubmitText.innerText = '회원가입';
+                accountSubmit.disabled = false;
+            });
         });
 
 block html
@@ -30,4 +46,4 @@ block html
             include ../includes/passwordToggleButton
         div: input#account-nickname.account-form(type='text' placeholder='닉네임' name='nickname' maxlength='10' autocomplete='off' required)
         div: input#account-email.account-form(type='email' placeholder='이메일' name='email' maxlength='320' autocomplete='on' required)
-        div.text-center: input#account-submit-button(type='submit' value='회원가입')
+        div.text-center: button#account-submit.submit: span 회원가입

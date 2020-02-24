@@ -1,4 +1,4 @@
-const fetchSignUp = () => {
+const fetchSignUp = callback => {
     fetch('/create-account', {
         method: 'post',
         headers: {
@@ -41,4 +41,6 @@ const fetchSignUp = () => {
 
         alert('서버와 통신할 수 없습니다.\n다시 시도해주세요');
     });
+
+    callback();
 };
