@@ -8,7 +8,7 @@ function getPost(postId) {
                                 "FROM `posts`\n" +
                                 "LEFT JOIN `accounts`\n" +
                                 "ON `accounts`.`index`=`posts`.`author`\n" +
-                                "WHERE `posts`.`index`=40;", [
+                                "WHERE `posts`.`index`=?;", [
             postId
         ], (error, result, fields) => {
             if (error) {

@@ -8,6 +8,7 @@ const getPostCount = require('../controllers/getPostCount').getPostCount;
 const getPostTitle = require('../controllers/getPostTitle').getPostTitle;
 const getPostPassword = require('../controllers/getPostPassword').getPostPassword;
 const getPost = require('../controllers/getPost').getPost;
+const createPost = require('../controllers/createPost').createPost;
 const encryptSha512 = require('../models/encryptSha512').encryptSha512;
 
 const communityRouter = express.Router();
@@ -131,8 +132,6 @@ communityRouter.post('/get-post', (req, res) => {
     const postId = req.body.postId;
     const userPassword = req.body.password;
 
-    console.log('postId:', postId);
-
     getPostPassword(postId)
     .then(dbPassword => {
         if (dbPassword === null || dbPassword === encryptSha512(userPassword)) {
@@ -189,7 +188,28 @@ communityRouter.get('/fix-post', (req, res) => {
 });
 
 communityRouter.post('/create-post', (req, res) => {
-    // TODO: check if user has signed in and add post to db
+    const title = req.body.title;
+    const password = req.body.password;
+    const content = req.body.content;
+
+    if (req.session.user) {
+        if (title.length === 0) {
+            res.send('empty-title');
+        } else if (content.replace(/<.*?>/g, '').length === 0) {
+            res.send('empty-content');
+        } else {
+            createPost(req.session.user.id, title, (password.length > 0 ? password : null), content)
+            .then(() => {
+                res.send('ok');
+            }).catch(error => {
+                console.error(error);
+
+                res.send('error');
+            });
+        }
+    } else {
+        res.send('not-signed-in');
+    }
 });
 
 communityRouter.post('/update-post', (req, res) => {

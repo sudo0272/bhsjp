@@ -1,4 +1,20 @@
 extends ./write-post
 
-block submit
-    input#post-submit(type='submit' value='글 작성')
+block submitText
+    span 글 작성
+
+append js
+    script(src='/js/enableWaitButton.min.js')
+    script(src='/js/disableWaitButton.min.js')
+    script(src='/js/fetchNewPost.min.js')
+
+    script.
+        postContainer.addEventListener('submit', e => {
+            e.preventDefault();
+
+            enableWaitButton(postSubmit, postSubmitText);
+
+            fetchNewPost(() => {
+                disableWaitButton(postSubmit, postSubmitText, '글 작성');
+            });
+        });

@@ -6,9 +6,9 @@ block css
 
 block html
     if isSignedIn
-        form.d-flex.flex-column.align-items-center
+        form#post-container.d-flex.flex-column.align-items-center
             .d-flex.flex-column.input-container
-                input#post-id(type='text' placeholder='제목' required)
+                input#post-title(type='text' placeholder='제목' required)
 
                 div
                     input#post-password(type='password' placeholder='비밀번호')
@@ -17,7 +17,7 @@ block html
             div#editor-container
                 #editor
 
-            block submit
+            div.text-center: button#post-submit.submit: block submitText
 
 block js
     script(src='https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js')
@@ -26,9 +26,13 @@ block js
 
     if isSignedIn
         script.
+            const postContainer = document.getElementById('post-container');
+            const postTitle = document.getElementById('post-title');
             const postPassword = document.getElementById('post-password');
             const passwordToggle = document.getElementById('password-toggle');
             const passwordToggleIcon = passwordToggle.getElementsByTagName('i')[0];
+            const postSubmit = document.getElementById('post-submit');
+            const postSubmitText = postSubmit.getElementsByTagName('span')[0];
 
             const quill = new Quill('#editor', {
                 placeholder: '글 내용',
