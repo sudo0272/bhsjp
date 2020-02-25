@@ -39,7 +39,10 @@ html
                             a(href=PROTOCOL + '://community.' + BASE_URL + '/view-posts/0'): li 글 보기
 
                             if isSignedIn
-                                a(href=PROTOCOL + '://community.' + BASE_URL + '/new-post'): li 글 쓰기
+                                a(href=PROTOCOL + '://community.' + BASE_URL + '/new-post'): li 글 작성
+
+                            if owner !== undefined && owner === true
+                                a(href=PROTOCOL + '://community.' + BASE_URL + '/fix-post/' + postId): li 글 수정
 
                     li
                         i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right

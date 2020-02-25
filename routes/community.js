@@ -10,6 +10,7 @@ const getPostPassword = require('../controllers/getPostPassword').getPostPasswor
 const getPost = require('../controllers/getPost').getPost;
 const createPost = require('../controllers/createPost').createPost;
 const encryptSha512 = require('../models/encryptSha512').encryptSha512;
+const isUserPostOwner = require('../controllers/isUserPostOwner').isUserPostOwner;
 
 const communityRouter = express.Router();
 
@@ -102,11 +103,23 @@ communityRouter.get('/read-post/:postId', (req, res) => {
     if (postId.match(/^\d+$/)) {
         getPostTitle(postId)
         .then(title => {
-            res.render('community/read-post', {
-                title: title,
-                isSignedIn: req.session.user,
-                postId: postId
-            });
+            if (req.session.user) {
+                isUserPostOwner(req.session.user.id, postId)
+                .then(owner => {
+                    res.render('community/read-post', {
+                        title: title,
+                        isSignedIn: req.session.user,
+                        postId: postId,
+                        owner: owner
+                    });
+                });
+            } else {
+                res.render('community/read-post', {
+                    title: title,
+                    isSignedIn: req.session.user,
+                    postId: postId
+                });
+            }
         }, reason => {
             res.render('errors/404', {
                 'title': '404 Not Found',
