@@ -14,7 +14,7 @@ const fetchPost = (postId, password) => {
         switch (obj.result) {
             case 'right':
                 postNickname.innerText = obj.data.nickname;
-                postDate.innerText = obj.data.date;
+                postDate.innerText = obj.data.date.getFullYear() + '년 ' + obj.data.date.getMonth() + '월 ' + obj.data.date.getDay() + '일 ' + obj.data.date.getHours() + '시 ' + ('0' + date.getMinutes()).slice(-2) + '분';
                 postContent.innerHTML = obj.data.content;
 
                 break;

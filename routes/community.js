@@ -169,13 +169,11 @@ communityRouter.post('/get-post', (req, res) => {
     .then(dbPassword => {
         if (dbPassword === null || dbPassword === encryptSha512(userPassword)) {
             getPost(postId).then(result => {
-                const date = result[0].date;
-
                 res.send({
                     result: 'right',
                     data: {
                         nickname: decryptAes256(result[0].nickname),
-                        date: date.getFullYear() + '년 ' + date.getMonth() + '월 ' + date.getDay() + '일 ' + date.getHours() + '시 ' + ('0' + date.getMinutes()).slice(-2) + '분',
+                        date: result[0].date,
                         content: result[0].content
                     }
                 });
@@ -215,13 +213,6 @@ communityRouter.get('/new-post', (req, res) => {
     });
 });
 
-communityRouter.get('/fix-post', (req, res) => {
-    res.render('community/fix-post', {
-        title: '새 글 수정',
-        isSignedIn: !!req.session.user
-    });
-});
-
 communityRouter.post('/create-post', (req, res) => {
     const title = req.body.title;
     const password = req.body.password;
@@ -245,6 +236,13 @@ communityRouter.post('/create-post', (req, res) => {
     } else {
         res.send('not-signed-in');
     }
+});
+
+communityRouter.get('/fix-post/:postId', (req, res) => {
+    res.render('community/fix-post', {
+        title: '새 글 수정',
+        isSignedIn: !!req.session.user
+    });
 });
 
 communityRouter.post('/update-post', (req, res) => {
