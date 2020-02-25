@@ -1,12 +1,15 @@
 extends ../layout
 
+block css
+    link(href='/css/posts.min.css' rel='stylesheet')
+
 block html
-    .d-flex.flex-row
-        div
+    #post-information.d-flex.flex-row.justify-content-around
+        .d-flex.flex-row
             i.material-icons account_box
             span#post-nickname
 
-        div
+        .d-flex.flex-row
             i.material-icons access_time
             span#post-date
 

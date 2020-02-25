@@ -11,6 +11,7 @@ const getPost = require('../controllers/getPost').getPost;
 const createPost = require('../controllers/createPost').createPost;
 const encryptSha512 = require('../models/encryptSha512').encryptSha512;
 const isUserPostOwner = require('../controllers/isUserPostOwner').isUserPostOwner;
+const decryptAes256 = require('../models/decryptAes256').decryptAes256;
 
 const communityRouter = express.Router();
 
@@ -168,11 +169,13 @@ communityRouter.post('/get-post', (req, res) => {
     .then(dbPassword => {
         if (dbPassword === null || dbPassword === encryptSha512(userPassword)) {
             getPost(postId).then(result => {
+                const date = result[0].date;
+
                 res.send({
                     result: 'right',
                     data: {
-                        nickname: result[0].nickname,
-                        date: result[0].date,
+                        nickname: decryptAes256(result[0].nickname),
+                        date: date.getFullYear() + '년 ' + date.getMonth() + '월 ' + date.getDay() + '일 ' + date.getHours() + '시 ' + ('0' + date.getMinutes()).slice(-2) + '분',
                         content: result[0].content
                     }
                 });
