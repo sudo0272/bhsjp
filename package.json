@@ -30,6 +30,7 @@
     "js-sha512": "^0.8.0",
     "js-string-escape": "^1.0.1",
     "mysql": "^2.18.1",
+    "node-fetch": "^2.6.0",
     "parse-domain": "^2.3.4",
     "pug": "^2.0.4",
     "redis": "^3.0.2",

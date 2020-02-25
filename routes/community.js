@@ -12,6 +12,7 @@ const createPost = require('../controllers/createPost').createPost;
 const encryptSha512 = require('../models/encryptSha512').encryptSha512;
 const isUserPostOwner = require('../controllers/isUserPostOwner').isUserPostOwner;
 const decryptAes256 = require('../models/decryptAes256').decryptAes256;
+const fetch = require('node-fetch');
 
 const communityRouter = express.Router();
 
@@ -185,7 +186,7 @@ communityRouter.post('/get-post', (req, res) => {
                 console.error(error);
 
                 res.send({
-                    result: 'no-post'
+                    result: 'error'
                 });
             });
         } else {
@@ -201,7 +202,7 @@ communityRouter.post('/get-post', (req, res) => {
         console.error(error);
 
         res.send({
-            result: 'no-post'
+            result: 'error'
         });
     });
 });
@@ -239,6 +240,17 @@ communityRouter.post('/create-post', (req, res) => {
 });
 
 communityRouter.get('/fix-post/:postId', (req, res) => {
+    fetch('/get-post', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            postId: postId,
+            password: password
+        })
+    });
+
     res.render('community/fix-post', {
         title: '새 글 수정',
         isSignedIn: !!req.session.user

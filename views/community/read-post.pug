@@ -28,7 +28,45 @@ block js
         const postDate = document.getElementById('post-date');
         const postContent = document.getElementById('post-content');
 
-        fetchPost(#{postId}, null);
+        fetchPost(#{postId}, null,
+            data => {
+                postNickname.innerText = data.nickname;
+                postDate.innerText = data.date.getFullYear() + '년 ' + data.date.getMonth() + '월 ' + data.date.getDay() + '일 ' + data.date.getHours() + '시 ' + ('0' + date.getMinutes()).slice(-2) + '분';
+                postContent.innerHTML = data.content;
+            }, () => {
+                vex.dialog.open({
+                    message: '비밀번호를 입력해주세요',
+                    input: `
+                        <input name="password" type="password">
+                    `,
+                    callback: data => {
+                        fetchPost(postId, data.password);
+                    }
+                });
+            }, () => {
+                vex.dialog.alert({
+                        unsafeMessage: '존재하지 않는 글입니다\n전 페이지로 이동합니다',
+                        callback: () => {
+                        history.go(-1);
+                    }
+                });
+            }, () => {
+                vex.dialog.alert({
+                    unsafeMessage: '서버 에러가 발생했습니다',
+                    callback: () => {
+                        vex.dialog.open({
+                            message: '비밀번호를 입력해주세요',
+                            input: `
+                                <input name="password" type="password">
+                            `,
+                            callback: (data) => {
+                                fetchPost(postId, data.password);
+                            }
+                        });
+                    }
+                });
+            }
+        );
 
     // comment
     if isSignedIn
