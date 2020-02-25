@@ -12,9 +12,19 @@ block html
                 =i.title
     .d-flex.flex-row
         if postListCount > 0
-            a(href='https://community.bhsjp.kro.kr/view-posts/' + (postListCount - 1))
+            a.move-post(href='https://community.bhsjp.kro.kr/view-posts/' + (postListCount - 1))
                 i.material-icons keyboard_arrow_left
+        else
+            a.move-post.no-target-page: i.material-icons keyboard_arrow_left
+
+        - maxPages = Math.round(postCount / 20);
+        - maxSize = Math.floor(Math.log10(maxPages) + 1);
+
+        input#move-page.text-center(type='number' min='0' max=maxPages size=maxWidth value=postListCount)
+        button#move-custom-page(type='button'): i.material-icons autorenew
 
         if (postListCount + 1) * 20 + 1 <= postCount
-            a(href='https://community.bhsjp.kro.kr/view-posts/' + (postListCount + 1))
+            a.move-post(href='https://community.bhsjp.kro.kr/view-posts/' + (postListCount + 1))
                 i.material-icons keyboard_arrow_right
+        else
+            a.move-post.no-target-page: i.material-icons keyboard_arrow_right

@@ -19,4 +19,35 @@
   color: #dc0007;
 }
 
+.move-post {
+  color: #141414;
+  align-self: center;
+}
+.move-post:hover {
+  text-decoration: none;
+  color: #141414;
+}
+.move-post.no-target-page {
+  color: #4f4f4f;
+}
+.move-post.no-target-page:hover {
+  color: #4f4f4f;
+}
+
+#move-page {
+  font-size: 1rem;
+}
+#move-page::-webkit-inner-spin-button, #move-page::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+#move-custom-page {
+  background-color: transparent;
+  border: none;
+  color: #141414;
+}
+#move-custom-page > i {
+  font-size: 1rem;
+}
+
 /*# sourceMappingURL=posts.css.map */
