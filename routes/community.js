@@ -97,6 +97,25 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
     }
 });
 
+communityRouter.post('/do-post-list-exist', (req, res) => {
+    const postList = req.body.postList;
+
+    if (postList.match(/^\d+$/)) {
+        getPostList(postList)
+            .then(() => {
+                res.send('ok');
+            }, () => {
+                res.send('no-list');
+            }).catch(error => {
+                console.error(error);
+
+                res.send('error');
+            })
+    } else {
+        res.send('number-format-not-match');
+    }
+});
+
 communityRouter.get('/read-post/:postId', (req, res) => {
     const postId = req.params.postId;
 

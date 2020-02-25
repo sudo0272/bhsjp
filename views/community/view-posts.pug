@@ -28,3 +28,14 @@ block html
                 i.material-icons keyboard_arrow_right
         else
             a.move-post.no-target-page: i.material-icons keyboard_arrow_right
+
+block js
+    script(src='/js/goCustomPostList.min.js')
+
+    script.
+        const movePage = document.getElementById('move-page');
+        const moveCustomPage = document.getElementById('move-custom-page');
+
+        moveCustomPage.addEventListener('click', () => {
+            goCustomPostList(movePage.value);
+        });
