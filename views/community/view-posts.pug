@@ -1,9 +1,12 @@
 extends ../layout
 
+block css
+    link(href='/css/posts.min.css' rel='stylesheet')
+
 block html
     each i in postItems
         div
-            a(href='https://community.bhsjp.kro.kr/read-post/' + i.index)
+            a.post-items(href='https://community.bhsjp.kro.kr/read-post/' + i.index)
                 if i.password !== null
                     i.material-icons lock
                 =i.title

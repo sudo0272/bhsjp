@@ -1,0 +1,22 @@
+.post-items {
+  font-size: 25px;
+  color: #444444;
+}
+.post-items > i {
+  color: #dc3545;
+}
+.post-items:visited {
+  color: #606060;
+}
+.post-items:visited > i {
+  color: #dc7383;
+}
+.post-items:hover {
+  text-decoration: none;
+  color: #222222;
+}
+.post-items:hover > i {
+  color: #dc0007;
+}
+
+/*# sourceMappingURL=posts.css.map */
