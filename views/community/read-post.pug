@@ -31,7 +31,14 @@ block js
         fetchPost(#{postId}, null,
             data => {
                 postNickname.innerText = data.nickname;
-                postDate.innerText = data.date.getFullYear() + '년 ' + data.date.getMonth() + '월 ' + data.date.getDay() + '일 ' + data.date.getHours() + '시 ' + ('0' + date.getMinutes()).slice(-2) + '분';
+                console.log(typeof (data.date));
+                postDate.innerText = data.date
+                                        .replace('-', '년 ')
+                                        .replace('-', '월 ')
+                                        .replace('T', '일 ')
+                                        .replace(':', '시 ')
+                                        .replace(':', '분')
+                                        .substr(0, 21)
                 postContent.innerHTML = data.content;
             }, () => {
                 vex.dialog.open({
