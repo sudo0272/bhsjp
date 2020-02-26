@@ -2,6 +2,7 @@ extends ../layout
 
 block css
     link(href='/css/posts.min.css' rel='stylesheet')
+    link(href='https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.min.css' rel='stylesheet')
 
 block html
     #post-information.d-flex.flex-row.justify-content-around
@@ -13,12 +14,16 @@ block html
             i.material-icons access_time
             span#post-date
 
+    .separating-line
+
     #post-content
+
+    .separating-line
 
     // comment
     if isSignedIn
-        #quill-toolbar
-        #quill-editor
+        #comments
+            #editor
 
 block js
     script(src='/js/fetchPost.min.js')
@@ -77,9 +82,9 @@ block js
 
     // comment
     if isSignedIn
+        script(src='https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js')
         script.
-            let quill = new Quill('#quill-editor', {
-                modules: {
-                    toolbar: '#quill-toolbar'
-                }
+            const quill = new Quill('#editor', {
+                placeholder: '글 내용',
+                theme: 'snow'
             });

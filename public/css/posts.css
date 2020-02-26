@@ -54,4 +54,10 @@
   width: 50%;
 }
 
+.separating-line {
+  width: 50%;
+  border-bottom: 2px dashed #646464;
+  margin: 10px 0;
+}
+
 /*# sourceMappingURL=posts.css.map */
