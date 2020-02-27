@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-const jsStringEscape = require('js-string-escape');
+const escapeHtml = require('escape-html');
 const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMysqlConnectionData;
 const connection = mysql.createConnection(getMysqlConnectionData());
 const encryptAes256 = require('../models/encryptAes256').encryptAes256;

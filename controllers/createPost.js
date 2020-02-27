@@ -1,9 +1,10 @@
 const mysql = require('mysql');
-const jsStringEscape = require('js-string-escape');
+const escapeHtml = require('escape-html');
 const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMysqlConnectionData;
 const connection = mysql.createConnection(getMysqlConnectionData());
 const encryptAes256 = require('../models/encryptAes256').encryptAes256;
 const encryptSha512 = require('../models/encryptSha512').encryptSha512;
+const filterHtml = require('../lib/filterHtml').filterHtml;
 
 function createPost(userId, title, password, content) {
     console.log(userId, title, password, content);
@@ -15,7 +16,10 @@ function createPost(userId, title, password, content) {
                             "            FROM `accounts`\n" +
                             "            WHERE `id`=?\n" +
                             "    ), ?, ?, ?, NOW());", [
-            encryptAes256(userId), title, content, password === null ? null : encryptSha512(password)
+            encryptAes256(userId),
+            escapeHtml(title),
+            filterHtml(content),
+            password === null ? null : encryptSha512(password)
         ], (error, result, fields) => {
             if (error) {
                 throw error;
