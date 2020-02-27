@@ -7,7 +7,7 @@ const expressSession = require('express-session');
 const cors = require('cors');
 const RedisStore = require('connect-redis')(expressSession);
 const redisClient = require('../models/getRedisClient').getRedisClient();
-const decryptAes256 = require('../models/decryptAes256').decryptAes256;
+const Aes256 = require('../lib/Aes256');
 const corsWhiteList = [
     'https://bhsjp.kro.kr',
     'https://introduce.bhsjp.kro.kr',
@@ -123,6 +123,7 @@ accountsRouter.post('/create-account', (req, res) => {
 accountsRouter.post('/check-account', (req, res) => {
     const id = req.body.id;
     const password = req.body.password;
+    const aes256 = new Aes256();
 
     if (id === undefined) {
         res.send('no-id');
@@ -143,9 +144,9 @@ accountsRouter.post('/check-account', (req, res) => {
                 res.send('already-signed-in');
             } else {
                 req.session.user = {
-                    id: decryptAes256(accountData.id),
-                    nickname: decryptAes256(accountData.nickname),
-                    email: decryptAes256(accountData.email)
+                    id: aes256.decrypt(accountData.id),
+                    nickname: aes256.decrypt(accountData.nickname),
+                    email: aes256.decrypt(accountData.email)
                 };
 
                 console.log(req.session.user);

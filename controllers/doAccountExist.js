@@ -3,12 +3,14 @@ const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMy
 const connection = mysql.createConnection(getMysqlConnectionData());
 const escapeHtml = require('escape-html');
 const encryptSha512 = require('../models/encryptSha512').encryptSha512;
-const encryptAes256 = require('../models/encryptAes256').encryptAes256;
+const Aes256 = require('../lib/Aes256');
 
 function doAccountExist(id, password) {
+    const aes256 = new Aes256();
+
     return new Promise((resolve, reject) => {
         connection.query('SELECT * FROM accounts WHERE `id`=? AND `password`=?', [
-            encryptAes256(escapeHtml(id)),
+            aes256.encrypt(escapeHtml(id)),
             encryptSha512(password)
         ], (error, results, fields) => {
             if (error) {

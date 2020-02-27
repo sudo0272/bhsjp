@@ -2,9 +2,11 @@ const mysql = require('mysql');
 const escapeHtml = require('escape-html');
 const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMysqlConnectionData;
 const connection = mysql.createConnection(getMysqlConnectionData());
-const encryptAes256 = require('../models/encryptAes256').encryptAes256;
+const Aes256 = require('../lib/Aes256');
 
 function isUserPostOwner(userId, postId) {
+    const aes256 = new Aes256();
+
     return new Promise(resolve => {
         connection.query("SELECT COUNT(1) count\n" +
                             "    FROM `posts`\n" +
@@ -13,7 +15,7 @@ function isUserPostOwner(userId, postId) {
                             "            FROM `accounts`\n" +
                             "            WHERE `id`=?\n" +
                             "    ) AND `index`=?;", [
-            encryptAes256(userId),
+            aes256.encrypt(userId),
             postId
         ], (error, result, fields) => {
             if (error) {

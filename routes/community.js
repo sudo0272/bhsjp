@@ -11,7 +11,7 @@ const getPost = require('../controllers/getPost').getPost;
 const createPost = require('../controllers/createPost').createPost;
 const encryptSha512 = require('../models/encryptSha512').encryptSha512;
 const isUserPostOwner = require('../controllers/isUserPostOwner').isUserPostOwner;
-const decryptAes256 = require('../models/decryptAes256').decryptAes256;
+const Aes256 = require('../lib/Aes256');
 const fetch = require('node-fetch');
 
 const communityRouter = express.Router();
@@ -163,6 +163,7 @@ communityRouter.get('/read-post/:postId', (req, res) => {
 });
 
 communityRouter.post('/get-post', (req, res) => {
+    const aes256 = new Aes256();
     const postId = req.body.postId;
     const userPassword = req.body.password;
 
@@ -173,7 +174,7 @@ communityRouter.post('/get-post', (req, res) => {
                 res.send({
                     result: 'right',
                     data: {
-                        nickname: decryptAes256(result[0].nickname),
+                        nickname: aes256.decrypt(result[0].nickname),
                         date: result[0].date,
                         content: result[0].content
                     }

@@ -2,12 +2,14 @@ const mysql = require('mysql');
 const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMysqlConnectionData;
 const connection = mysql.createConnection(getMysqlConnectionData());
 const escapeHtml = require('escape-html');
-const encryptAes256 = require('../models/encryptAes256').encryptAes256;
+const Aes256 = require('../lib/Aes256');
 
 function doIdExist(id) {
+    const aes256 = new Aes256();
+
     return new Promise((resolve, reject) => {
         connection.query('SELECT COUNT(1) FROM accounts WHERE `id`=?', [
-            encryptAes256(escapeHtml(id))
+            aes256.encrypt(escapeHtml(id))
         ], (error, results, fields) => {
             if (error) {
                 throw error;
