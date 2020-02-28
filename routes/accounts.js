@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const doIdExist = require('../controllers/doIdExist').doIdExist;
-const doAccountExist = require('../controllers/doAccountExist').doAccountExist;
+const CheckAccount = require('../controllers/Account/CheckAccount');
 const CreateAccount = require('../controllers/Account/CreateAccount');
 const expressSession = require('express-session');
 const cors = require('cors');
@@ -105,22 +104,25 @@ accountsRouter.post('/create-account', (req, res) => {
     } else if (email.match(/^[^@]{1,64}@[^@]{1,255}$/) === null) {
         res.send('email-template-not-match');
     } else {
-        doIdExist(id)
-        .then(() => {
-            res.send('id-already-exists');
-        }, () => {
-            const createAccount = new CreateAccount(id, password, nickname, email);
+        const checkAccount = new CheckAccount(id);
 
-            createAccount.create()
-                .then(() => {
-                    res.send('ok');
-                }).catch(error => {
-                    console.error(error);
+        checkAccount(id)
+            .then(() => {
+                res.send('id-already-exists');
+            }, () => {
+                const createAccount = new CreateAccount(id, password, nickname, email);
 
-                    res.send('error');
-                }
-            );
-        })
+                createAccount.create()
+                    .then(() => {
+                        res.send('ok');
+                    }).catch(error => {
+                        console.error(error);
+
+                        res.send('error');
+                    }
+                );
+            }
+        );
     }
 });
 
@@ -141,30 +143,33 @@ accountsRouter.post('/check-account', (req, res) => {
     } else if (password.length < 4) {
         res.send('password-length-short');
     } else {
-        doAccountExist(id, password)
-        .then(accountData => {
-            if (req.session.user) {
-                res.send('already-signed-in');
-            } else {
-                req.session.user = {
-                    id: new Aes256(accountData.id, 'encrypted').getPlain(),
-                    nickname: new Aes256(accountData.nickname, 'encrypted').getPlain(),
-                    email: new Aes256(accountData.email, 'encrypted').getPlain()
-                };
+        const checkAccount = new CheckAccount(id, password);
 
-                console.log(req.session.user);
+        checkAccount.account()
+            .then(accountData => {
+                if (req.session.user) {
+                    res.send('already-signed-in');
+                } else {
+                    req.session.user = {
+                        id: new Aes256(accountData.id, 'encrypted').getPlain(),
+                        nickname: new Aes256(accountData.nickname, 'encrypted').getPlain(),
+                        email: new Aes256(accountData.email, 'encrypted').getPlain()
+                    };
 
-                res.send('ok');
+                    console.log(req.session.user);
+
+                    res.send('ok');
+                }
+            }, () => {
+                setTimeout(() => {
+                    res.send('wrong');
+                }, 1000);
+            }).catch(error => {
+                console.error(error);
+
+                res.send('error');
             }
-        }, () => {
-            setTimeout(() => {
-                res.send('wrong');
-            }, 1000);
-        }).catch(error => {
-            console.error(error);
-
-            res.send('error');
-        });
+        );
     }
 });
 
