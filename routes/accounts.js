@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const doIdExist = require('../controllers/doIdExist').doIdExist;
 const doAccountExist = require('../controllers/doAccountExist').doAccountExist;
-const createAccount = require('../controllers/createAccount').createAccount;
+const CreateAccount = require('../controllers/Account/CreateAccount');
 const expressSession = require('express-session');
 const cors = require('cors');
 const RedisStore = require('connect-redis')(expressSession);
@@ -109,14 +109,17 @@ accountsRouter.post('/create-account', (req, res) => {
         .then(() => {
             res.send('id-already-exists');
         }, () => {
-            createAccount(id, password, nickname, email)
-            .then(() => {
-                res.send('ok');
-            }).catch(error => {
-                console.error(error);
+            const createAccount = new CreateAccount(id, password, nickname, email);
 
-                res.send('error');
-            });
+            createAccount.create()
+                .then(() => {
+                    res.send('ok');
+                }).catch(error => {
+                    console.error(error);
+
+                    res.send('error');
+                }
+            );
         })
     }
 });
