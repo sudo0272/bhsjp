@@ -3,7 +3,7 @@ const escapeHtml = require('escape-html');
 const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMysqlConnectionData;
 const connection = mysql.createConnection(getMysqlConnectionData());
 const Aes256 = require('../lib/Aes256');
-const encryptSha512 = require('../models/encryptSha512').encryptSha512;
+const Sha512 = require('../lib/Sha512');
 const filterHtml = require('../lib/filterHtml').filterHtml;
 
 function createPost(userId, title, password, content) {
@@ -18,7 +18,7 @@ function createPost(userId, title, password, content) {
             new Aes256(userId, 'plain').getEncrypted(),
             escapeHtml(title),
             filterHtml(content),
-            password === null ? null : encryptSha512(password)
+            password === null ? null : new Sha512(password).getEncrypted()
         ], (error, result, fields) => {
             if (error) {
                 throw error;

@@ -9,7 +9,7 @@ const getPostTitle = require('../controllers/getPostTitle').getPostTitle;
 const getPostPassword = require('../controllers/getPostPassword').getPostPassword;
 const getPost = require('../controllers/getPost').getPost;
 const createPost = require('../controllers/createPost').createPost;
-const encryptSha512 = require('../models/encryptSha512').encryptSha512;
+const Sha512 = require('../lib/Sha512');
 const isUserPostOwner = require('../controllers/isUserPostOwner').isUserPostOwner;
 const Aes256 = require('../lib/Aes256');
 const fetch = require('node-fetch');
@@ -168,7 +168,7 @@ communityRouter.post('/get-post', (req, res) => {
 
     getPostPassword(postId)
     .then(dbPassword => {
-        if (dbPassword === null || dbPassword === encryptSha512(userPassword)) {
+        if (dbPassword === null || dbPassword === new Sha512(userPassword).getEncrypted()) {
             getPost(postId).then(result => {
                 res.send({
                     result: 'right',
