@@ -163,7 +163,6 @@ communityRouter.get('/read-post/:postId', (req, res) => {
 });
 
 communityRouter.post('/get-post', (req, res) => {
-    const aes256 = new Aes256();
     const postId = req.body.postId;
     const userPassword = req.body.password;
 
@@ -174,7 +173,7 @@ communityRouter.post('/get-post', (req, res) => {
                 res.send({
                     result: 'right',
                     data: {
-                        nickname: aes256.decrypt(result[0].nickname),
+                        nickname: new Aes256(result[0].nickname, 'encrypted').getPlain(),
                         date: result[0].date,
                         content: result[0].content
                     }

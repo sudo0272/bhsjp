@@ -7,8 +7,6 @@ const encryptSha512 = require('../models/encryptSha512').encryptSha512;
 const filterHtml = require('../lib/filterHtml').filterHtml;
 
 function createPost(userId, title, password, content) {
-    const aes256 = new Aes256();
-
     return new Promise(resolve => {
         connection.query("INSERT INTO `posts`\n" +
                             "    (`author`, `title`, `content`, `password`, `date`)\n" +
@@ -17,7 +15,7 @@ function createPost(userId, title, password, content) {
                             "            FROM `accounts`\n" +
                             "            WHERE `id`=?\n" +
                             "    ), ?, ?, ?, NOW());", [
-            aes256.encrypt(userId),
+            new Aes256(userId, 'plain').getEncrypted(),
             escapeHtml(title),
             filterHtml(content),
             password === null ? null : encryptSha512(password)

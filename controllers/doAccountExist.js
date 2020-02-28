@@ -6,11 +6,9 @@ const encryptSha512 = require('../models/encryptSha512').encryptSha512;
 const Aes256 = require('../lib/Aes256');
 
 function doAccountExist(id, password) {
-    const aes256 = new Aes256();
-
     return new Promise((resolve, reject) => {
         connection.query('SELECT * FROM accounts WHERE `id`=? AND `password`=?', [
-            aes256.encrypt(escapeHtml(id)),
+            new Aes256(escapeHtml(id), 'plain').getEncrypted(),
             encryptSha512(password)
         ], (error, results, fields) => {
             if (error) {
