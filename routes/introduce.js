@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const expressSession = require('express-session');
 const RedisStore = require('connect-redis')(expressSession);
-const redisClient = require('../models/getRedisClient').getRedisClient();
+const RedisData = require('../models/RedisData');
+const redisClient = new RedisData().getClient();
 
 const introduceRouter = express.Router();
 

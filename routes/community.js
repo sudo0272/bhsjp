@@ -4,12 +4,9 @@ const expressSession = require('express-session');
 const RedisStore = require('connect-redis')(expressSession);
 const RedisData = require('../models/RedisData');
 const redisClient = new RedisData().getClient();
-const getPostList = require('../controllers/getPostList').getPostList;
-const getPostCount = require('../controllers/getPostCount').getPostCount;
-const getPostTitle = require('../controllers/getPostTitle').getPostTitle;
-const getPostPassword = require('../controllers/getPostPassword').getPostPassword;
-const getPost = require('../controllers/getPost').getPost;
-const createPost = require('../controllers/createPost').createPost;
+const ReadPost = require('../controllers/Post/ReadPost');
+const CreatePost = require('../controllers/Post/CreatePost');
+const ReadPostList = require('../controllers/PostList/ReadPostList');
 const Sha512 = require('../lib/Sha512');
 const isUserPostOwner = require('../controllers/isUserPostOwner').isUserPostOwner;
 const Aes256 = require('../lib/Aes256');
@@ -50,20 +47,36 @@ communityRouter.get('/', (req, res) => {
 });
 
 communityRouter.get('/view-posts/:postListCount', (req, res) => {
+    const readPostList = new ReadPostList(req.params.postListCount);
+
     if (req.params.postListCount !== undefined) {
         if (req.params.postListCount.match(/^\d+$/)) {
             const postListCount = parseInt(req.params.postListCount);
 
-            getPostList(postListCount)
-            .then(postItems => {
-                getPostCount()
-                .then(postCount => {
-                    res.render('community/view-posts', {
-                        title: '글 보기',
-                        isSignedIn: !!req.session.user,
-                        postItems: postItems,
-                        postListCount: postListCount,
-                        postCount: postCount
+            readPostList.list()
+                .then(postItems => {
+                    readPostList.count()
+                        .then(postCount => {
+                            res.render('community/view-posts', {
+                                title: '글 보기',
+                                isSignedIn: !!req.session.user,
+                                postItems: postItems,
+                                postListCount: postListCount,
+                                postCount: postCount
+                            });
+                        }).catch(error => {
+                            console.error(error);
+
+                            res.render('errors/500', {
+                                title: '500 Internal Server Error',
+                                isSignedIn: !!req.session.user
+                            });
+                        }
+                    );
+                }, reason => {
+                    res.render('errors/404', {
+                        'title': '404 Not Found',
+                        'isSignedIn': req.session.user
                     });
                 }).catch(error => {
                     console.error(error);
@@ -72,20 +85,8 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
                         title: '500 Internal Server Error',
                         isSignedIn: !!req.session.user
                     });
-                });
-            }, reason => {
-                res.render('errors/404', {
-                    'title': '404 Not Found',
-                    'isSignedIn': req.session.user
-                });
-            }).catch(error => {
-                console.error(error);
-
-                res.render('errors/500', {
-                    title: '500 Internal Server Error',
-                    isSignedIn: !!req.session.user
-                });
-            });
+                }
+            );
         } else {
             res.render('errors/404', {
                 'title': '404 Not Found',
@@ -102,9 +103,10 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
 
 communityRouter.post('/do-post-list-exist', (req, res) => {
     const postList = req.body.postList;
+    const readPostList = new ReadPostList(postList);
 
     if (postList.match(/^\d+$/)) {
-        getPostList(postList)
+        readPostList.list()
             .then(() => {
                 res.send('ok');
             }, () => {
@@ -121,40 +123,42 @@ communityRouter.post('/do-post-list-exist', (req, res) => {
 
 communityRouter.get('/read-post/:postId', (req, res) => {
     const postId = req.params.postId;
+    const readPost = new ReadPost(postId);
 
     if (postId.match(/^\d+$/)) {
-        getPostTitle(postId)
-        .then(title => {
-            if (req.session.user) {
-                isUserPostOwner(req.session.user.id, postId)
-                .then(owner => {
+        readPost.title()
+            .then(title => {
+                if (req.session.user) {
+                    isUserPostOwner(req.session.user.id, postId)
+                    .then(owner => {
+                        res.render('community/read-post', {
+                            title: title,
+                            isSignedIn: req.session.user,
+                            postId: postId,
+                            owner: owner
+                        });
+                    });
+                } else {
                     res.render('community/read-post', {
                         title: title,
                         isSignedIn: req.session.user,
-                        postId: postId,
-                        owner: owner
+                        postId: postId
                     });
+                }
+            }, reason => {
+                res.render('errors/404', {
+                    'title': '404 Not Found',
+                    'isSignedIn': req.session.user
                 });
-            } else {
-                res.render('community/read-post', {
-                    title: title,
-                    isSignedIn: req.session.user,
-                    postId: postId
+            }).catch(error => {
+                console.error(error);
+
+                res.render('errors/500', {
+                    title: '500 Internal Server Error',
+                    isSignedIn: !!req.session.user
                 });
             }
-        }, reason => {
-            res.render('errors/404', {
-                'title': '404 Not Found',
-                'isSignedIn': req.session.user
-            });
-        }).catch(error => {
-            console.error(error);
-
-            res.render('errors/500', {
-                title: '500 Internal Server Error',
-                isSignedIn: !!req.session.user
-            });
-        });
+        );
     } else {
         res.render('errors/404', {
             'title': '404 Not Found',
@@ -166,46 +170,50 @@ communityRouter.get('/read-post/:postId', (req, res) => {
 communityRouter.post('/get-post', (req, res) => {
     const postId = req.body.postId;
     const userPassword = req.body.password;
+    const readPost = new ReadPost(postId);
 
-    getPostPassword(postId)
-    .then(dbPassword => {
-        if (dbPassword === null || dbPassword === new Sha512(userPassword).getEncrypted()) {
-            getPost(postId).then(result => {
-                res.send({
-                    result: 'right',
-                    data: {
-                        nickname: new Aes256(result[0].nickname, 'encrypted').getPlain(),
-                        date: result[0].date,
-                        content: result[0].content
+    readPost.title()
+        .then(dbPassword => {
+            if (dbPassword === null || dbPassword === new Sha512(userPassword).getEncrypted()) {
+                readPost.post()
+                    .then(result => {
+                        res.send({
+                            result: 'right',
+                            data: {
+                                nickname: new Aes256(result[0].nickname, 'encrypted').getPlain(),
+                                date: result[0].date,
+                                content: result[0].content
+                            }
+                        });
+                    }, reason => {
+                        res.send({
+                            result: 'no-post'
+                        });
+                    }).catch(error => {
+                        console.error(error);
+
+                        res.send({
+                            result: 'error'
+                        });
                     }
-                });
-            }, reason => {
+                );
+            } else {
                 res.send({
-                    result: 'no-post'
+                    result: 'wrong'
                 });
-            }).catch(error => {
-                console.error(error);
-
-                res.send({
-                    result: 'error'
-                });
-            });
-        } else {
+            }
+        }, reason => {
             res.send({
-                result: 'wrong'
+                result: 'no-post'
+            });
+        }).catch(error => {
+            console.error(error);
+
+            res.send({
+                result: 'error'
             });
         }
-    }, reason => {
-        res.send({
-            result: 'no-post'
-        });
-    }).catch(error => {
-        console.error(error);
-
-        res.send({
-            result: 'error'
-        });
-    });
+    );
 });
 
 communityRouter.get('/new-post', (req, res) => {
@@ -219,6 +227,7 @@ communityRouter.post('/create-post', (req, res) => {
     const title = req.body.title;
     const password = req.body.password;
     const content = req.body.content;
+    const createPost = new CreatePost(req.session.user.id, title, (password.length > 0 ? password : null), content);
 
     if (req.session.user) {
         if (title.length === 0) {
@@ -226,14 +235,15 @@ communityRouter.post('/create-post', (req, res) => {
         } else if (content.replace(/<.*?>/g, '').length === 0) {
             res.send('empty-content');
         } else {
-            createPost(req.session.user.id, title, (password.length > 0 ? password : null), content)
-            .then(() => {
-                res.send('ok');
-            }).catch(error => {
-                console.error(error);
+            createPost.post()
+                .then(() => {
+                    res.send('ok');
+                }).catch(error => {
+                    console.error(error);
 
-                res.send('error');
-            });
+                    res.send('error');
+                }
+            );
         }
     } else {
         res.send('not-signed-in');

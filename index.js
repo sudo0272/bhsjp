@@ -6,7 +6,8 @@ const path = require('path');
 const https = require('https');
 const expressSession = require('express-session');
 const RedisStore = require('connect-redis')(expressSession);
-const redisClient = require('./models/getRedisClient').getRedisClient();
+const RedisData = require('./models/RedisData');
+const redisClient = new RedisData().getClient();
 
 const routes = {
     introduce: require('./routes/introduce').router,
