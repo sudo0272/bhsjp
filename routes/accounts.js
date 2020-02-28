@@ -6,7 +6,8 @@ const createAccount = require('../controllers/createAccount').createAccount;
 const expressSession = require('express-session');
 const cors = require('cors');
 const RedisStore = require('connect-redis')(expressSession);
-const redisClient = require('../models/getRedisClient').getRedisClient();
+const RedisData = require('../models/RedisData');
+const redisClient = new RedisData().getClient();
 const Aes256 = require('../lib/Aes256');
 const corsWhiteList = [
     'https://bhsjp.kro.kr',

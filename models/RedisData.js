@@ -7,10 +7,12 @@ redisClient.on('error', err => {
     }
 });
 
-function getRedisClient() {
-    return redisClient;
-}
+module.exports = class RedisData {
+    constructor() {
+        this.client = redisClient;
+    }
 
-module.exports = {
-    getRedisClient: getRedisClient
+    getClient() {
+        return this.client;
+    }
 };
