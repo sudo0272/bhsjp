@@ -8,7 +8,7 @@ const ReadPost = require('../controllers/Post/ReadPost');
 const CreatePost = require('../controllers/Post/CreatePost');
 const ReadPostList = require('../controllers/PostList/ReadPostList');
 const Sha512 = require('../lib/Sha512');
-const isUserPostOwner = require('../controllers/isUserPostOwner').isUserPostOwner;
+const CheckPostOwner = require('../controllers/Post/CheckPostOwner');
 const Aes256 = require('../lib/Aes256');
 const fetch = require('node-fetch');
 
@@ -129,15 +129,18 @@ communityRouter.get('/read-post/:postId', (req, res) => {
         readPost.title()
             .then(title => {
                 if (req.session.user) {
-                    isUserPostOwner(req.session.user.id, postId)
-                    .then(owner => {
-                        res.render('community/read-post', {
-                            title: title,
-                            isSignedIn: req.session.user,
-                            postId: postId,
-                            owner: owner
-                        });
-                    });
+                    const checkPostOwner = new CheckPostOwner(postId, req.session.user.id);
+
+                    checkPostOwner.check()
+                        .then(owner => {
+                            res.render('community/read-post', {
+                                title: title,
+                                isSignedIn: req.session.user,
+                                postId: postId,
+                                owner: owner
+                            });
+                        }
+                    );
                 } else {
                     res.render('community/read-post', {
                         title: title,
@@ -251,6 +254,9 @@ communityRouter.post('/create-post', (req, res) => {
 });
 
 communityRouter.get('/fix-post/:postId', (req, res) => {
+    const postId = req.params.postId;
+
+
     fetch('/get-post', {
         method: 'post',
         headers: {
