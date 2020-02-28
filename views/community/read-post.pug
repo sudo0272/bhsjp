@@ -32,53 +32,9 @@ block js
         const postNickname = document.getElementById('post-nickname');
         const postDate = document.getElementById('post-date');
         const postContent = document.getElementById('post-content');
+        const postId = #{postId};
 
-        fetchPost(#{postId}, null,
-            data => {
-                postNickname.innerText = data.nickname;
-                console.log(typeof (data.date));
-                postDate.innerText = data.date
-                                        .replace('-', '년 ')
-                                        .replace('-', '월 ')
-                                        .replace('T', '일 ')
-                                        .replace(':', '시 ')
-                                        .replace(':', '분')
-                                        .substr(0, 21)
-                postContent.innerHTML = data.content;
-            }, () => {
-                vex.dialog.open({
-                    message: '비밀번호를 입력해주세요',
-                    input: `
-                        <input name="password" type="password">
-                    `,
-                    callback: data => {
-                        fetchPost(postId, data.password);
-                    }
-                });
-            }, () => {
-                vex.dialog.alert({
-                        unsafeMessage: '존재하지 않는 글입니다\n전 페이지로 이동합니다',
-                        callback: () => {
-                        history.go(-1);
-                    }
-                });
-            }, () => {
-                vex.dialog.alert({
-                    unsafeMessage: '서버 에러가 발생했습니다',
-                    callback: () => {
-                        vex.dialog.open({
-                            message: '비밀번호를 입력해주세요',
-                            input: `
-                                <input name="password" type="password">
-                            `,
-                            callback: (data) => {
-                                fetchPost(postId, data.password);
-                            }
-                        });
-                    }
-                });
-            }
-        );
+        fetchPost(postId, null);
 
     // comment
     if isSignedIn

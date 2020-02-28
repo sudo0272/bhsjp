@@ -172,7 +172,7 @@ communityRouter.post('/get-post', (req, res) => {
     const userPassword = req.body.password;
     const readPost = new ReadPost(postId);
 
-    readPost.title()
+    readPost.password()
         .then(dbPassword => {
             if (dbPassword === null || dbPassword === new Sha512(userPassword).getEncrypted()) {
                 readPost.post()
