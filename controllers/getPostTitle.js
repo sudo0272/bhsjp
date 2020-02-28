@@ -1,6 +1,6 @@
 const mysql = require('mysql');
-const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMysqlConnectionData;
-const connection = mysql.createConnection(getMysqlConnectionData());
+const MysqlData = require('../models/MysqlData');
+const connection = mysql.createConnection(new MysqlData().getConnection());
 
 function getPostTitle(index) {
     return new Promise((resolve, reject) => {

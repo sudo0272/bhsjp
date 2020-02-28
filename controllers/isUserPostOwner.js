@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 const escapeHtml = require('escape-html');
-const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMysqlConnectionData;
-const connection = mysql.createConnection(getMysqlConnectionData());
+const MysqlData = require('../models/MysqlData');
+const connection = mysql.createConnection(new MysqlData().getConnection());
 const Aes256 = require('../lib/Aes256');
 
 function isUserPostOwner(userId, postId) {

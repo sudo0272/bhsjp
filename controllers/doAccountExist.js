@@ -1,6 +1,6 @@
 const mysql = require('mysql');
-const getMysqlConnectionData = require('../models/getMysqlConnectionData').getMysqlConnectionData;
-const connection = mysql.createConnection(getMysqlConnectionData());
+const MysqlData = require('../models/MysqlData');
+const connection = mysql.createConnection(new MysqlData().getConnection());
 const escapeHtml = require('escape-html');
 const Sha512 = require('../lib/Sha512');
 const Aes256 = require('../lib/Aes256');
