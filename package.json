@@ -29,6 +29,7 @@
     "express-subdomain": "^1.0.5",
     "hex64": "^0.4.0",
     "js-sha512": "^0.8.0",
+    "morgan": "^1.9.1",
     "mysql": "^2.18.1",
     "node-fetch": "^2.6.0",
     "parse-domain": "^2.3.4",

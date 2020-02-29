@@ -4,6 +4,7 @@ const expressSession = require('express-session');
 const RedisStore = require('connect-redis')(expressSession);
 const RedisData = require('../models/RedisData');
 const redisClient = new RedisData().getClient();
+const morgan = require('morgan');
 
 const introduceRouter = express.Router();
 
@@ -31,6 +32,8 @@ introduceRouter.use(expressSession({
         maxAge: 1000 * 60 * 60 * 24
     }
 }));
+
+introduceRouter.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
 
 introduceRouter.get('/', (req, res) => {
     res.render('introduce/index', {

@@ -11,6 +11,7 @@ const Sha512 = require('../lib/Sha512');
 const CheckPostOwner = require('../controllers/Post/CheckPostOwner');
 const Aes256 = require('../lib/Aes256');
 const fetch = require('node-fetch');
+const morgan = require('morgan');
 
 const communityRouter = express.Router();
 
@@ -38,6 +39,8 @@ communityRouter.use(expressSession({
         maxAge: 1000 * 60 * 60 * 24
     }
 }));
+
+communityRouter.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
 
 communityRouter.get('/', (req, res) => {
     res.render('community/index', {

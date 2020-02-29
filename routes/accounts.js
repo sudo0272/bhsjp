@@ -7,6 +7,7 @@ const cors = require('cors');
 const RedisStore = require('connect-redis')(expressSession);
 const RedisData = require('../models/RedisData');
 const redisClient = new RedisData().getClient();
+const morgan = require('morgan');
 const Aes256 = require('../lib/Aes256');
 const corsWhiteList = [
     'https://bhsjp.kro.kr',
@@ -41,6 +42,8 @@ accountsRouter.use(expressSession({
         maxAge: 1000 * 60 * 60 * 24
     }
 }));
+
+accountsRouter.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
 
 accountsRouter.all('/*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', corsWhiteList);

@@ -8,6 +8,7 @@ const expressSession = require('express-session');
 const RedisStore = require('connect-redis')(expressSession);
 const RedisData = require('./models/RedisData');
 const redisClient = new RedisData().getClient();
+const morgan = require('morgan');
 
 const routes = {
     introduce: require('./routes/introduce').router,
@@ -59,13 +60,15 @@ app.use(expressSession({
     }
 }));
 
+app.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
+
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Credentials', true);
     res.header('Access-Control-Allow-Origin', req.headers.origin);
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
     res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
     next();
-})
+});
 
 app.get('/', (req, res) => {
     res.render('index', {
