@@ -109,7 +109,7 @@ accountsRouter.post('/create-account', (req, res) => {
     } else {
         const checkAccount = new CheckAccount(id);
 
-        checkAccount(id)
+        checkAccount.id()
             .then(() => {
                 res.send('id-already-exists');
             }, () => {
@@ -158,8 +158,6 @@ accountsRouter.post('/check-account', (req, res) => {
                         nickname: new Aes256(accountData.nickname, 'encrypted').getPlain(),
                         email: new Aes256(accountData.email, 'encrypted').getPlain()
                     };
-
-                    console.log(req.session.user);
 
                     res.send('ok');
                 }

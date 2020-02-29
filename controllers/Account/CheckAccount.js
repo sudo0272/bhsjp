@@ -3,10 +3,10 @@ const MysqlData = require('../../models/MysqlData');
 const connection = mysql.createConnection(new MysqlData().getConnection());
 const escapeHtml = require('escape-html');
 const Sha512 = require('../../lib/Sha512');
-const Aes256 = require('../../lib/Sha512');
+const Aes256 = require('../../lib/Aes256');
 
 module.exports = class CheckAccount {
-    constructor(userId, userPassword=null) {
+    constructor(userId, userPassword) {
         this.userId = userId;
         this.userPassword = userPassword;
     }
@@ -20,6 +20,8 @@ module.exports = class CheckAccount {
                 if (error) {
                     throw error;
                 }
+
+                console.log(results);
 
                 if (results.length > 0) {
                     resolve(results[0]);
