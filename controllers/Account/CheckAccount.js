@@ -21,8 +21,6 @@ module.exports = class CheckAccount {
                     throw error;
                 }
 
-                console.log(results);
-
                 if (results.length > 0) {
                     resolve(results[0]);
                 } else {

@@ -164,7 +164,7 @@ accountsRouter.post('/check-account', (req, res) => {
             }, () => {
                 setTimeout(() => {
                     res.send('wrong');
-                }, 1000);
+                }, 3000);
             }).catch(error => {
                 console.error(error);
 
