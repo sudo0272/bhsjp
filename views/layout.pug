@@ -4,6 +4,9 @@ html
     head
         title #{title} | BHSJP
 
+        meta(name='msapplication-TileColor' content='#000000')
+        meta(name='theme-color' content='#000000')
+
         link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous')
         link(href='https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css' rel='stylesheet')
         link(href='/css/styles.min.css' rel='stylesheet')
@@ -14,6 +17,11 @@ html
         link(href='/css/highlightjs-themes/tomorrow-night.min.css' rel='stylesheet')
         link(href='/css/input.min.css' rel='stylesheet')
         link(href='/css/animation/rotating.min.css' rel='stylesheet')
+        link(rel='apple-touch-icon' sizes='180x180' href='/apple-touch-icon.png')
+        link(rel='icon' type='image/png' sizes='32x32' href='/favicon-32x32.png')
+        link(rel='icon' type='image/png' sizes='16x16' href='/favicon-16x16.png')
+        link(rel='manifest' href='/site.webmanifest')
+        link(rel='mask-icon' href='/safari-pinned-tab.svg' color='#000000')
         block css
 
     body
