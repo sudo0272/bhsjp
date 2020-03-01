@@ -258,23 +258,31 @@ communityRouter.post('/create-post', (req, res) => {
 
 communityRouter.get('/fix-post/:postId', (req, res) => {
     const postId = req.params.postId;
-    const checkPostOwner = new CheckPostOwner(postId, req.session.user.id);
 
-    checkPostOwner.check()
-        .then(owner => {
-            if (owner) {
-                res.render('community/fix-post', {
-                    title: '글 수정',
-                    isSignedIn: !!req.session.user
-                });
-            } else {
-                res.render('errors/403', {
-                    title: '403 Forbidden',
-                    isSignedIn: !!req.session.user
-                });
-            }
-        }
-    );
+    if (req.session.user) {
+        const checkPostOwner = new CheckPostOwner(postId, req.session.user.id);
+
+        checkPostOwner.check()
+            .then(owner => {
+                    if (owner) {
+                        res.render('community/fix-post', {
+                            title: '글 수정',
+                            isSignedIn: !!req.session.user
+                        });
+                    } else {
+                        res.render('errors/403', {
+                            title: '403 Forbidden',
+                            isSignedIn: !!req.session.user
+                        });
+                    }
+                }
+            );
+    } else {
+        res.render('errors/403', {
+            title: '403 Forbidden',
+            isSignedIn: !!req.session.user
+        });
+    }
 });
 
 communityRouter.post('/update-post', (req, res) => {
