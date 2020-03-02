@@ -6,6 +6,7 @@ const RedisData = require('../models/RedisData');
 const redisClient = new RedisData().getClient();
 const ReadPost = require('../controllers/Post/ReadPost');
 const CreatePost = require('../controllers/Post/CreatePost');
+const UpdatePost = require('../controllers/Post/UpdatePost');
 const ReadPostList = require('../controllers/PostList/ReadPostList');
 const Sha512 = require('../lib/Sha512');
 const CheckPostOwner = require('../controllers/Post/CheckPostOwner');
@@ -317,7 +318,36 @@ communityRouter.get('/fix-post/:postId', (req, res) => {
 });
 
 communityRouter.post('/update-post', (req, res) => {
-    // TODO: check if user has signed in, if user is the person who wrote the post and if the post exist
+    const title = req.body.title;
+    const password = req.body.password;
+    const content = req.body.content;
+    const postId = req.body.postId;
+    const updatePost = new UpdatePost(postId, req.session.user.id, title, (password.length > 0 ? password : null), content);
+
+    if (req.session.user) {
+        if (title.length === 0) {
+            res.send('empty-title');
+        } else if (content.replace(/<.*?>/g, '').length === 0) {
+            res.send('empty-content');
+        } else {
+            updatePost.post()
+                .then(() => {
+                    res.send('ok');
+                }, reason => {
+                    switch (reason) {
+                        case 'no-row': res.send('no-post'); break;
+                        case 'invalid-user': res.send('invalid-user'); break;
+                    }
+                }).catch(error => {
+                    console.error(error);
+
+                    res.send('error');
+                }
+            );
+        }
+    } else {
+        res.send('not-signed-in');
+    }
 });
 
 communityRouter.post('delete-post', (req, res) => {

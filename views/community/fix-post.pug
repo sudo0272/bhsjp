@@ -7,6 +7,7 @@ append js
     script(src='/js/enableWaitButton.min.js')
     script(src='/js/disableWaitButton.min.js')
     script(src='/js/fetchPostToFix.min.js')
+    script(src='/js/fetchUpdatePost.min.js')
 
     script.
         const postId = #{postId};
@@ -18,7 +19,7 @@ append js
 
             enableWaitButton(postSubmit, postSubmitText);
 
-            fetchFixPost(() => {
-                disableWaitButton(postSubmit, postSubmitText, '글수정');
+            fetchUpdatePost(() => {
+                disableWaitButton(postSubmit, postSubmitText, '글 수정');
             });
         });
