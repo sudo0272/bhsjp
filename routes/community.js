@@ -42,6 +42,10 @@ communityRouter.use(expressSession({
 
 communityRouter.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
 
+morgan.token('remote-user', (req, res) => {
+    return req.session ? req.session.user.id : '-';
+});
+
 communityRouter.get('/', (req, res) => {
     res.render('community/index', {
         title: '커뮤니티',
