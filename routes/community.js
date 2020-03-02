@@ -186,9 +186,10 @@ communityRouter.post('/get-post', (req, res) => {
                         res.send({
                             result: 'right',
                             data: {
-                                nickname: new Aes256(result[0].nickname, 'encrypted').getPlain(),
-                                date: result[0].date,
-                                content: result[0].content
+                                title: result.title,
+                                nickname: new Aes256(result.nickname, 'encrypted').getPlain(),
+                                date: result.date,
+                                content: result.content
                             }
                         });
                     }, reason => {
@@ -258,29 +259,55 @@ communityRouter.post('/create-post', (req, res) => {
 
 communityRouter.get('/fix-post/:postId', (req, res) => {
     const postId = req.params.postId;
+    const readPost = new ReadPost(postId);
 
-    if (req.session.user) {
-        const checkPostOwner = new CheckPostOwner(postId, req.session.user.id);
+    if (postId.match(/^\d+$/)) {
+        readPost.title()
+            .then(title => {
+                if (req.session.user) {
+                    const checkPostOwner = new CheckPostOwner(postId, req.session.user.id);
 
-        checkPostOwner.check()
-            .then(owner => {
-                    if (owner) {
-                        res.render('community/fix-post', {
-                            title: '글 수정',
-                            isSignedIn: !!req.session.user
-                        });
-                    } else {
-                        res.render('errors/403', {
-                            title: '403 Forbidden',
-                            isSignedIn: !!req.session.user
-                        });
-                    }
+                    checkPostOwner.check()
+                        .then(owner => {
+                            if (owner) {
+                                res.render('community/fix-post', {
+                                    title: '글 수정',
+                                    isSignedIn: req.session.user,
+                                    postId: postId,
+                                    owner: owner
+                                });
+                            } else {
+                                res.render('errors/403', {
+                                    title: '403 Forbidden',
+                                    isSignedIn: !!req.session.user
+                                });
+                            }
+                        }
+                    );
+                } else {
+                    res.render('errors/403', {
+                        title: '403 Forbidden',
+                        isSignedIn: !!req.session.user
+                    });
                 }
-            );
+            }, reason => {
+                res.render('errors/404', {
+                    'title': '404 Not Found',
+                    'isSignedIn': req.session.user
+                });
+            }).catch(error => {
+                console.error(error);
+
+                res.render('errors/500', {
+                    title: '500 Internal Server Error',
+                    isSignedIn: !!req.session.user
+                });
+            }
+        );
     } else {
-        res.render('errors/403', {
-            title: '403 Forbidden',
-            isSignedIn: !!req.session.user
+        res.render('errors/404', {
+            'title': '404 Not Found',
+            'isSignedIn': req.session.user
         });
     }
 });

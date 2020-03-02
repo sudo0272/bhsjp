@@ -10,7 +10,7 @@ module.exports = class ReadPost {
     post() {
         return new Promise((resolve, reject) => {
             connection.query(
-                "SELECT `accounts`.`nickname`, `posts`.`date`, `posts`.`content`\n" +
+                "SELECT `accounts`.`nickname`, `posts`.`title`, `posts`.`content`, `posts`.`date`\n" +
                 "FROM `posts`\n" +
                 "LEFT JOIN `accounts`\n" +
                 "ON `accounts`.`index`=`posts`.`author`\n" +
@@ -22,7 +22,7 @@ module.exports = class ReadPost {
                     }
 
                     if (result.length > 0) {
-                        resolve(result);
+                        resolve(result[0]);
                     } else {
                         reject('no-row');
                     }

@@ -2,3 +2,23 @@ extends ./write-post
 
 block submitText
     span 글 수정
+
+append js
+    script(src='/js/enableWaitButton.min.js')
+    script(src='/js/disableWaitButton.min.js')
+    script(src='/js/fetchPostToFix.min.js')
+
+    script.
+        const postId = #{postId};
+
+        fetchPostToFix(postId, null);
+
+        postContainer.addEventListener('submit', e => {
+            e.preventDefault();
+
+            enableWaitButton(postSubmit, postSubmitText);
+
+            fetchFixPost(() => {
+                disableWaitButton(postSubmit, postSubmitText, '글수정');
+            });
+        });
