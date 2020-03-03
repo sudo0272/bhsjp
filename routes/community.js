@@ -320,10 +320,11 @@ communityRouter.get('/fix-post/:postId', (req, res) => {
 
 communityRouter.post('/update-post', (req, res) => {
     const title = req.body.title;
+    const originalPassword = req.body.originalPassword;
     const password = req.body.password;
     const content = req.body.content;
     const postId = req.body.postId;
-    const updatePost = new UpdatePost(postId, req.session.user.id, title, password, content);
+    const updatePost = new UpdatePost(postId, req.session.user.id, title, originalPassword, password, content);
 
     if (req.session.user) {
         if (title.length === 0) {

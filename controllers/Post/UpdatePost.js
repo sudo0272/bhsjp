@@ -7,11 +7,12 @@ const Sha512 = require('../../lib/Sha512');
 const filterHtml = require('../../lib/filterHtml').filterHtml;
 
 module.exports = class UpdatePost {
-    constructor(postId, userId, title, password, content) {
+    constructor(postId, userId, title, originalPassword, password, content) {
         this.postId = postId;
         this.userId = userId;
         this.encryptedUserId = new Aes256(this.userId, 'plain').getEncrypted();
         this.title = title;
+        this.originalPassword = originalPassword;
         this.password = password;
         this.content = content;
     }
@@ -23,9 +24,12 @@ module.exports = class UpdatePost {
                 "    WHERE `index`= (\n" +
                 "        SELECT `author`\n" +
                 "            FROM posts\n" +
-                "            WHERE `index`=?\n" +
+                "            WHERE\n" +
+                "                `index`=? AND\n" +
+                "                `password`=?\n" +
                 "    );", [
-                this.postId
+                this.postId,
+                new Sha512(this.originalPassword).getEncrypted()
             ], (error, accountResult, fields) => {
                 if (error) {
                     throw error;

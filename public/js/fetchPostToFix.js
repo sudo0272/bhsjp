@@ -13,6 +13,8 @@ const fetchPostToFix = (postId, password) => {
     }).then(obj => {
         switch (obj.result) {
         case 'right':
+            window.userPassword = password;
+
             postTitle.value = obj.data.title;
             quill.clipboard.dangerouslyPasteHTML(obj.data.content);
 

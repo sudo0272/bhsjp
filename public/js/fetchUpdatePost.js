@@ -6,6 +6,7 @@ const fetchUpdatePost = callback => {
         },
         body: JSON.stringify({
             title: postTitle.value,
+            originalPassword: userPassword,
             password: postPassword.value,
             content: quill.container.firstChild.innerHTML,
             postId: postId
