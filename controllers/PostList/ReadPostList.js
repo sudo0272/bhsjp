@@ -24,10 +24,11 @@ module.exports = class ReadPostList {
     list() {
         return new Promise((resolve, reject) => {
             connection.query(
-                "SELECT `posts`.`index`, `posts`.`title`, `posts`.`password`\n" +
-                        "FROM `posts`\n" +
-                        "LEFT JOIN `accounts`\n" +
-                        "ON `posts`.`author`=`accounts`.`index`\n" +
+                "SELECT p.`index`, p.`title`, p.`password`\n" +
+                        "FROM `posts` p\n" +
+                        "LEFT JOIN `accounts` a\n" +
+                        "ON p.`author`=a.`index`\n" +
+                        "ORDER BY p.`index` DESC\n" +
                         "LIMIT ?, ?", [
                 this.offset * postListItemCount,
                 postListItemCount
