@@ -6,14 +6,13 @@ const Aes256 = require('../../lib/Aes256');
 const Sha512 = require('../../lib/Sha512');
 const filterHtml = require('../../lib/filterHtml').filterHtml;
 
-module.exports = class UpdatePost {
-    constructor(postId, userId, title, password, content) {
+module.exports = class {
+    constructor(postId, userId, password) {
         this.postId = postId;
         this.userId = userId;
         this.encryptedUserId = new Aes256(this.userId, 'plain').getEncrypted();
-        this.title = title;
         this.password = password;
-        this.content = content;
+        this.encryptedPassword = new Sha512(this.password).getEncrypted();
     }
 
     post() {
@@ -23,9 +22,12 @@ module.exports = class UpdatePost {
                 "    WHERE `index`= (\n" +
                 "        SELECT `author`\n" +
                 "            FROM posts\n" +
-                "            WHERE `index`=?\n" +
+                "            WHERE\n" +
+                "                `index`=? AND\n" +
+                "                `password`=?\n" +
                 "    );", [
-                this.postId
+                this.postId,
+                this.encryptedPassword
             ], (error, accountResult, fields) => {
                 if (error) {
                     throw error;
@@ -34,16 +36,9 @@ module.exports = class UpdatePost {
                 if (accountResult.length > 0) {
                     if (accountResult[0].id === this.encryptedUserId) {
                         connection.query(
-                            "UPDATE `posts`\n" +
-                            "    SET\n" +
-                            "        `title`=?,\n" +
-                            "        `content`=?,\n" +
-                            "        `password`=?,\n" +
-                            "        `date`=NOW()\n" +
+                            "DELETE\n" +
+                            "    FROM `posts`\n" +
                             "    WHERE `index`=?;", [
-                                escapeHtml(this.title),
-                                filterHtml(this.content),
-                                new Sha512(this.password).getEncrypted(),
                                 this.postId
                             ], (error, result, fields) => {
                                 if (error) {
@@ -57,7 +52,7 @@ module.exports = class UpdatePost {
                         reject('invalid-user');
                     }
                 } else {
-                    reject('no-row');
+                    reject('wrong-password');
                 }
             });
         });

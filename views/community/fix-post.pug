@@ -12,7 +12,7 @@ append js
     script.
         const postId = #{postId};
 
-        fetchPostToFix(postId, null);
+        fetchPostToFix(postId, '');
 
         postContainer.addEventListener('submit', e => {
             e.preventDefault();

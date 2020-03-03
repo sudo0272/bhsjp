@@ -27,7 +27,7 @@ module.exports = class CreatePost {
                     new Aes256(this.userId, 'plain').getEncrypted(),
                     escapeHtml(this.title),
                     filterHtml(this.content),
-                    this.password === null ? null : new Sha512(this.password).getEncrypted()
+                    new Sha512(this.password).getEncrypted()
                 ], (error, result, fields) => {
                     if (error) {
                         throw error;

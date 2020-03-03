@@ -7,6 +7,7 @@ const redisClient = new RedisData().getClient();
 const ReadPost = require('../controllers/Post/ReadPost');
 const CreatePost = require('../controllers/Post/CreatePost');
 const UpdatePost = require('../controllers/Post/UpdatePost');
+const DeletePost = require('../controllers/Post/DeletePost');
 const ReadPostList = require('../controllers/PostList/ReadPostList');
 const Sha512 = require('../lib/Sha512');
 const CheckPostOwner = require('../controllers/Post/CheckPostOwner');
@@ -185,7 +186,7 @@ communityRouter.post('/get-post', (req, res) => {
 
     readPost.password()
         .then(dbPassword => {
-            if (dbPassword === null || dbPassword === new Sha512(userPassword).getEncrypted()) {
+            if (dbPassword === new Sha512(userPassword).getEncrypted()) {
                 readPost.post()
                     .then(result => {
                         res.send({
@@ -239,7 +240,7 @@ communityRouter.post('/create-post', (req, res) => {
     const title = req.body.title;
     const password = req.body.password;
     const content = req.body.content;
-    const createPost = new CreatePost(req.session.user.id, title, (password.length > 0 ? password : null), content);
+    const createPost = new CreatePost(req.session.user.id, title, password, content);
 
     if (req.session.user) {
         if (title.length === 0) {
@@ -322,7 +323,7 @@ communityRouter.post('/update-post', (req, res) => {
     const password = req.body.password;
     const content = req.body.content;
     const postId = req.body.postId;
-    const updatePost = new UpdatePost(postId, req.session.user.id, title, (password.length > 0 ? password : null), content);
+    const updatePost = new UpdatePost(postId, req.session.user.id, title, password, content);
 
     if (req.session.user) {
         if (title.length === 0) {
@@ -350,8 +351,28 @@ communityRouter.post('/update-post', (req, res) => {
     }
 });
 
-communityRouter.post('delete-post', (req, res) => {
-    // TODO: check if user has signed in, if user is the person who wrote the post and if the post exists
+communityRouter.post('/delete-post', (req, res) => {
+    const postId = req.body.postId;
+    const password = req.body.password;
+    const deletePost = new DeletePost(postId, req.session.user.id, password);
+
+    console.log(req.body);
+
+    if (req.session.user) {
+        deletePost.post()
+            .then(() => {
+                res.send('ok');
+            }, reason => {
+                res.send(reason);
+            }).catch(error => {
+                console.error(error);
+
+                res.send('error');
+            }
+        );
+    } else {
+        res.send('not-signed-in');
+    }
 });
 
 communityRouter.post('/create-comment', (req, res) => {

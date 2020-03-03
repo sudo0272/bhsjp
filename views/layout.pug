@@ -51,6 +51,7 @@ html
 
                             if owner !== undefined && owner === true
                                 a(href=PROTOCOL + '://community.' + BASE_URL + '/fix-post/' + postId): li 글 수정
+                                a#delete-post(href='#'): li 글 삭제
 
                     li
                         i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right
@@ -84,7 +85,7 @@ html
         script(src='/js/menu.min.js')
         script(src='/js/fetchSignOut.min.js')
 
-        if isSignedIn
+        if owner !== undefined && owner
             script.
                 document.getElementById('sign-out').addEventListener('click', () => {
                     fetchSignOut();

@@ -24,6 +24,9 @@ block js
     script(src='/js/limitInput.min.js')
     script(src='/js/togglePassword.min.js')
 
+    script.
+        const postId = #{postId};
+
     if isSignedIn
         script.
             const postContainer = document.getElementById('post-container');

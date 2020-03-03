@@ -34,7 +34,7 @@ block js
         const postContent = document.getElementById('post-content');
         const postId = #{postId};
 
-        fetchPost(postId, null);
+        fetchPost(postId, '');
 
     // comment
     if isSignedIn
@@ -43,4 +43,13 @@ block js
             const quill = new Quill('#editor', {
                 placeholder: '글 내용',
                 theme: 'snow'
+            });
+
+    if owner !== undefined && owner
+        script(src='/js/fetchDeletePost.min.js')
+        script.
+            const deletePost = document.getElementById('delete-post');
+
+            deletePost.addEventListener('click', () => {
+                fetchDeletePost(postId, '');
             });
