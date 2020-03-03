@@ -18,12 +18,12 @@ module.exports = class CreatePost {
         return new Promise(resolve => {
             connection.query(
                 "INSERT INTO `posts`\n" +
-                "(`author`, `title`, `content`, `password`, `date`)\n" +
+                "(`author`, `title`, `content`, `password`, `date`, `isModified`)\n" +
                 "VALUES ((\n" +
                 "    SELECT `index`\n" +
                 "        FROM `accounts`\n" +
                 "        WHERE `id`=?\n" +
-                "), ?, ?, ?, NOW());", [
+                "), ?, ?, ?, NOW(), FALSE);", [
                     new Aes256(this.userId, 'plain').getEncrypted(),
                     escapeHtml(this.title),
                     filterHtml(this.content),
