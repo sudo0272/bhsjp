@@ -43,7 +43,8 @@ module.exports = class UpdatePost {
                             "        `title`=?,\n" +
                             "        `content`=?,\n" +
                             "        `password`=?,\n" +
-                            "        `date`=NOW()\n" +
+                            "        `date`=NOW(),\n" +
+                            "        `isModified`=TRUE\n" +
                             "    WHERE `index`=?;", [
                                 escapeHtml(this.title),
                                 filterHtml(this.content),

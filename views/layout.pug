@@ -67,7 +67,7 @@ html
 
             #contents.d-flex.flex-column
                 div
-                    h1.text-center #{title}
+                    h1#title.text-center #{title}
 
                 div
                     #main.d-flex.flex-column.align-items-center
@@ -95,3 +95,5 @@ html
             vex.defaultOptions.className = 'vex-theme-plain';
 
         block js
+            script.
+                const title = document.getElementById('title');

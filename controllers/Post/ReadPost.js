@@ -10,7 +10,7 @@ module.exports = class ReadPost {
     post() {
         return new Promise((resolve, reject) => {
             connection.query(
-                "SELECT `accounts`.`nickname`, `posts`.`title`, `posts`.`content`, `posts`.`date`\n" +
+                "SELECT `accounts`.`nickname`, `posts`.`title`, `posts`.`content`, `posts`.`date`, `posts`.`isModified`\n" +
                 "FROM `posts`\n" +
                 "LEFT JOIN `accounts`\n" +
                 "ON `accounts`.`index`=`posts`.`author`\n" +

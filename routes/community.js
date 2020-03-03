@@ -195,7 +195,8 @@ communityRouter.post('/get-post', (req, res) => {
                                 title: result.title,
                                 nickname: new Aes256(result.nickname, 'encrypted').getPlain(),
                                 date: result.date,
-                                content: result.content
+                                content: result.content,
+                                isModified: result.isModified
                             }
                         });
                     }, reason => {
