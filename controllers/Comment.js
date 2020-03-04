@@ -17,8 +17,8 @@ module.exports = class Comment {
     create() {
         return new Promise(resolve => {
             connection.query("INSERT INTO comments\n" +
-                "    (author, postId, content, isPrivate, isModified)\n" +
-                "    VALUES (?, ?, ?, ?, ?);", [
+                "    (author, postId, content, date, isPrivate, isModified)\n" +
+                "    VALUES (?, ?, ?, NOW(), ?, ?);", [
                 this.userIndex,
                 this.postId,
                 filterHtml(this.content),

@@ -10,6 +10,7 @@ const UpdatePost = require('../controllers/Post/UpdatePost');
 const DeletePost = require('../controllers/Post/DeletePost');
 const ReadPostList = require('../controllers/PostList/ReadPostList');
 const Comment = require('../controllers/Comment');
+const CommentList = require('../controllers/CommentList');
 const Sha512 = require('../lib/Sha512');
 const CheckPostOwner = require('../controllers/Post/CheckPostOwner');
 const Aes256 = require('../lib/Aes256');
@@ -183,23 +184,53 @@ communityRouter.get('/read-post/:postId', (req, res) => {
 communityRouter.post('/get-post', (req, res) => {
     const postId = req.body.postId;
     const userPassword = req.body.password;
+    const needComments = req.body.needComments;
     const readPost = new ReadPost(postId);
+    const commentList = new CommentList(postId);
 
     readPost.password()
         .then(dbPassword => {
             if (dbPassword === new Sha512(userPassword).getEncrypted()) {
                 readPost.post()
-                    .then(result => {
-                        res.send({
-                            result: 'right',
-                            data: {
-                                title: result.title,
-                                nickname: new Aes256(result.nickname, 'encrypted').getPlain(),
-                                date: result.date,
-                                content: result.content,
-                                isModified: result.isModified
-                            }
-                        });
+                    .then(post => {
+                        if (needComments) {
+                            commentList.getFromPostId(postId)
+                                .then(comments => {
+                                    let plainComments = comments;
+
+                                    for (let i = 0; i < plainComments.length; i++) {
+                                        plainComments[i].nickname = new Aes256(plainComments[i].nickname, 'encrypted').getPlain()
+                                    }
+
+                                    res.send({
+                                        result: 'right',
+                                        data: {
+                                            title: post.title,
+                                            nickname: new Aes256(post.nickname, 'encrypted').getPlain(),
+                                            date: post.date,
+                                            content: post.content,
+                                            isModified: post.isModified,
+                                            comments: plainComments
+                                        }
+                                    });
+                                }).catch(error => {
+                                    console.error(error);
+
+                                    res.send('error');
+                                }
+                            );
+                        } else {
+                            res.send({
+                                result: 'right',
+                                data: {
+                                    title: post.title,
+                                    nickname: new Aes256(post.nickname, 'encrypted').getPlain(),
+                                    date: post.date,
+                                    content: post.content,
+                                    isModified: post.isModified
+                                }
+                            });
+                        }
                     }, reason => {
                         res.send({
                             result: 'no-post'

@@ -6,7 +6,8 @@ const fetchPost = (postId, password) => {
         },
         body: JSON.stringify({
             postId: postId,
-            password: password
+            password: password,
+            needComments: true
         })
     }).then(res => {
         return res.json();
@@ -14,20 +15,26 @@ const fetchPost = (postId, password) => {
         switch (obj.result) {
             case 'right':
                 postNickname.innerText = obj.data.nickname;
-                postDate.innerText = obj.data.date
-                    .replace('-', '년 ')
-                    .replace('-', '월 ')
-                    .replace('T', '일 ')
-                    .replace(':', '시 ')
-                    .replace(':', '분')
-                    .substr(0, 21);
+                postDate.innerText = isoDateToKoreanDate(obj.data.date);
                 postContent.innerHTML = obj.data.content;
 
                 if (obj.data.isModified) {
                     title.innerHTML += `<span class="post-edited">(수정됨)</span>`;
                 }
 
-                console.log(obj.data.isModified);
+                for (i of obj.data.comments) {
+                    commentsContainer.innerHTML += `
+                        <div class="d-flex flex-column comments">
+                            <div class="d-flex flex-row">
+                                ${i.nickname}&#58;&nbsp;${isoDateToKoreanDate(i.date)}
+                            </div>
+                            
+                            <div>
+                                ${i.content}
+                            </div>
+                        </div>
+                    `
+                }
 
                 break;
 
