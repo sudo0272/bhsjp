@@ -160,7 +160,8 @@ accountsRouter.post('/check-account', (req, res) => {
                     req.session.user = {
                         id: new Aes256(accountData.id, 'encrypted').getPlain(),
                         nickname: new Aes256(accountData.nickname, 'encrypted').getPlain(),
-                        email: new Aes256(accountData.email, 'encrypted').getPlain()
+                        email: new Aes256(accountData.email, 'encrypted').getPlain(),
+                        index: accountData.index
                     };
 
                     res.send('ok');

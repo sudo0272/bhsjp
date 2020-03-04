@@ -1,0 +1,39 @@
+const fetchNewComment = callback => {
+    fetch('https://community.bhsjp.kro.kr/create-comment', {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            postId: postId,
+            content: quill.container.firstChild.innerHTML,
+            isPrivateComment: isPrivateComment.checked
+        })
+    }).then(res => {
+        return res.text();
+    }).then(text => {
+        switch (text) {
+            case 'not-signed-in':
+                vex.dialog.alert({
+                    unsafeMessage: '로그인되어있지 않습니다\n로그인 페이지로 이동합니다',
+                    callback: () => {
+                        location.href = 'https://accounts.bhsjp.kro.kr/sign-in';
+                    }
+                });
+
+                break;
+
+            case 'empty-content': vex.dialog.alert('글의 내용이 비어있습니다'); break;
+            case 'error': vex.dialog.alert('서버 에러가 발생했습니다\n다시 시도해주세요'); break;
+            case 'ok':
+                vex.dialog.alert({
+                    unsafeMessage: '댓글이 등록되었습니다',
+                    callback: () => {
+                        location.reload();
+                    }
+                });
+        }
+    });
+
+    callback();
+};

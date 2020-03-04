@@ -9,6 +9,7 @@ const CreatePost = require('../controllers/Post/CreatePost');
 const UpdatePost = require('../controllers/Post/UpdatePost');
 const DeletePost = require('../controllers/Post/DeletePost');
 const ReadPostList = require('../controllers/PostList/ReadPostList');
+const Comment = require('../controllers/Comment');
 const Sha512 = require('../lib/Sha512');
 const CheckPostOwner = require('../controllers/Post/CheckPostOwner');
 const Aes256 = require('../lib/Aes256');
@@ -378,7 +379,23 @@ communityRouter.post('/delete-post', (req, res) => {
 });
 
 communityRouter.post('/create-comment', (req, res) => {
-    // TODO: check if user has signed in, if user is the person who wrote the comment and if the comment exist
+    const content = req.body.content;
+    const isPrivateComment = req.body.isPrivateComment;
+    const postId = req.body.postId;
+
+    if (req.session.user) {
+        const comment = new Comment(req.session.user.index, postId, content, isPrivateComment);
+
+        comment.create()
+            .then(() => {
+                res.send('ok');
+            }).catch(() => {
+                res.send('error');
+            }
+        );
+    } else {
+        res.send('not-signed-in');
+    }
 });
 
 communityRouter.post('/update-comment', (req, res) => {

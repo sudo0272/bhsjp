@@ -24,6 +24,10 @@ block html
     if isSignedIn
         #comments
             #editor
+        div.text-center.d-flex.flex-row.align-items-center
+            input#is-private-comment(type='checkbox')
+            label(for='is-private-comment') 비밀댓글
+            button#new-comment.submit: span 댓글 작성
 
 append js
     script(src='/js/fetchPost.min.js')
@@ -39,10 +43,25 @@ append js
     // comment
     if isSignedIn
         script(src='https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js')
+        script(src='/js/fetchNewComment.min.js')
+        script(src='/js/enableWaitButton.min.js')
+        script(src='/js//disableWaitButton.min.js')
         script.
             const quill = new Quill('#editor', {
                 placeholder: '글 내용',
                 theme: 'snow'
+            });
+
+            const isPrivateComment = document.getElementById('is-private-comment');
+            const newComment = document.getElementById('new-comment');
+            const newCommentText = newComment.getElementsByTagName('span')[0];
+
+            newComment.addEventListener('click', () => {
+                enableWaitButton(newComment, newCommentText);
+
+                fetchNewComment(() => {
+                    disableWaitButton(newComment, newCommentText, '댓글 작성')
+                });
             });
 
     if owner !== undefined && owner
