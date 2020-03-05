@@ -24,16 +24,21 @@ const fetchPost = (postId, password) => {
 
                 for (i of obj.data.comments) {
                     commentsContainer.innerHTML += `
-                        <div class="comments${i.isPrivate ? " private-comment" : ""}">
-                            <div>
-                                ${i.nickname}&#58;&nbsp;${isoDateToKoreanDate(i.date)}
+                        <div class="comment-form">
+                            <div class="comments${i.isPrivate ? " private-comment" : ""}">
+                                <div>
+                                    ${i.nickname}&#58;&nbsp;${isoDateToKoreanDate(i.date)}
+                                </div>
+                                
+                                <div>
+                                    ${i.content}
+                                </div>
                             </div>
                             
-                            <div>
-                                ${i.content}
-                            </div>
-                            
-                            
+                            <span class="edit-comment">
+                                <button>수정</button>
+                                <button>삭제</button>
+                            </span>
                         </div>
                     `
                 }
