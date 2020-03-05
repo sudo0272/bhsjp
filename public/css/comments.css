@@ -10,4 +10,9 @@
   margin: 10px;
 }
 
+.private-comment {
+  color: #555555;
+  border: 1.5px dashed #555555 !important;
+}
+
 /*# sourceMappingURL=comments.css.map */

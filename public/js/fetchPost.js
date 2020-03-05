@@ -24,7 +24,7 @@ const fetchPost = (postId, password) => {
 
                 for (i of obj.data.comments) {
                     commentsContainer.innerHTML += `
-                        <div class="d-flex flex-column comments">
+                        <div class="d-flex flex-column comments${i.isPrivate ? " private-comment" : ""}">
                             <div class="d-flex flex-row">
                                 ${i.nickname}&#58;&nbsp;${isoDateToKoreanDate(i.date)}
                             </div>
