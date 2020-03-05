@@ -16,8 +16,6 @@ module.exports = class CommentList {
                     throw error;
                 }
 
-                console.log(result);
-
                 resolve(result);
             });
         });

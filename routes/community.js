@@ -390,8 +390,6 @@ communityRouter.post('/delete-post', (req, res) => {
     const password = req.body.password;
     const deletePost = new DeletePost(postId, req.session.user.id, password);
 
-    console.log(req.body);
-
     if (req.session.user) {
         deletePost.post()
             .then(() => {
