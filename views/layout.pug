@@ -85,7 +85,7 @@ html
         script(src='/js/menu.min.js')
         script(src='/js/fetchSignOut.min.js')
 
-        if owner !== undefined && owner
+        if isSignedIn
             script.
                 document.getElementById('sign-out').addEventListener('click', () => {
                     fetchSignOut();
