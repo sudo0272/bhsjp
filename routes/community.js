@@ -199,7 +199,27 @@ communityRouter.post('/get-post', (req, res) => {
                                     let plainComments = comments;
 
                                     for (let i = 0; i < plainComments.length; i++) {
-                                        plainComments[i].nickname = new Aes256(plainComments[i].nickname, 'encrypted').getPlain()
+                                        let decryptedNickname = new Aes256(plainComments[i].nickname, 'encrypted').getPlain();
+
+                                        plainComments[i].nickname = decryptedNickname;
+
+                                        if (plainComments[i].isPrivate) {
+                                            if (req.session.user) {
+                                                // the comment is private and
+                                                // user is not the owner of the comment and the post
+                                                if (req.session.user.id !== decryptedNickname) {
+                                                    new CheckPostOwner(postId, req.session.user.id).check()
+                                                        .then(owner => {
+                                                            if (!owner) {
+                                                                plainComments[i].content = `<i class="material-icons">lock</i>비밀 댓글입니다`;
+                                                            }
+                                                        }
+                                                    );
+                                                }
+                                            } else {
+                                                plainComments[i].content = `<i class="material-icons">lock</i>비밀 댓글입니다`;
+                                            }
+                                        }
                                     }
 
                                     res.send({
