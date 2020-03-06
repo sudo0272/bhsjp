@@ -35,10 +35,27 @@ const fetchPost = (postId, password) => {
                                 </div>
                             </div>
                             
-                            <span class="edit-comment">
-                                <button>수정</button>
-                                <button>삭제</button>
-                            </span>
+                            ${(() => {
+                                switch (i.userPermission) {
+                                    case 'writer':
+                                        return `
+                                            <span class="configure-comment">
+                                                <button class="edit-comment" data-target="${i.index}">수정</button>
+                                                <button class="delete-comment" data-target="${i.index}">삭제</button>
+                                            </span>
+                                        `;
+                                    
+                                    case 'postOwner':
+                                        return `
+                                            <span class="configure-comment">
+                                                <button class="delete-comment" data-target="${i.index}">삭제</button>
+                                            </span>
+                                        `;
+                                    
+                                    case 'none':
+                                        return ``;
+                                }
+                            })()}
                         </div>
                     `
                 }

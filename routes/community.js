@@ -198,41 +198,85 @@ communityRouter.post('/get-post', (req, res) => {
                                 .then(comments => {
                                     let plainComments = comments;
 
-                                    for (let i = 0; i < plainComments.length; i++) {
-                                        let decryptedNickname = new Aes256(plainComments[i].nickname, 'encrypted').getPlain();
+                                    Promise.all([...Array(plainComments.length).keys()].map(i => {
+                                        return new Promise(resolve => {
+                                            let decryptedNickname = new Aes256(plainComments[i].nickname, 'encrypted').getPlain();
 
-                                        plainComments[i].nickname = decryptedNickname;
+                                            plainComments[i].nickname = decryptedNickname;
 
-                                        if (plainComments[i].isPrivate) {
-                                            if (req.session.user) {
-                                                // the comment is private and
-                                                // user is not the owner of the comment and the post
-                                                if (req.session.user.id !== decryptedNickname) {
-                                                    new CheckPostOwner(postId, req.session.user.id).check()
+                                            if (req.session && req.session.user) {
+                                                // if current user is the owner of the comment
+                                                if (req.session.user.id === decryptedNickname) {
+                                                    plainComments[i].userPermission = 'writer';
+
+                                                    resolve();
+                                                } else {
+                                                    const checkPostOwner = new CheckPostOwner(postId, req.session.user.id);
+
+                                                    checkPostOwner
+                                                        .check()
                                                         .then(owner => {
-                                                            if (!owner) {
-                                                                plainComments[i].content = `<i class="material-icons">lock</i>비밀 댓글입니다`;
+                                                            if (owner) {
+                                                                plainComments[i].userPermission = 'postOwner';
+
+                                                                resolve();
+                                                            } else {
+                                                                if (plainComments[i].isPrivate) {
+                                                                    plainComments[i].content = `
+                                                                    <div>
+                                                                        <i class="material-icons">
+                                                                            lock
+                                                                        </i>
+                                                                        비밀 댓글입니다
+                                                                    </div>
+                                                                `;
+                                                                }
+
+                                                                plainComments[i].userPermission = 'none';
+
+                                                                resolve();
                                                             }
+                                                        }).catch(error => {
+                                                            throw error;
                                                         }
                                                     );
                                                 }
                                             } else {
-                                                plainComments[i].content = `<i class="material-icons">lock</i>비밀 댓글입니다`;
-                                            }
-                                        }
-                                    }
+                                                if (plainComments[i].isPrivate) {
+                                                    plainComments[i].content = `
+                                                    <div>
+                                                        <i class="material-icons">
+                                                            lock
+                                                        </i>
+                                                        비밀 댓글입니다
+                                                    </div>
+                                                `;
+                                                }
 
-                                    res.send({
-                                        result: 'right',
-                                        data: {
-                                            title: post.title,
-                                            nickname: new Aes256(post.nickname, 'encrypted').getPlain(),
-                                            date: post.date,
-                                            content: post.content,
-                                            isModified: post.isModified,
-                                            comments: plainComments
-                                        }
-                                    });
+                                                plainComments[i].userPermission = 'none';
+
+                                                resolve();
+                                            }
+                                        });
+                                    })).then(() => {
+                                        res.send({
+                                            result: 'right',
+                                            data: {
+                                                title: post.title,
+                                                nickname: new Aes256(post.nickname, 'encrypted').getPlain(),
+                                                date: post.date,
+                                                content: post.content,
+                                                isModified: post.isModified,
+                                                comments: plainComments
+                                            }
+                                        });
+                                    }).catch(error => {
+                                        console.error(error);
+
+                                        res.send({
+                                            result: 'error'
+                                        });
+                                    })
                                 }).catch(error => {
                                     console.error(error);
 
