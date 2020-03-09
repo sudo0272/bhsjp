@@ -4,16 +4,11 @@ const expressSession = require('express-session');
 const RedisStore = require('connect-redis')(expressSession);
 const RedisData = require('../models/RedisData');
 const redisClient = new RedisData().getClient();
-const ReadPost = require('../controllers/Post/ReadPost');
-const CreatePost = require('../controllers/Post/CreatePost');
-const UpdatePost = require('../controllers/Post/UpdatePost');
-const DeletePost = require('../controllers/Post/DeletePost');
-const ReadPostList = require('../controllers/PostList/ReadPostList');
-const CreateComment = require('../controllers/Comment/CreateComment');
-const UpdateComment = require('../controllers/Comment/UpdateComment');
+const Post = require('../controllers/Post');
+const PostList = require('../controllers/PostList');
+const Comment = require('../controllers/Comment');
 const CommentList = require('../controllers/CommentList');
 const Sha512 = require('../lib/Sha512');
-const CheckPostOwner = require('../controllers/Post/CheckPostOwner');
 const Aes256 = require('../lib/Aes256');
 const fetch = require('node-fetch');
 const morgan = require('morgan');
@@ -59,15 +54,17 @@ communityRouter.get('/', (req, res) => {
 });
 
 communityRouter.get('/view-posts/:postListCount', (req, res) => {
-    const readPostList = new ReadPostList(req.params.postListCount);
+    const postList = new PostList();
 
     if (req.params.postListCount !== undefined) {
         if (req.params.postListCount.match(/^\d+$/)) {
             const postListCount = parseInt(req.params.postListCount);
 
-            readPostList.list()
+            postList
+                .read(postListCount, 20)
                 .then(postItems => {
-                    readPostList.count()
+                    postList
+                        .getCount()
                         .then(postCount => {
                             res.render('community/view-posts', {
                                 title: '글 보기',
@@ -114,11 +111,12 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
 });
 
 communityRouter.post('/do-post-list-exist', (req, res) => {
-    const postList = req.body.postList;
-    const readPostList = new ReadPostList(postList);
+    const postListCount = req.body.postList;
+    const postList = new PostList();
 
     if (postList.match(/^\d+$/)) {
-        readPostList.list()
+        postList
+            .read(postListCount)
             .then(() => {
                 res.send('ok');
             }, () => {
@@ -135,21 +133,21 @@ communityRouter.post('/do-post-list-exist', (req, res) => {
 
 communityRouter.get('/read-post/:postId', (req, res) => {
     const postId = req.params.postId;
-    const readPost = new ReadPost(postId);
+    const post = new Post();
 
     if (postId.match(/^\d+$/)) {
-        readPost.title()
+        post
+            .getTitle(postId)
             .then(title => {
                 if (req.session.user) {
-                    const checkPostOwner = new CheckPostOwner(postId, req.session.user.id);
-
-                    checkPostOwner.check()
-                        .then(owner => {
+                    post
+                        .getAuthorId(postId)
+                        .then(id => {
                             res.render('community/read-post', {
                                 title: title,
                                 isSignedIn: req.session.user,
                                 postId: postId,
-                                owner: owner
+                                owner: req.session.user && req.session.user.index === id
                             });
                         }
                     );
@@ -186,16 +184,19 @@ communityRouter.post('/get-post', (req, res) => {
     const postId = req.body.postId;
     const userPassword = req.body.password;
     const needComments = req.body.needComments;
-    const readPost = new ReadPost(postId);
+    const post = new Post();
     const commentList = new CommentList(postId);
 
-    readPost.password()
+    post
+        .getPassword(postId)
         .then(dbPassword => {
             if (dbPassword === new Sha512(userPassword).getEncrypted()) {
-                readPost.post()
+                post
+                    .read(postId)
                     .then(post => {
                         if (needComments) {
-                            commentList.getFromPostId(postId)
+                            commentList
+                                .read()
                                 .then(comments => {
                                     let plainComments = comments;
 
@@ -212,12 +213,11 @@ communityRouter.post('/get-post', (req, res) => {
 
                                                     resolve();
                                                 } else {
-                                                    const checkPostOwner = new CheckPostOwner(postId, req.session.user.id);
-
-                                                    checkPostOwner
-                                                        .check()
-                                                        .then(owner => {
-                                                            if (owner) {
+                                                    const tempPost = new Post();
+                                                    tempPost
+                                                        .getAuthorId(postId)
+                                                        .then(authorId => {
+                                                            if (authorId === req.session.user.index) {
                                                                 plainComments[i].userPermission = 'postOwner';
 
                                                                 resolve();
@@ -338,7 +338,7 @@ communityRouter.post('/create-post', (req, res) => {
     const title = req.body.title;
     const password = req.body.password;
     const content = req.body.content;
-    const createPost = new CreatePost(req.session.user.id, title, password, content);
+    const post = new Post();
 
     if (req.session.user) {
         if (title.length === 0) {
@@ -346,7 +346,8 @@ communityRouter.post('/create-post', (req, res) => {
         } else if (content.replace(/<.*?>/g, '').length === 0) {
             res.send('empty-content');
         } else {
-            createPost.post()
+            post
+                .create(req.session.user.index, title, password, content)
                 .then(() => {
                     res.send('ok');
                 }).catch(error => {
@@ -363,22 +364,22 @@ communityRouter.post('/create-post', (req, res) => {
 
 communityRouter.get('/fix-post/:postId', (req, res) => {
     const postId = req.params.postId;
-    const readPost = new ReadPost(postId);
+    const post = new Post();
 
     if (postId.match(/^\d+$/)) {
-        readPost.title()
+        post
+            .getTitle(postId)
             .then(title => {
                 if (req.session.user) {
-                    const checkPostOwner = new CheckPostOwner(postId, req.session.user.id);
-
-                    checkPostOwner.check()
-                        .then(owner => {
-                            if (owner) {
+                    post
+                        .getAuthorId(postId)
+                        .then(authorId => {
+                            if (authorId === req.session.user.index) {
                                 res.render('community/fix-post', {
                                     title: '글 수정',
                                     isSignedIn: req.session.user,
                                     postId: postId,
-                                    owner: owner
+                                    owner: true
                                 });
                             } else {
                                 res.render('errors/403', {
@@ -422,7 +423,7 @@ communityRouter.post('/update-post', (req, res) => {
     const password = req.body.password;
     const content = req.body.content;
     const postId = req.body.postId;
-    const updatePost = new UpdatePost(postId, req.session.user.id, title, originalPassword, password, content);
+    const post = new Post();
 
     if (req.session.user) {
         if (title.length === 0) {
@@ -430,7 +431,8 @@ communityRouter.post('/update-post', (req, res) => {
         } else if (content.replace(/<.*?>/g, '').length === 0) {
             res.send('empty-content');
         } else {
-            updatePost.post()
+            post
+                .update(postId, req.session.user.index, title, originalPassword, password, content)
                 .then(() => {
                     res.send('ok');
                 }, reason => {
@@ -453,10 +455,11 @@ communityRouter.post('/update-post', (req, res) => {
 communityRouter.post('/delete-post', (req, res) => {
     const postId = req.body.postId;
     const password = req.body.password;
-    const deletePost = new DeletePost(postId, req.session.user.id, password);
+    const post = new Post();
 
     if (req.session.user) {
-        deletePost.post()
+        post
+            .delete(postId, req.session.user.index, password)
             .then(() => {
                 res.send('ok');
             }, reason => {
@@ -476,11 +479,11 @@ communityRouter.post('/create-comment', (req, res) => {
     const content = req.body.content;
     const isPrivateComment = req.body.isPrivateComment;
     const postId = req.body.postId;
+    const comment = new Comment();
 
     if (req.session.user) {
-        const comment = new CreateComment(req.session.user.index, postId, content, isPrivateComment);
-
-        comment.create()
+        comment
+            .create(req.session.user.index, postId, content, isPrivateComment)
             .then(() => {
                 res.send('ok');
             }).catch(() => {
@@ -496,12 +499,11 @@ communityRouter.post('/update-comment', (req, res) => {
     const commentId = req.body.commentId;
     const content = req.body.content;
     const isPrivate = req.body.isPrivate;
+    const comment = new Comment();
 
     if (req.session.user) {
-        const updateComment = new UpdateComment(req.session.user.index, commentId, content, isPrivate);
-
-        updateComment
-            .update()
+        comment
+            .update(req.session.user.index, commentId, content, isPrivate)
             .then(() => {
                 res.send('ok');
             }, reason => {

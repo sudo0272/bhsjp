@@ -1,32 +1,44 @@
 const mysql = require('mysql');
-const MysqlData = require('../../models/MysqlData');
+const MysqlData = require('../models/MysqlData');
 const connection = mysql.createConnection(new MysqlData().getConnection());
-const escapeHtml = require('escape-html');
-const Aes256 = require('../../lib/Aes256');
-const Sha512 = require('../../lib/Sha512');
-const filterHtml = require('../../lib/filterHtml').filterHtml;
+const filterHtml = require('../lib/filterHtml').filterHtml;
 
-module.exports = class UpdateComment {
-    constructor(userIndex, commentId, content, isPrivate) {
-        this.userIndex = userIndex;
-        this.commentId = commentId;
-        this.content = content;
-        this.isPrivate = isPrivate;
+module.exports = class Comment {
+    constructor() {}
+
+    create(userIndex, postId, content, isPrivate) {
+        return new Promise(resolve => {
+            connection.query("INSERT INTO comments\n" +
+                "    (author, postId, content, date, isPrivate, isModified)\n" +
+                "    VALUES (?, ?, ?, NOW(), ?, ?);", [
+                userIndex,
+                postId,
+                filterHtml(content),
+                isPrivate,
+                false
+            ], (error, result, fields) => {
+                if (error) {
+                    throw error;
+                }
+
+                resolve();
+            });
+        });
     }
 
-    update() {
+    update(userIndex, commentId, content, isPrivate) {
         return new Promise((resolve, reject) => {
             connection.query("SELECT author\n" +
                 "    FROM comments\n" +
                 "    WHERE `index`=?;", [
-                this.commentId
+                commentId
             ], (error, result, fields) => {
                 if (error) {
                     throw error;
                 }
 
                 if (result.length > 0) {
-                    if (result[0].author === parseInt(this.userIndex)) {
+                    if (result[0].author === userIndex) {
                         connection.query("UPDATE comments\n" +
                             "    SET\n" +
                             "        content=?,\n" +
@@ -34,9 +46,9 @@ module.exports = class UpdateComment {
                             "        `isPrivate`=?,\n" +
                             "        `isModified`=TRUE\n" +
                             "    WHERE `index`=?;", [
-                            filterHtml(this.content),
-                            this.isPrivate,
-                            this.commentId
+                            filterHtml(content),
+                            isPrivate,
+                            commentId
                         ], (error, result, fields) => {
                             if (error) {
                                 throw error;
