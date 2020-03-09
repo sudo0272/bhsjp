@@ -74,6 +74,19 @@ const fetchPost = (postId, password) => {
                     });
                 }
 
+                for (const i of document.getElementsByClassName('delete-comment')) {
+                    i.addEventListener('click', () => {
+                        vex.dialog.confirm({
+                            message: '정말로 삭제하시겠습니까?',
+                            callback: value => {
+                                if (value) {
+                                    fetchDeleteComment(i.dataset.target);
+                                }
+                            }
+                        });
+                    });
+                }
+
                 break;
 
             case 'wrong':

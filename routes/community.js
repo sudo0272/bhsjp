@@ -520,7 +520,25 @@ communityRouter.post('/update-comment', (req, res) => {
 });
 
 communityRouter.post('/delete-comment', (req, res) => {
-    // TODO: check if user has signed in, if user is the person who wrote the comment and if the comment exists
+    const comment = new Comment();
+    const commentId = req.body.commentId;
+
+    if (req.session.user) {
+        comment
+            .delete(req.session.user.index, commentId)
+            .then(() => {
+                res.send('ok');
+            }, reason => {
+                res.send(reason);
+            }).catch(error => {
+                console.error(error);
+
+                res.send('error');
+            }
+        );
+    } else {
+        res.send('not-signed-in');
+    }
 });
 
 communityRouter.get('/*', (req, res) => {

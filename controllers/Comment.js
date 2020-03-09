@@ -65,4 +65,51 @@ module.exports = class Comment {
             });
         });
     }
+
+    delete(userIndex, commentId) {
+        return new Promise((resolve, reject) => {
+            connection.query("SELECT\n" +
+                "    (SELECT `author`\n" +
+                "        FROM `comments` c\n" +
+                "        WHERE\n" +
+                "            `index`=?) commentAuthor,\n" +
+                "    (SELECT `author`\n" +
+                "        FROM `posts` p\n" +
+                "        WHERE\n" +
+                "            `index`=(\n" +
+                "                SELECT `postId`\n" +
+                "                    FROM `comments` c\n" +
+                "                    WHERE c.`index`=?\n" +
+                "            )\n" +
+                "    ) postOwner;\n", [
+                commentId,
+                commentId
+            ], (error, result, fields) => {
+                if (error) {
+                    throw error;
+                }
+
+                if (result.length > 0) {
+                    if (userIndex === result[0].commentAuthor ||
+                        userIndex === result[0].postOwner) {
+                        connection.query("DELETE\n" +
+                            "    FROM `comments`\n" +
+                            "    WHERE `index`=?;", [
+                            commentId
+                        ], (error, result, fields) => {
+                            if (error) {
+                                throw error;
+                            }
+
+                            resolve();
+                        });
+                    } else {
+                        reject('invalid-user');
+                    }
+                } else {
+                    reject('no-row');
+                }
+            })
+        });
+    }
 };
