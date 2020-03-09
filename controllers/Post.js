@@ -33,7 +33,7 @@ module.exports = class Post {
     read(postId) {
         return new Promise((resolve, reject) => {
             connection.query(
-                "SELECT `accounts`.`nickname`, `posts`.`title`, `posts`.`content`, `posts`.`date`, `posts`.`isModified`\n" +
+                "SELECT `accounts`.`nickname`, `posts`.`title`, `posts`.`content`, `posts`.`date`, `posts`.`isModified`, `posts`.`views`\n" +
                 "FROM `posts`\n" +
                 "LEFT JOIN `accounts`\n" +
                 "ON `accounts`.`index`=`posts`.`author`\n" +
@@ -162,6 +162,23 @@ module.exports = class Post {
                 } else {
                     reject('no-row');
                 }
+            });
+        });
+    }
+
+    increaseViews(postId) {
+        return new Promise(resolve => {
+            connection.query("UPDATE `posts`\n" +
+                "    SET\n" +
+                "        `views`=`views`+1\n" +
+                "    WHERE `index`=?;", [
+                postId
+            ], (error, result, fields) => {
+                if (error) {
+                    throw error;
+                }
+
+                resolve();
             });
         });
     }

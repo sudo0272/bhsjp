@@ -12,6 +12,10 @@ block html
             span#post-nickname
 
         .d-flex.flex-row
+            i.material-icons visibility
+            span#post-views
+
+        .d-flex.flex-row
             i.material-icons access_time
             span#post-date
 
@@ -39,6 +43,7 @@ append js
 
     script.
         const postNickname = document.getElementById('post-nickname');
+        const postViews = document.getElementById('post-views');
         const postDate = document.getElementById('post-date');
         const postContent = document.getElementById('post-content');
         const commentsContainer = document.getElementById('comments-container');

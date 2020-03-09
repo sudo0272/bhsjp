@@ -7,7 +7,8 @@ const fetchPost = (postId, password) => {
         body: JSON.stringify({
             postId: postId,
             password: password,
-            needComments: true
+            needComments: true,
+            increaseViews: true
         })
     }).then(res => {
         return res.json();
@@ -15,6 +16,7 @@ const fetchPost = (postId, password) => {
         switch (obj.result) {
             case 'right':
                 postNickname.innerText = obj.data.nickname;
+                postViews.innerText = obj.data.views;
                 postDate.innerText = isoDateToKoreanDate(obj.data.date);
                 postContent.innerHTML = obj.data.content;
 

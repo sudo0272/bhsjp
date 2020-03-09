@@ -184,6 +184,7 @@ communityRouter.post('/get-post', (req, res) => {
     const postId = req.body.postId;
     const userPassword = req.body.password;
     const needComments = req.body.needComments;
+    const increaseViews = req.body.increaseViews;
     const post = new Post();
     const commentList = new CommentList(postId);
 
@@ -193,7 +194,17 @@ communityRouter.post('/get-post', (req, res) => {
             if (dbPassword === new Sha512(userPassword).getEncrypted()) {
                 post
                     .read(postId)
-                    .then(post => {
+                    .then(postContents => {
+                        if (increaseViews) {
+                            post
+                                .increaseViews(postId)
+                                .then(() => {
+                                }).catch(error => {
+                                    console.error(error);
+                                }
+                            );
+                        }
+
                         if (needComments) {
                             commentList
                                 .read()
@@ -263,11 +274,12 @@ communityRouter.post('/get-post', (req, res) => {
                                         res.send({
                                             result: 'right',
                                             data: {
-                                                title: post.title,
-                                                nickname: new Aes256(post.nickname, 'encrypted').getPlain(),
-                                                date: post.date,
-                                                content: post.content,
-                                                isModified: post.isModified,
+                                                title: postContents.title,
+                                                nickname: new Aes256(postContents.nickname, 'encrypted').getPlain(),
+                                                date: postContents.date,
+                                                content: postContents.content,
+                                                isModified: postContents.isModified,
+                                                views: postContents.views,
                                                 comments: plainComments
                                             }
                                         });
@@ -288,11 +300,12 @@ communityRouter.post('/get-post', (req, res) => {
                             res.send({
                                 result: 'right',
                                 data: {
-                                    title: post.title,
-                                    nickname: new Aes256(post.nickname, 'encrypted').getPlain(),
-                                    date: post.date,
-                                    content: post.content,
-                                    isModified: post.isModified
+                                    title: postContents.title,
+                                    nickname: new Aes256(postContents.nickname, 'encrypted').getPlain(),
+                                    date: postContents.date,
+                                    content: postContents.content,
+                                    isModified: postContents.isModified,
+                                    views: postContents.views
                                 }
                             });
                         }
