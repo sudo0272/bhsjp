@@ -51,7 +51,7 @@ html
 
                             if owner !== undefined && owner === true
                                 a(href=PROTOCOL + '://community.' + BASE_URL + '/fix-post/' + postId): li 글 수정
-                                a#delete-post(href='#'): li 글 삭제
+                                a#delete-post: li 글 삭제
 
                     li
                         i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right
@@ -59,7 +59,7 @@ html
 
                         if isSignedIn
                             ul.sub-menus
-                                a#sign-out(href='#'): li 로그아웃
+                                a#sign-out: li 로그아웃
                         else
                             ul.sub-menus
                                 a(href=PROTOCOL + '://accounts.' + BASE_URL + '/sign-in'): li 로그인
@@ -84,11 +84,25 @@ html
         script(src='/js/toggleSubMenu.min.js')
         script(src='/js/menu.min.js')
         script(src='/js/fetchSignOut.min.js')
+        script(src='/js/fetchDeletePost.min.js')
 
         if isSignedIn
             script.
                 document.getElementById('sign-out').addEventListener('click', () => {
                     fetchSignOut();
+                });
+
+        if owner !== undefined && owner
+            script.
+                document.getElementById('delete-post').addEventListener('click', () => {
+                    vex.dialog.confirm({
+                        message: '정말 삭제하시겠습니까?',
+                        callback: value => {
+                            if(value) {
+                                fetchDeletePost(postId, '');
+                            }
+                        }
+                    });
                 });
 
         script.
