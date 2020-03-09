@@ -27,7 +27,7 @@ const fetchPost = (postId, password) => {
                         <div class="comment-form">
                             <div class="comments ${i.isPrivate ? "private-comment" : ""}">
                                 <div>
-                                    ${i.nickname}&#58;&nbsp;${isoDateToKoreanDate(i.date)}
+                                    ${i.nickname}&#58;&nbsp;${isoDateToKoreanDate(i.date)}${i.isModified ? '&nbsp;(수정됨)' : ''}
                                 </div>
                                 
                                 <div>
@@ -70,6 +70,7 @@ const fetchPost = (postId, password) => {
 
                         newComment.style.display = 'none';
                         updateComment.style.display = 'block';
+                        cancelUpdateComment.style.display = 'block';
                     });
                 }
 

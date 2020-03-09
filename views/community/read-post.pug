@@ -31,6 +31,7 @@ block html
             label(for='is-private-comment') 비밀댓글
             button#new-comment.submit: span 댓글 작성
             button#update-comment.submit(style='display: none;'): span 댓글 수정
+            button#cancel-update-comment.submit(style='display: none') 취소
 
 append js
     script(src='/js/fetchPost.min.js')
@@ -64,6 +65,7 @@ append js
             const deleteComment = document.getElementsByClassName('delete-comment');
             const updateComment = document.getElementById('update-comment');
             const updateCommentText = updateComment.getElementsByTagName('span')[0];
+            const cancelUpdateComment = document.getElementById('cancel-update-comment');
             let updateTarget = null;
 
             newComment.addEventListener('click', () => {
@@ -80,6 +82,15 @@ append js
                 fetchUpdateComment(updateTarget, () => {
                     disableWaitButton(updateComment, updateCommentText, '댓글 수정')
                 });
+            });
+
+            cancelUpdateComment.addEventListener('click', () => {
+                newComment.style.display = 'block';
+                updateComment.style.display = 'none';
+                cancelUpdateComment.style.display = 'none';
+
+                quill.setContents(); // reset quill editor
+                isPrivateComment.checked = false;
             });
 
     if owner !== undefined && owner
