@@ -519,7 +519,7 @@ communityRouter.post('/update-comment', (req, res) => {
     }
 });
 
-communityRouter.post('/delete-post', (req, res) => {
+communityRouter.post('/delete-comment', (req, res) => {
     // TODO: check if user has signed in, if user is the person who wrote the comment and if the comment exists
 });
 
