@@ -22,10 +22,10 @@ const fetchPost = (postId, password) => {
                     title.innerHTML += `<span class="post-edited">(수정됨)</span>`;
                 }
 
-                for (i of obj.data.comments) {
+                for (let i of obj.data.comments) {
                     commentsContainer.innerHTML += `
                         <div class="comment-form">
-                            <div class="comments${i.isPrivate ? " private-comment" : ""}">
+                            <div class="comments ${i.isPrivate ? "private-comment" : ""}">
                                 <div>
                                     ${i.nickname}&#58;&nbsp;${isoDateToKoreanDate(i.date)}
                                 </div>
@@ -58,6 +58,19 @@ const fetchPost = (postId, password) => {
                             })()}
                         </div>
                     `
+                }
+
+                for (const i of document.getElementsByClassName('edit-comment')) {
+                    i.addEventListener('click', () => {
+                        let root = i.parentElement.parentElement.firstElementChild;
+
+                        quill.clipboard.dangerouslyPasteHTML(root.getElementsByTagName('div')[1].innerHTML);
+                        isPrivateComment.checked = root.classList.contains('private-comment');
+                        updateTarget = i.dataset.target;
+
+                        newComment.style.display = 'none';
+                        updateComment.style.display = 'block';
+                    });
                 }
 
                 break;

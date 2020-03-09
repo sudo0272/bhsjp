@@ -30,6 +30,7 @@ block html
             input#is-private-comment(type='checkbox')
             label(for='is-private-comment') 비밀댓글
             button#new-comment.submit: span 댓글 작성
+            button#update-comment.submit(style='display: none;'): span 댓글 수정
 
 append js
     script(src='/js/fetchPost.min.js')
@@ -48,8 +49,9 @@ append js
     if isSignedIn
         script(src='https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js')
         script(src='/js/fetchNewComment.min.js')
+        script(src='/js/fetchUpdateComment.min.js')
         script(src='/js/enableWaitButton.min.js')
-        script(src='/js//disableWaitButton.min.js')
+        script(src='/js/disableWaitButton.min.js')
         script.
             const quill = new Quill('#editor', {
                 placeholder: '글 내용',
@@ -59,12 +61,24 @@ append js
             const isPrivateComment = document.getElementById('is-private-comment');
             const newComment = document.getElementById('new-comment');
             const newCommentText = newComment.getElementsByTagName('span')[0];
+            const deleteComment = document.getElementsByClassName('delete-comment');
+            const updateComment = document.getElementById('update-comment');
+            const updateCommentText = updateComment.getElementsByTagName('span')[0];
+            let updateTarget = null;
 
             newComment.addEventListener('click', () => {
                 enableWaitButton(newComment, newCommentText);
 
                 fetchNewComment(() => {
                     disableWaitButton(newComment, newCommentText, '댓글 작성')
+                });
+            });
+
+            updateComment.addEventListener('click', () => {
+                enableWaitButton(updateComment, updateCommentText);
+
+                fetchUpdateComment(updateTarget, () => {
+                    disableWaitButton(updateComment, updateCommentText, '댓글 수정')
                 });
             });
 

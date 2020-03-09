@@ -9,7 +9,8 @@ const CreatePost = require('../controllers/Post/CreatePost');
 const UpdatePost = require('../controllers/Post/UpdatePost');
 const DeletePost = require('../controllers/Post/DeletePost');
 const ReadPostList = require('../controllers/PostList/ReadPostList');
-const Comment = require('../controllers/Comment');
+const CreateComment = require('../controllers/Comment/CreateComment');
+const UpdateComment = require('../controllers/Comment/UpdateComment');
 const CommentList = require('../controllers/CommentList');
 const Sha512 = require('../lib/Sha512');
 const CheckPostOwner = require('../controllers/Post/CheckPostOwner');
@@ -477,7 +478,7 @@ communityRouter.post('/create-comment', (req, res) => {
     const postId = req.body.postId;
 
     if (req.session.user) {
-        const comment = new Comment(req.session.user.index, postId, content, isPrivateComment);
+        const comment = new CreateComment(req.session.user.index, postId, content, isPrivateComment);
 
         comment.create()
             .then(() => {
@@ -492,7 +493,28 @@ communityRouter.post('/create-comment', (req, res) => {
 });
 
 communityRouter.post('/update-comment', (req, res) => {
-    // TODO: check if user has signed in, if user is the person who wrote the comment and if the comment exist
+    const commentId = req.body.commentId;
+    const content = req.body.content;
+    const isPrivate = req.body.isPrivate;
+
+    if (req.session.user) {
+        const updateComment = new UpdateComment(req.session.user.index, commentId, content, isPrivate);
+
+        updateComment
+            .update()
+            .then(() => {
+                res.send('ok');
+            }, reason => {
+                res.send(reason);
+            }).catch(error => {
+                console.error(error);
+
+                res.send('error');
+            }
+        );
+    } else {
+        res.send('not-signed-in');
+    }
 });
 
 communityRouter.post('/delete-post', (req, res) => {
