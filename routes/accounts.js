@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const CheckAccount = require('../controllers/Account/CheckAccount');
-const CreateAccount = require('../controllers/Account/CreateAccount');
+const Account = require('../controllers/Account');
 const expressSession = require('express-session');
 const cors = require('cors');
 const RedisStore = require('connect-redis')(expressSession);
@@ -83,6 +82,7 @@ accountsRouter.post('/create-account', (req, res) => {
     const password = req.body.password;
     const nickname = req.body.nickname;
     const email = req.body.email;
+    const account = new Account();
 
     if (id === undefined) {
         res.send('no-id');
@@ -111,15 +111,13 @@ accountsRouter.post('/create-account', (req, res) => {
     } else if (email.match(/^[^@]{1,64}@[^@]{1,255}$/) === null) {
         res.send('email-template-not-match');
     } else {
-        const checkAccount = new CheckAccount(id);
-
-        checkAccount.id()
+        account
+            .doIdExist(id)
             .then(() => {
                 res.send('id-already-exists');
             }, () => {
-                const createAccount = new CreateAccount(id, password, nickname, email);
-
-                createAccount.create()
+                account
+                    .create(id, password, nickname, email)
                     .then(() => {
                         res.send('ok');
                     }).catch(error => {
@@ -136,6 +134,7 @@ accountsRouter.post('/create-account', (req, res) => {
 accountsRouter.post('/check-account', (req, res) => {
     const id = req.body.id;
     const password = req.body.password;
+    const account = new Account();
 
     if (id === undefined) {
         res.send('no-id');
@@ -150,9 +149,8 @@ accountsRouter.post('/check-account', (req, res) => {
     } else if (password.length < 4) {
         res.send('password-length-short');
     } else {
-        const checkAccount = new CheckAccount(id, password);
-
-        checkAccount.account()
+        account
+            .doAccountExist(id, password)
             .then(accountData => {
                 if (req.session.user) {
                     res.send('already-signed-in');
