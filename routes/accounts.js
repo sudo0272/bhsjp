@@ -8,6 +8,8 @@ const RedisData = require('../models/RedisData');
 const redisClient = new RedisData().getClient();
 const morgan = require('morgan');
 const Aes256 = require('../lib/Aes256');
+const nodemailer = require('nodemailer');
+const NodemailerData = require('../models/NodemailerData');
 const corsWhiteList = [
     'https://bhsjp.kro.kr',
     'https://introduce.bhsjp.kro.kr',
@@ -119,6 +121,27 @@ accountsRouter.post('/create-account', (req, res) => {
                 account
                     .create(id, password, nickname, email)
                     .then(() => {
+                        const nodemailerData = new NodemailerData();
+                        const userCertificationAddress = 'https://accounts.bhsjp.kro.kr/auth/' + new Aes256(id, 'plain', nodemailerData.getUserCertificationKey(), nodemailerData.getUserCertificationIv()).getEncrypted();
+
+                        let transporter = nodemailer.createTransport({
+                            service: nodemailerData.getService(),
+                            auth: {
+                                user: nodemailerData.getEmailAddress(),
+                                pass: nodemailerData.getPassword()
+                            }
+                        });
+
+                        transporter.sendMail({
+                            from: nodemailerData.getEmailAddress(),
+                            to: email,
+                            subject: 'BHSJP 인증 메일',
+                            html: `
+                                <h1>BHSJP의 회원이 되신 것을 축하드립니다</h1>
+                                <h3><a href="${userCertificationAddress}">여기</a>를 클릭하시거나 "${userCertificationAddress}" 로 직접 들어가서 인증해주시기 바랍니다</h3>
+                            `
+                        });
+
                         res.send('ok');
                     }).catch(error => {
                         console.error(error);
@@ -155,14 +178,27 @@ accountsRouter.post('/check-account', (req, res) => {
                 if (req.session.user) {
                     res.send('already-signed-in');
                 } else {
-                    req.session.user = {
-                        id: new Aes256(accountData.id, 'encrypted').getPlain(),
-                        nickname: new Aes256(accountData.nickname, 'encrypted').getPlain(),
-                        email: new Aes256(accountData.email, 'encrypted').getPlain(),
-                        index: accountData.index
-                    };
+                    account
+                        .isVerified(accountData.index)
+                        .then(isVerified => {
+                            if (isVerified) {
+                                req.session.user = {
+                                    id: new Aes256(accountData.id, 'encrypted').getPlain(),
+                                    nickname: new Aes256(accountData.nickname, 'encrypted').getPlain(),
+                                    email: new Aes256(accountData.email, 'encrypted').getPlain(),
+                                    index: accountData.index
+                                };
 
-                    res.send('ok');
+                                res.send('ok');
+                            } else {
+                                res.send('not-verified');
+                            }
+                        }).catch(error => {
+                            console.error(error);
+
+                            res.send('error');
+                        }
+                    );
                 }
             }, () => {
                 setTimeout(() => {
@@ -197,6 +233,70 @@ accountsRouter.post('/sign-out', cors({
     } else {
         res.send('not-signed-in');
     }
+});
+
+accountsRouter.get('/auth/:verificationCode', (req, res) => {
+    const verificationCode = req.params.verificationCode;
+    const nodemailerData = new NodemailerData();
+    const account = new Account();
+    const id = new Aes256(verificationCode, 'encrypted', nodemailerData.getUserCertificationKey(), nodemailerData.getUserCertificationIv()).getPlain();
+
+    console.log(verificationCode);
+    console.log(new Aes256(verificationCode, 'encrypted', nodemailerData.getUserCertificationKey(), nodemailerData.getUserCertificationIv()).getPlain());
+    
+    account
+        .doIdExist(id)
+        .then(() => {
+            console.log('1');
+            account
+                .getIndexByEncryptedId(new Aes256(id, 'plain').getEncrypted())
+                .then(index => {
+                    console.log('2');
+                    account
+                        .setToVerified(index)
+                        .then(() => {
+                            console.log('3');
+                            res.render('accounts/verification-success', {
+                                title: '인증 성공',
+                                isSignedIn: !!req.session.user
+                            });
+                        }).catch(error => {
+                            console.error(error);
+                            
+                            res.render('error/500', {
+                                title: '500 Internal Server Error',
+                                isSignedIn: !!req.session.user
+                            });
+                        }
+                    );
+                }, () => {
+                    res.render('accounts/verification-failure', {
+                        title: '인증 실패',
+                        isSignedIn: !!req.session.user
+                    });
+                }).catch(error => {
+                    console.error(error);
+
+                    res.render('error/500', {
+                        title: '500 Internal Server Error',
+                        isSignedIn: !!req.session.user
+                    });
+                }
+            );
+        }, () => {
+            res.render('accounts/verification-failure', {
+                title: '인증 실패',
+                isSignedIn: !!req.session.user
+            });
+        }).catch(error => {
+            console.error(error);
+
+            res.render('error/500', {
+                title: '500 Internal Server Error',
+                isSignedIn: !!req.session.user
+            });
+        }
+    );
 });
 
 accountsRouter.get('/*', (req, res) => {

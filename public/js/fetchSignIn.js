@@ -14,19 +14,23 @@ const fetchSignIn = callback => {
         callback();
 
         switch (text) {
-            case 'no-id': alert('아이디가 존재하지 않습니다'); break;
+            case 'no-id': vex.dialog.alert('아이디가 존재하지 않습니다'); break;
             case 'id-length-short':
-            case 'id-length-long': alert('아이디의 길이는 1자리에서 10자리입니다'); break;
-            case 'id-template-not-match': alert('아이디는 영문 혹은 숫자만 가능합니다'); break;
-            case 'no-password': alert('비밀번호가 존재하지 않습니다'); break;
-            case 'password-length-short': alert('비밀번호의 길이는 4자리 이상입니다'); break;
-            case 'wrong': alert('아이디 또는 비밀번호가 잘못되었습니다'); break;
-            case 'already-signed-in': alert('이미 로그인되어있습니다'); break;
-            case 'error': alert('서버 에러가 발생했습니다\n다시 시도해주세요'); break;
+            case 'id-length-long': vex.dialog.alert('아이디의 길이는 1자리에서 10자리입니다'); break;
+            case 'id-template-not-match': vex.dialog.alert('아이디는 영문 혹은 숫자만 가능합니다'); break;
+            case 'no-password': vex.dialog.alert('비밀번호가 존재하지 않습니다'); break;
+            case 'password-length-short': vex.dialog.alert('비밀번호의 길이는 4자리 이상입니다'); break;
+            case 'wrong': vex.dialog.alert('아이디 또는 비밀번호가 잘못되었습니다'); break;
+            case 'already-signed-in': vex.dialog.alert('이미 로그인되어있습니다'); break;
+            case 'not-verified': vex.dialog.alert('이메일 인증을 해주세요'); break;
+            case 'error': vex.dialog.alert('서버 에러가 발생했습니다\n다시 시도해주세요'); break;
             case 'ok':
-                alert('로그인이 완료되었습니다\n메인 페이지로 이동합니다');
-
-                location.href = 'https://bhsjp.kro.kr';
+                vex.dialog.alert({
+                    unsafeMessage: '로그인이 완료되었습니다\n메인 페이지로 이동합니다',
+                    callback: () => {
+                        location.href = 'https://bhsjp.kro.kr';
+                    }
+                });
 
                 break;
         }
@@ -35,6 +39,6 @@ const fetchSignIn = callback => {
 
         console.error(err);
 
-        alert('서버와 통신할 수 없습니다.\n다시 시도해주세요');
+        vex.dialog.alert('서버와 통신할 수 없습니다.\n다시 시도해주세요');
     });
 };

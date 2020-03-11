@@ -8,7 +8,7 @@ const Aes256 = require('../lib/Aes256');
 module.exports = class Account {
     create(id, password, nickname, email) {
         return new Promise(resolve => {
-            connection.query("INSERT INTO `accounts` (`id`, `password`, `nickname`, `email`) VALUES (?, ?, ?, ?)", [
+            connection.query("INSERT INTO `accounts` (`id`, `password`, `nickname`, `email`, `isVerified`) VALUES (?, ?, ?, ?, FALSE)", [
                 new Aes256(escapeHtml(id), 'plain').getEncrypted(),
                 new Sha512(password).getEncrypted(),
                 new Aes256(escapeHtml(nickname), 'plain').getEncrypted(),
@@ -57,6 +57,65 @@ module.exports = class Account {
                     reject('id-exist');
                 }
             });
+        });
+    }
+
+    isVerified(index) {
+        return new Promise((resolve, reject) => {
+            connection.query("SELECT `isVerified`\n" +
+                "    FROM `accounts`\n" +
+                "    WHERE `index`=?;", [
+                index
+            ], (error, result, fields) => {
+                if (error) {
+                    throw error;
+                }
+
+                if (result.length > 0) {
+                    resolve(!!result[0].isVerified);
+                } else {
+                    reject('no-account');
+                }
+            })
+        });
+    }
+
+    setToVerified(index) {
+        return new Promise(resolve => {
+            connection.query("UPDATE `accounts`\n" +
+                "    SET\n" +
+                "        `isVerified`=TRUE\n" +
+                "    WHERE `index`=?;", [
+                index
+            ], (error, result, fields) => {
+                if (error) {
+                     throw error;
+                }
+
+                resolve();
+            });
+        });
+    }
+
+    getIndexByEncryptedId(encryptedId) {
+        return new Promise((resolve, reject) => {
+            connection.query("SELECT `index`\n" +
+                "    FROM `accounts`\n" +
+                "    WHERE `id`=?;", [
+                encryptedId
+            ], (error, result, fields) => {
+                if (error) {
+                    throw error;
+                }
+
+                console.log(encryptedId, result);
+
+                if (result.length > 0) {
+                    resolve(result[0].index);
+                } else {
+                    reject('no-row');
+                }
+            })
         });
     }
 };
