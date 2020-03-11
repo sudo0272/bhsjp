@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const expressSession = require('express-session');
 const RedisStore = require('connect-redis')(expressSession);
 const RedisData = require('../models/RedisData');
+const SessionData = require('../models/SessionData');
 const redisClient = new RedisData().getClient();
 const Post = require('../controllers/Post');
 const PostList = require('../controllers/PostList');
@@ -12,6 +13,8 @@ const Sha512 = require('../lib/Sha512');
 const Aes256 = require('../lib/Aes256');
 const fetch = require('node-fetch');
 const morgan = require('morgan');
+
+const sessionData = new SessionData();
 
 const communityRouter = express.Router();
 
@@ -23,20 +26,16 @@ communityRouter.use(bodyParser.json());
 communityRouter.use(bodyParser.raw());
 
 communityRouter.use(expressSession({
-    secret: "f%*JNsNn!tFfdqog#Ba7oITKgLW0YYKOm1ARil6MW#BKlmMSrC@LSZnA5E#0!EY63#R%U!NH1#PM4AV80PVDGQDuQbHgZ%&5BEN",
-    resave: false,
-    saveUninitialized: true,
-    store: new RedisStore({
-        client: redisClient,
-        resave: false,
-        saveUninitialized: true
-    }),
+    secret: sessionData.getSecret(),
+    resave: sessionData.getResave(),
+    saveUninitialized: sessionData.getSaveUninitialized(),
+    store: eval(sessionData.getStore()),
     cookie: {
-        secure: true,
-        name: '.bhsjp.kro.kr',
-        domain: 'bhsjp.kro.kr',
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24
+        secure: sessionData.getCookieSecure(),
+        name: sessionData.getCookieName(),
+        domain: sessionData.getCookieDomain(),
+        httpOnly: sessionData.getCookieHttpOnly(),
+        maxAge: sessionData.getMaxAge()
     }
 }));
 
