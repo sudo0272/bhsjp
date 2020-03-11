@@ -3,3 +3,9 @@ node_modules/
 dump.rdb
 models/mysqlConnectionData.json
 certbot/
+models/MysqlData.js
+models/MysqlData.min.js
+models/NodemailerData.js
+models/NodemailerData.min.js
+models/SessionData.js
+models/SessionData.min.js
