@@ -9,3 +9,7 @@ models/NodemailerData.js
 models/NodemailerData.min.js
 models/SessionData.js
 models/SessionData.min.js
+lib/Aes256.js
+lib/Aes256.min.js
+lib/Sha512.js
+lib/Sha512.min.js
