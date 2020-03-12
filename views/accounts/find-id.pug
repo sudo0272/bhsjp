@@ -1,0 +1,28 @@
+extends ../layout
+
+block html
+    div 가입 시 입력하신 이메일 주소를 입력해주세요
+    form#find-id-form.d-flex.flex-column.input-container
+        input#email(type='email' placeholder='이메일 주소' required)
+        button#submit.submit: span 메일 발송
+
+append js
+    script(src='/js/enableWaitButton.min.js')
+    script(src='/js/disableWaitButton.min.js')
+    script(src='/js/fetchFindId.min.js')
+
+    script.
+        const findIdForm = document.getElementById('find-id-form');
+        const email = document.getElementById('email');
+        const submit = document.getElementById('submit');
+        const submitText = submit.getElementsByTagName('span')[0];
+
+        findIdForm.addEventListener('submit', e => {
+            e.preventDefault();
+
+            enableWaitButton(submit, submitText);
+
+            fetchFindId(email.value, () => {
+                disableWaitButton(submit, submitText, '메일 발송')
+            });
+        });

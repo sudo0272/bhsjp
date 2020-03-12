@@ -97,6 +97,26 @@ module.exports = class Account {
         });
     }
 
+    getDataByIndex(index) {
+        return new Promise((resolve, reject) => {
+            connection.query("SELECT *\n" +
+                "    FROM `accounts`\n" +
+                "    WHERE `index`=?;", [
+                index
+            ], (error, result, fields) => {
+                if (error) {
+                    throw error;
+                }
+
+                if (result.length > 0) {
+                    resolve(result[0]);
+                } else {
+                    reject('no-row');
+                }
+            })
+        });
+    }
+
     getIndexByEncryptedId(encryptedId) {
         return new Promise((resolve, reject) => {
             connection.query("SELECT `index`\n" +
@@ -108,14 +128,32 @@ module.exports = class Account {
                     throw error;
                 }
 
-                console.log(encryptedId, result);
-
                 if (result.length > 0) {
                     resolve(result[0].index);
                 } else {
                     reject('no-row');
                 }
             })
+        });
+    }
+
+    getIndexByEncryptedEmail(email) {
+        return new Promise((resolve, reject) => {
+            connection.query("SELECT `index`\n" +
+                "    FROM `accounts`\n" +
+                "    WHERE `email`=?;", [
+                email
+            ], (error, result, fields) => {
+                if (error) {
+                     throw error;
+                }
+
+                if (result.length > 0) {
+                    resolve(result[0].index);
+                } else {
+                    reject('no-row');
+                }
+            });
         });
     }
 };

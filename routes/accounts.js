@@ -298,6 +298,114 @@ accountsRouter.get('/auth/:verificationCode', (req, res) => {
     );
 });
 
+accountsRouter.get('/find-id', (req, res) => {
+    res.render('accounts/find-id', {
+        'title': '아이디 찾기',
+        'isSignedIn': req.session.user
+    });
+});
+
+accountsRouter.post('/id-lookup', (req, res) => {
+    const account = new Account();
+    const email = req.body.email;
+
+    console.log(new Aes256(email, 'plain').getEncrypted());
+
+    account
+        .getIndexByEncryptedEmail(new Aes256(email, 'plain').getEncrypted())
+        .then(index => {
+            account
+                .getDataByIndex(index)
+                .then(data => {
+                    const nodemailerData = new NodemailerData();
+                    const id = new Aes256(data.id, 'encrypted').getPlain();
+
+                    let transporter = nodemailer.createTransport({
+                        service: nodemailerData.getService(),
+                        auth: {
+                            user: nodemailerData.getEmailAddress(),
+                            pass: nodemailerData.getPassword()
+                        }
+                    });
+
+                    transporter.sendMail({
+                        from: nodemailerData.getEmailAddress(),
+                        to: email,
+                        subject: 'BHSJP 아이디 찾기',
+                        html: `
+                            <h1>BHSJP 아이디 찾기</h1>
+                            <h3>회원님의 아이디는 "${id}" 입니다</h3>
+                        `
+                    });
+
+                    res.send('ok');
+                }, reason => {
+                    const nodemailerData = new NodemailerData();
+
+                    let transporter = nodemailer.createTransport({
+                        service: nodemailerData.getService(),
+                        auth: {
+                            user: nodemailerData.getEmailAddress(),
+                            pass: nodemailerData.getPassword()
+                        }
+                    });
+
+                    transporter.sendMail({
+                        from: nodemailerData.getEmailAddress(),
+                        to: email,
+                        subject: 'BHSJP 아이디 찾기',
+                        html: `
+                    <h1>BHSJP 아이디 찾기</h1>
+                    <h3>등록되지 않은 이메일입니다</h3>
+                    <h3>다시 한 번 확인해주세요</h3>
+                `
+                    });
+
+                    res.send(reason);
+                }).catch(error => {
+                    console.error(error);
+
+                    res.send('error');
+                }
+            );
+        }, reason => {
+            const nodemailerData = new NodemailerData();
+
+            let transporter = nodemailer.createTransport({
+                service: nodemailerData.getService(),
+                auth: {
+                    user: nodemailerData.getEmailAddress(),
+                    pass: nodemailerData.getPassword()
+                }
+            });
+
+            transporter.sendMail({
+                from: nodemailerData.getEmailAddress(),
+                to: email,
+                subject: 'BHSJP 아이디 찾기',
+                html: `
+                    <h1>BHSJP 아이디 찾기</h1>
+                    <h3>등록되지 않은 이메일입니다</h3>
+                    <h3>다시 한 번 확인해주세요</h3>
+                `
+            });
+
+            res.send(reason);
+        }).catch(error => {
+            console.error(error);
+
+            res.send('error');
+        }
+    );
+});
+
+accountsRouter.get('/find-password', (req, res) => {
+    res.render('accounts/find-password', {
+        'title': '비밀번호 찾기',
+        'isSignedIn': req.session.user
+    });
+});
+
 accountsRouter.get('/*', (req, res) => {
     res.render('errors/404', {
         'title': '404 Not Found',

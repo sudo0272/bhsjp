@@ -8,6 +8,9 @@ block html
             include ../includes/passwordToggleButton
         div.text-center: button#account-submit.submit: span 로그인
 
+    div: a(href='https://accounts.bhsjp.kro.kr/find-id') 아이디 찾기
+    div: a(href='https://accounts.bhsjp.kro.kr/find-password') 비밀번호 찾기
+
 append js
     script(src='/js/togglePassword.min.js')
     script(src='/js/limitInput.min.js')
