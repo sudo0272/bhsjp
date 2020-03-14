@@ -156,4 +156,36 @@ module.exports = class Account {
             });
         });
     }
+
+    getData(json) {
+        return new Promise((resolve, reject) => {
+            let whereList = [];
+            const jsonLength = Object.keys(json).length;
+
+            if (jsonLength === 0) {
+                throw new Error('Parameter does not have data');
+            }
+
+            for (const i in json) {
+                whereList.push(i);
+                whereList.push(json[i]);
+            }
+
+            connection.query("SELECT *\n" +
+                "    FROM `accounts`\n" +
+                "    WHERE " +
+                Array(jsonLength).fill('??=?').join(' AND\n'),
+                whereList, (error, result, fields) => {
+                if (error) {
+                    throw error;
+                }
+
+                if (result.length > 0) {
+                    resolve(result);
+                } else {
+                    reject('no-row');
+                }
+            });
+        });
+    }
 };

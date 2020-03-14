@@ -18,6 +18,16 @@ const corsWhiteList = [
     'https://community.bhsjp.kro.kr'
 ];
 
+const nodemailerData = new NodemailerData();
+
+const transporter = nodemailer.createTransport({
+    service: nodemailerData.getService(),
+    auth: {
+        user: nodemailerData.getEmailAddress(),
+        pass: nodemailerData.getPassword()
+    }
+});
+
 const sessionData = new SessionData();
 
 const accountsRouter = express.Router();
@@ -120,16 +130,7 @@ accountsRouter.post('/create-account', (req, res) => {
                 account
                     .create(id, password, nickname, email)
                     .then(() => {
-                        const nodemailerData = new NodemailerData();
                         const userCertificationAddress = 'https://accounts.bhsjp.kro.kr/auth/' + new Aes256(id, 'plain', nodemailerData.getUserCertificationKey(), nodemailerData.getUserCertificationIv()).getEncrypted();
-
-                        let transporter = nodemailer.createTransport({
-                            service: nodemailerData.getService(),
-                            auth: {
-                                user: nodemailerData.getEmailAddress(),
-                                pass: nodemailerData.getPassword()
-                            }
-                        });
 
                         transporter.sendMail({
                             from: nodemailerData.getEmailAddress(),
@@ -317,16 +318,7 @@ accountsRouter.post('/id-lookup', (req, res) => {
             account
                 .getDataByIndex(index)
                 .then(data => {
-                    const nodemailerData = new NodemailerData();
                     const id = new Aes256(data.id, 'encrypted').getPlain();
-
-                    let transporter = nodemailer.createTransport({
-                        service: nodemailerData.getService(),
-                        auth: {
-                            user: nodemailerData.getEmailAddress(),
-                            pass: nodemailerData.getPassword()
-                        }
-                    });
 
                     transporter.sendMail({
                         from: nodemailerData.getEmailAddress(),
@@ -340,16 +332,6 @@ accountsRouter.post('/id-lookup', (req, res) => {
 
                     res.send('ok');
                 }, reason => {
-                    const nodemailerData = new NodemailerData();
-
-                    let transporter = nodemailer.createTransport({
-                        service: nodemailerData.getService(),
-                        auth: {
-                            user: nodemailerData.getEmailAddress(),
-                            pass: nodemailerData.getPassword()
-                        }
-                    });
-
                     transporter.sendMail({
                         from: nodemailerData.getEmailAddress(),
                         to: email,
@@ -369,16 +351,6 @@ accountsRouter.post('/id-lookup', (req, res) => {
                 }
             );
         }, reason => {
-            const nodemailerData = new NodemailerData();
-
-            let transporter = nodemailer.createTransport({
-                service: nodemailerData.getService(),
-                auth: {
-                    user: nodemailerData.getEmailAddress(),
-                    pass: nodemailerData.getPassword()
-                }
-            });
-
             transporter.sendMail({
                 from: nodemailerData.getEmailAddress(),
                 to: email,
@@ -404,6 +376,54 @@ accountsRouter.get('/find-password', (req, res) => {
         'title': '비밀번호 찾기',
         'isSignedIn': req.session.user
     });
+});
+
+accountsRouter.post('/password-lookup', (req, res) => {
+    const account = new Account();
+    const id = req.body.id;
+    const encryptedId = new Aes256(id, 'plain').getEncrypted();
+    const email = req.body.email;
+    const encryptedEmail = new Aes256(email, 'plain').getEncrypted();
+    const resetPasswordAddress = "https://accounts.bhsjp.kro.kr/reset-password/" + encryptedId;
+
+    account
+        .getData({
+            id: encryptedId,
+            email: encryptedEmail
+        }).then(result => {
+            transporter.sendMail({
+                from: nodemailerData.getEmailAddress(),
+                to: email,
+                subject: 'BHSJP 비밀번호 찾기',
+                html: `
+                    <h1>BHSJP 비밀번호 찾기</h1>
+                    <h3>회원님의 비밀번호는 저희도 알 수 없습니다</h3>
+                    <h3><a href="${resetPasswordAddress}">여기</a>를 누르시거나 "<a href="${resetPasswordAddress}">${resetPasswordAddress}</a>"로 이동하셔서 비밀번호를 재설정해주세요</h3>
+                `
+            });
+
+            res.send('ok');
+
+        }, reason => {
+            transporter.sendMail({
+                from: nodemailerData.getEmailAddress(),
+                to: email,
+                subject: 'BHSJP 비밀번호 찾기',
+                html: `
+                    <h1>BHSJP 비밀번호 찾기</h1>
+                    <h3>회원님께서 입력하신 정보와 일치하는 계정이 존재하지 않습니다</h3>
+                    <h3>다시 한 번 확인해주세요</h3>
+                `
+            });
+
+            res.send(reason);
+
+        }).catch(error => {
+            console.error(error);
+
+            res.send('error');
+        }
+    );
 });
 
 accountsRouter.get('/*', (req, res) => {
