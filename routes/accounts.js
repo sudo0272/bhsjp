@@ -11,6 +11,7 @@ const morgan = require('morgan');
 const Aes256 = require('../lib/Aes256');
 const nodemailer = require('nodemailer');
 const NodemailerData = require('../models/NodemailerData');
+const VerificationData = require('../models/VerificationData');
 const corsWhiteList = [
     'https://bhsjp.kro.kr',
     'https://introduce.bhsjp.kro.kr',
@@ -309,8 +310,6 @@ accountsRouter.get('/find-id', (req, res) => {
 accountsRouter.post('/id-lookup', (req, res) => {
     const account = new Account();
     const email = req.body.email;
-
-    console.log(new Aes256(email, 'plain').getEncrypted());
 
     account
         .getIndexByEncryptedEmail(new Aes256(email, 'plain').getEncrypted())
