@@ -9,6 +9,7 @@ const SessionData = require('../models/SessionData');
 const redisClient = new RedisData().getClient();
 const morgan = require('morgan');
 const Aes256 = require('../lib/Aes256');
+const Sha512 = require('../lib/Sha512');
 const nodemailer = require('nodemailer');
 const NodemailerData = require('../models/NodemailerData');
 const VerificationData = require('../models/VerificationData');
@@ -379,11 +380,13 @@ accountsRouter.get('/find-password', (req, res) => {
 
 accountsRouter.post('/password-lookup', (req, res) => {
     const account = new Account();
+    const verificationData = new VerificationData();
     const id = req.body.id;
     const encryptedId = new Aes256(id, 'plain').getEncrypted();
+    const verificationEncryptedId = new Aes256(id, 'plain', verificationData.getEncryptionKey(), verificationData.getEncryptionIv()).getEncrypted();
     const email = req.body.email;
     const encryptedEmail = new Aes256(email, 'plain').getEncrypted();
-    const resetPasswordAddress = "https://accounts.bhsjp.kro.kr/reset-password/" + encryptedId;
+    const resetPasswordAddress = "https://accounts.bhsjp.kro.kr/reset-password/" + verificationEncryptedId;
 
     account
         .getData({
@@ -417,6 +420,66 @@ accountsRouter.post('/password-lookup', (req, res) => {
 
             res.send(reason);
 
+        }).catch(error => {
+            console.error(error);
+
+            res.send('error');
+        }
+    );
+});
+accountsRouter.get('/reset-password/:verificationCode', (req, res) => {
+    const verificationCode = req.params.verificationCode;
+    const account = new Account();
+    const verificationData = new VerificationData();
+
+    account
+        .getData({
+            id: new Aes256(new Aes256(verificationCode, 'encrypted', verificationData.getEncryptionKey(), verificationData.getEncryptionIv()).getPlain(), 'plain').getEncrypted()
+        }).then(() => {
+            res.render('accounts/reset-password', {
+                title: '비밀번호 변경',
+                isSignedIn: req.session.user,
+                verificationCode: verificationCode
+            });
+        }, () => {
+            res.render('accounts/verification-failure', {
+                title: '인증 실패',
+                isSignedIn: !!req.session.user
+            });
+        }).catch(error => {
+            console.error(error);
+
+            res.render('errors/500', {
+                title: '500 Internal Server Error',
+                isSignedIn: !!req.session.user
+            });
+        }
+    );
+});
+
+accountsRouter.post('/change-password', (req, res) => {
+    const verificationCode = req.body.verificationCode;
+    const password = req.body.password;
+    const account = new Account();
+    const verificationData = new VerificationData();
+
+    account
+        .getData({
+            id: new Aes256(new Aes256(verificationCode, 'encrypted', verificationData.getEncryptionKey(), verificationData.getEncryptionIv()).getPlain(), 'plain').getEncrypted()
+        }).then(data => {
+            console.log(data);
+
+            return account
+                .setData({
+                    password: new Sha512(password).getEncrypted()
+                }, {
+                    index: data[0].index
+                }
+            );
+        }, () => {
+            res.send('error');
+        }).then(() => {
+            res.send('ok');
         }).catch(error => {
             console.error(error);
 

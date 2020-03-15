@@ -188,4 +188,35 @@ module.exports = class Account {
             });
         });
     }
+
+    setData(data, where) {
+        return new Promise(resolve => {
+            let whereList = [];
+            const whereLength = Object.keys(where).length;
+
+            for (const i in where) {
+                whereList.push(i);
+                whereList.push(where[i]);
+            }
+
+            console.log(whereList);
+
+            console.log(mysql.format("UPDATE `accounts`\n" +
+                "    SET ?\n" +
+                "    WHERE " + Array(whereLength).fill('??=?').join(' AND '),
+                [data].concat(whereList)));
+
+            connection.query("UPDATE `accounts`\n" +
+                "    SET ?\n" +
+                "    WHERE " + Array(whereLength).fill('??=?').join(' AND '),
+                [data].concat(whereList),
+            (error, result, fields) => {
+                if (error) {
+                    throw error;
+                }
+
+                resolve();
+            });
+        });
+    }
 };
