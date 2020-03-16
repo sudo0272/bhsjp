@@ -431,10 +431,20 @@ accountsRouter.get('/reset-password/:verificationCode', (req, res) => {
     const verificationCode = req.params.verificationCode;
     const account = new Account();
     const verificationData = new VerificationData();
+    let encryptedId;
+    
+    try {
+        encryptedId = new Aes256(new Aes256(verificationCode, 'encrypted', verificationData.getEncryptionKey(), verificationData.getEncryptionIv()).getPlain(), 'plain').getEncrypted()
+    } catch (e) {
+        res.render('accounts/verification-failure', {
+            title: '인증 실패',
+            isSignedIn: !!req.session.user
+        });
+    }
 
     account
         .getData({
-            id: new Aes256(new Aes256(verificationCode, 'encrypted', verificationData.getEncryptionKey(), verificationData.getEncryptionIv()).getPlain(), 'plain').getEncrypted()
+            id: encryptedId
         }).then(() => {
             res.render('accounts/reset-password', {
                 title: '비밀번호 변경',
@@ -462,10 +472,17 @@ accountsRouter.post('/change-password', (req, res) => {
     const password = req.body.password;
     const account = new Account();
     const verificationData = new VerificationData();
+    let encryptedId;
+
+    try {
+        encryptedId = new Aes256(new Aes256(verificationCode, 'encrypted', verificationData.getEncryptionKey(), verificationData.getEncryptionIv()).getPlain(), 'plain').getEncrypted();
+    } catch (e) {
+        res.send('error');
+    }
 
     account
         .getData({
-            id: new Aes256(new Aes256(verificationCode, 'encrypted', verificationData.getEncryptionKey(), verificationData.getEncryptionIv()).getPlain(), 'plain').getEncrypted()
+            id: encryptedId
         }).then(data => {
             console.log(data);
 
@@ -477,6 +494,10 @@ accountsRouter.post('/change-password', (req, res) => {
                 }
             );
         }, () => {
+            res.send('error');
+        }).catch(error => {
+            console.error(error);
+
             res.send('error');
         }).then(() => {
             res.send('ok');
