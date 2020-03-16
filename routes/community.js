@@ -56,9 +56,9 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
     const postList = new PostList();
 
     if (req.params.postListCount !== undefined) {
-        if (req.params.postListCount.match(/^\d+$/)) {
-            const postListCount = parseInt(req.params.postListCount);
+        const postListCount = parseInt(req.params.postListCount);
 
+        if (!isNaN(postListCount)) {
             postList
                 .read(postListCount, 20)
                 .then(postItems => {
@@ -113,7 +113,7 @@ communityRouter.post('/do-post-list-exist', (req, res) => {
     const postListCount = req.body.postList;
     const postList = new PostList();
 
-    if (postList.match(/^\d+$/)) {
+    if (!isNaN(parseInt(postListCount))) {
         postList
             .read(postListCount)
             .then(() => {
@@ -134,7 +134,7 @@ communityRouter.get('/read-post/:postId', (req, res) => {
     const postId = req.params.postId;
     const post = new Post();
 
-    if (postId.match(/^\d+$/)) {
+    if (!isNaN(parseInt(postId))) {
         post
             .getTitle(postId)
             .then(title => {
@@ -378,7 +378,7 @@ communityRouter.get('/fix-post/:postId', (req, res) => {
     const postId = req.params.postId;
     const post = new Post();
 
-    if (postId.match(/^\d+$/)) {
+    if (!isNaN(parseInt(postId))) {
         post
             .getTitle(postId)
             .then(title => {
