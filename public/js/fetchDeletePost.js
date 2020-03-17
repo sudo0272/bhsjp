@@ -32,7 +32,9 @@ const fetchDeletePost = (postId, password) => {
                         if (data) {
                             fetchDeletePost(postId, data.password);
                         } else {
-                            vex.dialog.alert('글 삭제가 취소되었습니다');
+                            vex.dialog.alert({
+                                unsafeMessage: '글 삭제가 취소되었습니다'
+                            });
                         }
                     }
                 });
@@ -40,7 +42,9 @@ const fetchDeletePost = (postId, password) => {
                 break;
 
             case 'invalid-user':
-                vex.dialog.alert('이 글의 주인이 아닙니다');
+                vex.dialog.alert({
+                    unsafeMessage: '이 글의 주인이 아닙니다'
+                });
 
                 break;
 

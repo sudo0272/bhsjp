@@ -7,18 +7,35 @@ const fetchSignOut = () => {
         return res.text();
     }).then(text => {
         switch (text) {
-            case 'cannot-sign-out': vex.dialog.alert('로그아웃 할 수 없습니다'); break;
-            case 'not-signed-in': vex.dialog.alert('로그인되어있지 않습니다'); break;
-            case 'ok':
-                vex.dialog.alert('로그아웃되었습니다\n홈페이지로 이동합니다');
+            case 'cannot-sign-out':
+                vex.dialog.alert({
+                    unsafeMessage: '로그아웃 할 수 없습니다'
+                });
 
-                location.href = 'https://bhsjp.kro.kr';
+                break;
+
+            case 'not-signed-in':
+                vex.dialog.alert({
+                    unsafeMessage: '로그인되어있지 않습니다'
+                });
+
+                break;
+
+            case 'ok':
+                vex.dialog.alert({
+                    unsafeMessage: '로그아웃되었습니다<br>홈페이지로 이동합니다',
+                    callback: () => {
+                        location.href = 'https://bhsjp.kro.kr';
+                    }
+                });
 
                 break;
         }
     }).catch(err => {
         console.error(err);
 
-        vex.dialog.alert('서버와 통신할 수 없습니다.\n다시 시도해주세요');
+        vex.dialog.alert({
+            unsafeMessage: '서버와 통신할 수 없습니다<br>다시 시도해주세요'
+        });
     });
 };

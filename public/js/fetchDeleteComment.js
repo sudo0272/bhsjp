@@ -21,9 +21,25 @@ const fetchDeleteComment = commentId => {
 
                 break;
 
-            case 'invalid-user': vex.dialog.alert('삭제 권한이 없습니다'); break;
-            case 'no-row': vex.dialog.alert('댓글이 존재하지 않습니다'); break;
-            case 'error': vex.dialog.alert('서버 에러가 발생했습니다\n다시 시도해주세요');
+            case 'invalid-user':
+                vex.dialog.alert({
+                    unsafeMessage: '삭제 권한이 없습니다'
+                });
+
+                break;
+
+            case 'no-row':
+                vex.dialog.alert({
+                    unsafeMessage: '댓글이 존재하지 않습니다'
+                });
+
+                break;
+            case 'error':
+                vex.dialog.alert({
+                    unsafeMessage: '서버 에러가 발생했습니다<br>다시 시도해주세요'
+                });
+
+                break;
         }
     });
 };

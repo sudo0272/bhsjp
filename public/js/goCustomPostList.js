@@ -15,7 +15,10 @@ const goCustomPostList = targetPostList => {
                 case 'number-format-not-match':
                 case 'error':
                 case 'no-list':
-                    vex.dialog.alert('에러가 발생했습니다\n다시 시도해주세요');
+                    vex.dialog.alert({
+                        unsafeMessage: '에러가 발생했습니다<br>다시 시도해주세요'
+                    });
+
                     break;
                 case 'ok':
                     location.href = 'https://community.bhsjp.kro.kr/view-posts/' + targetPostList;

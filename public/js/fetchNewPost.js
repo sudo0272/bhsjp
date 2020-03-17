@@ -23,9 +23,27 @@ const fetchNewPost = callback => {
 
                 break;
 
-            case 'empty-content': vex.dialog.alert('글의 내용이 비어있습니다'); break;
-            case 'empty-title': vex.dialog.alert('제목이 비어있습니다'); break;
-            case 'error': vex.dialog.alert('서버 에러가 발생했습니다\n다시 시도해주세요'); break;
+            case 'empty-content':
+                vex.dialog.alert({
+                    unsafeMessage: '글의 내용이 비어있습니다'
+                });
+
+                break;
+
+            case 'empty-title':
+                vex.dialog.alert({
+                    unsafeMessage: '제목이 비어있습니다'
+                });
+
+                break;
+
+            case 'error':
+                vex.dialog.alert({
+                    unsafeMessage: '서버 에러가 발생했습니다<br>다시 시도해주세요'
+                });
+
+                break;
+
             case 'ok': vex.dialog.alert({
                 unsafeMessage: '글이 등록되었습니다\n"글 보기" 페이지로 이동합니다',
                 callback: () => {

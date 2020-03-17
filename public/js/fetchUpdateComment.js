@@ -23,7 +23,12 @@ const fetchUpdateComment = (commentId, callback) => {
 
                 break;
 
-            case 'error': vex.dialog.alert('서버 에러가 발생했습니다\n다시 시도해주세요'); break;
+            case 'error':
+                vex.dialog.alert({
+                    unsafeMessage: '서버 에러가 발생했습니다<br>다시 시도해주세요'
+                });
+
+                break;
         }
 
         callback();
