@@ -249,15 +249,12 @@ accountsRouter.get('/auth/:verificationCode', (req, res) => {
     account
         .doIdExist(id)
         .then(() => {
-            console.log('1');
             account
                 .getIndexByEncryptedId(new Aes256(id, 'plain').getEncrypted())
                 .then(index => {
-                    console.log('2');
                     account
                         .setToVerified(index)
                         .then(() => {
-                            console.log('3');
                             res.render('accounts/verification-success', {
                                 title: '인증 성공',
                                 isSignedIn: !!req.session.user
