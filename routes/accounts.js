@@ -471,10 +471,18 @@ accountsRouter.post('/change-password', (req, res) => {
     const verificationData = new VerificationData();
     let encryptedId;
 
+    if (password.length < 4) {
+        res.send('password-short');
+
+        return;
+    }
+
     try {
         encryptedId = new Aes256(new Aes256(verificationCode, 'encrypted', verificationData.getEncryptionKey(), verificationData.getEncryptionIv()).getPlain(), 'plain').getEncrypted();
     } catch (e) {
         res.send('error');
+
+        return;
     }
 
     account

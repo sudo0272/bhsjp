@@ -22,10 +22,19 @@ function fetchChangePassword(verificationCode, password) {
 
                 break;
 
+            case 'password-short':
+                vex.dialog.alert({
+                    unsafeMessage: '비밀번호는 4글자 이상입니다'
+                });
+
+                break;
+
             case 'error':
                 vex.dialog.alert({
                     unsafeMessage: '서버 에러가 발생했습니다<br>다시 시도해주세요'
                 });
+
+                break;
         }
     });
 }
