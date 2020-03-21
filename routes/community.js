@@ -494,14 +494,18 @@ communityRouter.post('/create-comment', (req, res) => {
     const comment = new Comment();
 
     if (req.session.user) {
-        comment
-            .create(req.session.user.index, postId, content, isPrivateComment)
-            .then(() => {
-                res.send('ok');
-            }).catch(() => {
-                res.send('error');
-            }
-        );
+        if (content.replace(/<.*?>/g, '').length === 0) {
+            res.send('empty-content')
+        } else {
+            comment
+                .create(req.session.user.index, postId, content, isPrivateComment)
+                .then(() => {
+                    res.send('ok');
+                }).catch(() => {
+                    res.send('error');
+                }
+            );
+        }
     } else {
         res.send('not-signed-in');
     }
