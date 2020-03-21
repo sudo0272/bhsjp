@@ -13,3 +13,4 @@ lib/Aes256.js
 lib/Aes256.min.js
 lib/Sha512.js
 lib/Sha512.min.js
+public/txt/bad-words-filter
