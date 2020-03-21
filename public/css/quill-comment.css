@@ -1,0 +1,8 @@
+#editor {
+  height: inherit;
+}
+#editor > .ql-editor {
+  height: inherit;
+}
+
+/*# sourceMappingURL=quill-comment.css.map */
