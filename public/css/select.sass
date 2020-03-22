@@ -1,0 +1,9 @@
+@function icon($character)
+  @return unquote('\"') + unquote(str-insert($character,'\\', 1)) + unquote('\"')
+
+select
+  border: 2px #141414 solid
+  background-color: #dddddd
+  outline: none
+  padding: 0
+  margin: 0

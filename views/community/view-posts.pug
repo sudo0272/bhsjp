@@ -4,6 +4,18 @@ block css
     link(href='/css/posts.min.css' rel='stylesheet')
 
 block html
+    div.d-flex.flex-row
+        div.d-flex.flex-row
+            label(for='order') 정렬:
+            select#order
+                case order
+                    when 'asc'
+                        option(value='asc' selected) 오름차순
+                        option(value='desc') 내림차순
+                    when 'desc'
+                        option(value='asc') 오름차순
+                        option(value='desc' selected) 내림차순
+
     each i in postItems
         div
             a.post-items(href='https://community.bhsjp.kro.kr/read-post/' + i.index)
@@ -12,7 +24,7 @@ block html
                 =i.title
     .d-flex.flex-row
         if postListCount > 0
-            a.move-post(href='https://community.bhsjp.kro.kr/view-posts/' + (postListCount - 1))
+            a.move-post(href='https://community.bhsjp.kro.kr/view-posts/' + (postListCount - 1) + '?order=' + order)
                 i.material-icons keyboard_arrow_left
         else
             a.move-post.no-target-page: i.material-icons keyboard_arrow_left
@@ -24,7 +36,7 @@ block html
         button#move-custom-page(type='button'): i.material-icons autorenew
 
         if (postListCount + 1) * 20 + 1 <= postCount
-            a.move-post(href='https://community.bhsjp.kro.kr/view-posts/' + (postListCount + 1))
+            a.move-post(href='https://community.bhsjp.kro.kr/view-posts/' + (postListCount + 1) + '?order=' + order)
                 i.material-icons keyboard_arrow_right
         else
             a.move-post.no-target-page: i.material-icons keyboard_arrow_right
@@ -35,7 +47,12 @@ append js
     script.
         const movePage = document.getElementById('move-page');
         const moveCustomPage = document.getElementById('move-custom-page');
+        const order = document.getElementById('order');
 
         moveCustomPage.addEventListener('click', () => {
             goCustomPostList(movePage.value);
+        });
+
+        order.addEventListener('change', e => {
+            location.href = 'https://community.bhsjp.kro.kr/view-posts/0?order=' + e.target.value;
         });

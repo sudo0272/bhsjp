@@ -5,14 +5,14 @@ const connection = mysql.createConnection(new MysqlData().getConnection());
 module.exports = class PostList {
     constructor() {}
 
-    read(offset, count) {
+    read(offset, count, order='desc') {
         return new Promise((resolve, reject) => {
             connection.query(
                 "SELECT p.`index`, p.`title`, p.`password`\n" +
                 "FROM `posts` p\n" +
                 "LEFT JOIN `accounts` a\n" +
                 "ON p.`author`=a.`index`\n" +
-                "ORDER BY p.`index` DESC\n" +
+                "ORDER BY p.`index` " + order + "\n" +
                 "LIMIT ?, ?", [
                     offset * count,
                     count

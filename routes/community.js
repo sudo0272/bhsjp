@@ -54,13 +54,18 @@ communityRouter.get('/', (req, res) => {
 
 communityRouter.get('/view-posts/:postListCount', (req, res) => {
     const postList = new PostList();
+    let order = req.query.order;
+
+    if (order === undefined || (order !== 'asc' && order !== 'desc')) {
+        order = 'desc';
+    }
 
     if (req.params.postListCount !== undefined) {
         const postListCount = parseInt(req.params.postListCount);
 
         if (!isNaN(postListCount)) {
             postList
-                .read(postListCount, 20)
+                .read(postListCount, 20, order)
                 .then(postItems => {
                     postList
                         .getCount()
@@ -70,7 +75,8 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
                                 isSignedIn: !!req.session.user,
                                 postItems: postItems,
                                 postListCount: postListCount,
-                                postCount: postCount
+                                postCount: postCount,
+                                order: order
                             });
                         }).catch(error => {
                             console.error(error);
