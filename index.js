@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const subdomain = require('express-subdomain');
 const fs = require('fs');
 const path = require('path');
+const http = require('http');
 const https = require('https');
 const expressSession = require('express-session');
 const RedisStore = require('connect-redis')(expressSession);
@@ -25,7 +26,8 @@ const certificationData = {
     ca:   fs.readFileSync(path.join(__dirname, certificationDataPath, 'chain.pem'),   'utf8')
 };
 
-const PORT = 443;
+const HTTP_PORT = 80;
+const HTTPS_PORT = 443;
 
 const sessionData = new SessionData();
 
@@ -80,8 +82,19 @@ app.get('/', (req, res) => {
     });
 });
 
-const server = https.createServer(certificationData, app);
+const httpsServer = https.createServer(certificationData, app);
+const httpServer = http.createServer((req, res) => {
+    res.writeHead(301, {
+        Location: `https://${req.headers.host}${req.url}`
+    });
 
-server.listen(PORT, () => {
-    console.log('HTTPS server running on', PORT);
+    res.end();
+});
+
+httpServer.listen(HTTP_PORT, () => {
+    console.log('HTTP server running on', HTTP_PORT);
+});
+
+httpsServer.listen(HTTPS_PORT, () => {
+    console.log('HTTPS server running on', HTTPS_PORT);
 });
