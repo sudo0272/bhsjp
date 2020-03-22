@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     for (let i = 0; i < topMenus.length; i++) {
-        topMenus[i].addEventListener('dblclick', e => toggleSubMenu(e, topMenuIcons[i], subMenus[i]));
-        topMenuIcons[i].addEventListener('click', e => toggleSubMenu(e, topMenuIcons[i], subMenus[i]));
+        topMenus[i].addEventListener('click', e => toggleSubMenu(e, topMenuIcons[i], subMenus[i]));
     }
 });

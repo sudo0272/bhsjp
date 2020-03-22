@@ -34,16 +34,18 @@ html
 
                 ul
                     li
-                        i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right
-                        span.top-menus(data-is-opened='false') 소개
+                        span.top-menus(data-is-opened='false')
+                            i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right
+                            span 소개
 
                         ul.sub-menus
                             a(href=PROTOCOL + '://introduce.' + BASE_URL + '/project'):   li 프로젝트
                             a(href=PROTOCOL + '://introduce.' + BASE_URL + '/developer'): li 개발자
 
                     li
-                        i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right
-                        span.top-menus(data-is-opened='false') 커뮤니티
+                        span.top-menus(data-is-opened='false')
+                            i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right
+                            span 커뮤니티
 
                         ul.sub-menus
                             a(href=PROTOCOL + '://community.' + BASE_URL + '/view-posts/0'): li 글 보기
@@ -56,8 +58,9 @@ html
                                 a#delete-post: li 글 삭제
 
                     li
-                        i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right
-                        span.top-menus(data-is-opened='false') 계정
+                        span.top-menus(data-is-opened='false')
+                            i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right
+                            span 계정
 
                         if isSignedIn
                             ul.sub-menus
