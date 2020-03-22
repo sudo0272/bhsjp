@@ -1,0 +1,11 @@
+function parseUrlQuery(url) {
+    let query = {};
+
+    for (const i of url.split('?')[1].split('&')) {
+        let temp = i.split('=');
+
+        query[temp[0]] = temp[1];
+    }
+
+    return query;
+}

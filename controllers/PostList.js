@@ -5,13 +5,14 @@ const connection = mysql.createConnection(new MysqlData().getConnection());
 module.exports = class PostList {
     constructor() {}
 
-    read(offset, count, order='desc') {
+    read(offset, count, order='desc', searchOption=undefined, searchKeyword=undefined) {
         return new Promise((resolve, reject) => {
             connection.query(
                 "SELECT p.`index`, p.`title`, p.`password`\n" +
                 "FROM `posts` p\n" +
                 "LEFT JOIN `accounts` a\n" +
                 "ON p.`author`=a.`index`\n" +
+                (typeof searchOption === 'string' && typeof searchKeyword === 'string' ? [' WHERE ', mysql.escapeId(searchOption), ' LIKE "%', mysql.escape(searchKeyword).slice(1, -1), '%"'].join('') : '') +
                 "ORDER BY p.`index` " + order + "\n" +
                 "LIMIT ?, ?", [
                     offset * count,

@@ -55,6 +55,8 @@ communityRouter.get('/', (req, res) => {
 communityRouter.get('/view-posts/:postListCount', (req, res) => {
     const postList = new PostList();
     let order = req.query.order;
+    const searchOption = (typeof req.query.searchOption === 'string' && (req.query.searchOption === 'title' || req.query.searchOption === 'content')) ? req.query.searchOption : 'title';
+    const searchKeyword = req.query.searchKeyword;
 
     if (order === undefined || (order !== 'asc' && order !== 'desc')) {
         order = 'desc';
@@ -65,7 +67,7 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
 
         if (!isNaN(postListCount)) {
             postList
-                .read(postListCount, 20, order)
+                .read(postListCount, 20, order, searchOption, searchKeyword)
                 .then(postItems => {
                     postList
                         .getCount()
@@ -76,7 +78,9 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
                                 postItems: postItems,
                                 postListCount: postListCount,
                                 postCount: postCount,
-                                order: order
+                                order: order,
+                                previousSearchOption: searchOption,
+                                previousSearchKeyword: searchKeyword
                             });
                         }).catch(error => {
                             console.error(error);
@@ -88,9 +92,15 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
                         }
                     );
                 }, reason => {
-                    res.render('errors/404', {
-                        'title': '404 Not Found',
-                        'isSignedIn': req.session.user
+                    res.render('community/view-posts', {
+                        title: '글 보기',
+                        isSignedIn: !!req.session.user,
+                        postItems: [],
+                        postListCount: postListCount,
+                        postCount: 0,
+                        order: order,
+                        previousSearchOption: searchOption,
+                        previousSearchKeyword: searchKeyword
                     });
                 }).catch(error => {
                     console.error(error);
