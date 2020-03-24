@@ -47,13 +47,59 @@
     },
     "project": {
       "meaning": {
-        "label": "Meaning of BHSJP",
+        "title": "Meaning of BHSJP",
         "data": "BHSJP stands for 'By Hong SeJung Project'"
       },
       "direction": {
-        "label": "Direction of this project",
+        "title": "Direction of this project",
         "data": "This project will be a website whose main feature is community and provide convenient and easy-to-use online tools"
       }
     }
+  },
+  "community": {
+    "index": {
+      "introducingCommunity": {
+        "title": "This community is ...",
+        "content": "A community that inherits former 'communitybs.kro.kr'"
+      }
+    },
+    "newPost": {
+      "submitText": "Upload this post"
+    },
+    "fixPost": {
+      "submitText": "Fix this post"
+    },
+    "readPost": {
+      "comment": {
+        "private": "Private Comment",
+        "write": "Write a new comment",
+        "edit": "Edit this comment",
+        "cancel": "Cancel",
+        "contentPlaceHolder": "Comment Content"
+      }
+    },
+    "viewPosts": {
+      "search": {
+        "inputKeyword": "Input a keyword",
+        "options": {
+          "title": "Title",
+          "content": "Content"
+        },
+        "order": {
+          "ascending": "Ascending",
+          "descending": "Descending"
+        }
+      }
+    },
+    "writePost": {
+      "post": {
+        "title": "Title",
+        "password": "Password",
+        "contentPlaceHolder": "Post Content"
+      }
+    }
+  },
+  "errorMessages": {
+    "notSignedIn": "You did not signed in<br>Redirecting to sign in page"
   }
 }

@@ -7,6 +7,9 @@ block css
     link(href='/css/quill-comment.min.css' rel='stylesheet')
 
 block html
+    -
+        const i18n = __('community').readPost;
+
     #post-information.d-flex.flex-row.justify-content-around
         .d-flex.flex-row
             i.material-icons account_box
@@ -33,10 +36,10 @@ block html
         div: #editor
         div.text-center.d-flex.flex-row.align-items-center
             input#is-private-comment(type='checkbox')
-            label(for='is-private-comment') 비밀댓글
-            button#new-comment.submit: span 댓글 작성
-            button#update-comment.submit(style='display: none;'): span 댓글 수정
-            button#cancel-update-comment.submit(style='display: none') 취소
+            label(for='is-private-comment') #{i18n.comment.private}
+            button#new-comment.submit: span #{i18n.comment.write}
+            button#update-comment.submit(style='display: none;'): span #{i18n.comment.edit}
+            button#cancel-update-comment.submit(style='display: none') #{i18n.comment.cancel}
 
 append js
     script(src='/js/fetchPost.min.js')
@@ -62,7 +65,7 @@ append js
         script(src='/js/disableWaitButton.min.js')
         script.
             const quill = new Quill('#editor', {
-                placeholder: '글 내용',
+                placeholder: '#{i18n.comment.contentPlaceHolder}',
                 theme: 'snow'
             });
 
@@ -78,7 +81,7 @@ append js
                 enableWaitButton(newComment, newCommentText);
 
                 fetchNewComment(() => {
-                    disableWaitButton(newComment, newCommentText, '댓글 작성')
+                    disableWaitButton(newComment, newCommentText, '#{i18n.comment.write}')
                 });
             });
 
@@ -86,7 +89,7 @@ append js
                 enableWaitButton(updateComment, updateCommentText);
 
                 fetchUpdateComment(updateTarget, () => {
-                    disableWaitButton(updateComment, updateCommentText, '댓글 수정')
+                    disableWaitButton(updateComment, updateCommentText, '#{i18n.comment.edit}')
                 });
             });
 

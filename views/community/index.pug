@@ -1,8 +1,11 @@
 extends ../layout
 
 block html
+    -
+        const i18n = __('community').index;
+
     .d-flex.align-items-center
         div
-            h5 이 커뮤니티는...
+            h5 #{i18n.introducingCommunity.title}
             p
-                | 과거 `communitybs.kro.kr` 계승하는 커뮤니티입니다
+                | #{i18n.introducingCommunity.content}

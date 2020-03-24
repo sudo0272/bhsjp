@@ -4,28 +4,31 @@ block css
     link(href='/css/posts.min.css' rel='stylesheet')
 
 block html
+    -
+        const i18n = __('community').viewPosts;
+
     div.d-flex.flex-row
         div.d-flex.flex-row.align-items-center#search-container
-            input#search-keyword(placeholder='검색어 입력' value=previousSearchKeyword)
+            input#search-keyword(placeholder=i18n.search.inputKeyword value=previousSearchKeyword)
             select#search-option
                 case previousSearchOption
                     when 'title'
-                        option(value='title' selected) 제목
-                        option(value='content') 내용
+                        option(value='title' selected) #{i18n.search.options.title}
+                        option(value='content') #{i18n.search.options.content}
                     when 'content'
-                        option(value='title') 제목
-                        option(value='content' selected) 내용
+                        option(value='title') #{i18n.search.options.title}
+                        option(value='content' selected) #{i18n.search.options.content}
             i#search.material-icons search
 
         div.d-flex.flex-row.align-items-center
             select#order
                 case order
                     when 'asc'
-                        option(value='asc' selected) 오름차순
-                        option(value='desc') 내림차순
+                        option(value='asc' selected) #{i18n.search.order.ascending}
+                        option(value='desc') #{i18n.search.order.descending}
                     when 'desc'
-                        option(value='asc') 오름차순
-                        option(value='desc' selected) 내림차순
+                        option(value='asc') #{i18n.search.order.ascending}
+                        option(value='desc' selected) #{i18n.search.order.descending}
 
     each i in postItems
         div

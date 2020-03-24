@@ -1,7 +1,9 @@
 extends ./write-post
 
 block submitText
-    span 글 작성
+    -
+        i18n = __('community').newPost
+    span #{i18n.submitText}
 
 append js
     script(src='/js/enableWaitButton.min.js')

@@ -6,12 +6,16 @@ block css
 
 block html
     if isSignedIn
+        -
+            let i18n = __('community').writePost;
+            const errorMessages = __('errorMessages');
+
         form#post-container.d-flex.flex-column.align-items-center
             .d-flex.flex-column.input-container
-                input#post-title(type='text' placeholder='제목' required)
+                input#post-title(type='text' placeholder=i18n.post.title required)
 
                 div
-                    input#post-password(type='password' placeholder='비밀번호')
+                    input#post-password(type='password' placeholder=i18n.post.password)
                     include ../includes/passwordToggleButton
 
             div#editor-container
@@ -20,6 +24,9 @@ block html
             div.text-center: button#post-submit.submit: block submitText
 
 append js
+    -
+        let i18n = __('community').writePost;
+        const errorMessages = __('errorMessages');
     script(src='https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js')
     script(src='/js/limitInput.min.js')
     script(src='/js/togglePassword.min.js')
@@ -38,7 +45,7 @@ append js
             const postSubmitText = postSubmit.getElementsByTagName('span')[0];
 
             const quill = new Quill('#editor', {
-                placeholder: '글 내용',
+                placeholder: '#{i18n.post.contentPlaceHolder}',
                 theme: 'snow'
             });
 
@@ -47,7 +54,7 @@ append js
     else
         script.
             vex.dialog.alert({
-                unsafeMessage: '로그인되지 않았습니다\n로그인 페이지로 이동합니다',
+                unsafeMessage: '#{errorMessages.notSignedIn}',
                 callback: () => {
                     location.href = 'https://accounts.bhsjp.kro.kr/sign-in'
                 }
