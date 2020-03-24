@@ -1,5 +1,18 @@
 extends ../layout
 
+block html
+    -
+        const i18n = __('accounts').signUp;
+
+    form#account-form-container.d-flex.flex-column.input-container
+        input#account-id.account-form(type='text' placeholder=i18n.usernamePlaceholder name='id' autocomplete='off' minlength='1' maxlength='10')
+        div
+            input#account-password.account-form(type='password' placeholder=i18n.passwordPlaceholder name='password' autocomplete='off' minlength='4')
+            include ../includes/passwordToggleButton
+        div: input#account-nickname.account-form(type='text' placeholder=i18n.nicknamePlaceholder name='nickname' maxlength='10' autocomplete='off')
+        div: input#account-email.account-form(type='email' placeholder=i18n.emailPlaceholder name='email' maxlength='320' autocomplete='on')
+        div.text-center: button#account-submit.submit: span #{i18n.submit}
+
 append js
     script(src='/js/togglePassword.min.js')
     script(src='/js/limitInput.min.js')
@@ -26,16 +39,6 @@ append js
             enableWaitButton(accountSubmit, accountSubmitText);
 
             fetchSignUp(() => {
-                disableWaitButton(accountSubmit, accountSubmitText, '회원가입');
+                disableWaitButton(accountSubmit, accountSubmitText, '#{i18n.submit}');
             });
         });
-
-block html
-    form#account-form-container.d-flex.flex-column.input-container
-        input#account-id.account-form(type='text' placeholder='아이디' name='id' autocomplete='off' minlength='1' maxlength='10' title='1자리에서 10자리의 영문 혹은 숫자를 입력해주세요' required)
-        div
-            input#account-password.account-form(type='password' placeholder='비밀번호' name='password' autocomplete='off' minlength='4' title='최소 4글자의 영문 혹은 숫자, 특수문자를 입력해주세요' required)
-            include ../includes/passwordToggleButton
-        div: input#account-nickname.account-form(type='text' placeholder='닉네임' name='nickname' maxlength='10' autocomplete='off' required)
-        div: input#account-email.account-form(type='email' placeholder='이메일' name='email' maxlength='320' autocomplete='on' required)
-        div.text-center: button#account-submit.submit: span 회원가입

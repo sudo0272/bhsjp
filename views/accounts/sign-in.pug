@@ -1,15 +1,16 @@
 extends ../layout
 
 block html
-    form#account-form-container.d-flex.flex-column.input-container
-        input#account-id(type='text' placeholder='아이디' name='id' autocomplete='off' minlength='1' maxlength='10' title='1자리에서 10자리의 영문 혹은 숫자를 입력해주세요' required)
-        div
-            input#account-password(type='password' placeholder='비밀번호' name='password' autocomplete='off' minlength='4' title='최소 4글자의 영문 혹은 숫자, 특수문자를 입력해주세요' required)
-            include ../includes/passwordToggleButton
-        div.text-center: button#account-submit.submit: span 로그인
+    -
+        const i18n = __('accounts').signIn;
+        const errorMessages = __('errorMessages');
 
-    div: a(href='https://accounts.bhsjp.kro.kr/find-id') 아이디 찾기
-    div: a(href='https://accounts.bhsjp.kro.kr/find-password') 비밀번호 찾기
+    form#account-form-container.d-flex.flex-column.input-container
+        input#account-id(type='text' placeholder=i18n.usernamePlaceholder name='id' autocomplete='off' minlength='1' maxlength='10' required)
+        div
+            input#account-password(type='password' placeholder=i18n.passwordPlaceholder name='password' autocomplete='off' minlength='4' required)
+            include ../includes/passwordToggleButton
+        div.text-center: button#account-submit.submit: span #{i18n.submit}
 
 append js
     script(src='/js/togglePassword.min.js')
@@ -37,6 +38,6 @@ append js
             enableWaitButton(accountSubmit, accountSubmitText);
 
             fetchSignIn(() => {
-                disableWaitButton(accountSubmit, accountSubmitText, '로그인');
+                disableWaitButton(accountSubmit, accountSubmitText, '#{i18n.submit}');
             });
         });

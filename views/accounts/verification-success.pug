@@ -1,12 +1,17 @@
 extends ../layout
 
 block html
+    -
+        const i18n = __('accounts').verificationSuccess;
+
     .d-flex.flex-row.align-items-center
         div
             h2 BHSJP
         div
-            h5 인증에 성공했습니다
-            h5 BHSJP의 회원이 되신 것을 진심으로 축하드립니다
+            each i in i18n.informationMessages
+                h5= i
+
             h5
-                a(href='https://accounts.bhsjp.kro.kr/sign-in') 여기
-                | 를 눌러 로그인 해주세요
+                | #{i18n.signInMessage.front}
+                a(href='https://accounts.bhsjp.kro.kr/sign-in') #{i18n.signInMessage.here}
+                | #{i18n.signInMessage.back}

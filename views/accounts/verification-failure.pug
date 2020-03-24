@@ -1,9 +1,12 @@
 extends ../layout
 
 block html
+    -
+        const i18n = __('accounts').verificationFailure;
+
     .d-flex.flex-row.align-items-center
         div
             h2 BHSJP
         div
-            h5 인증에 실패했습니다
-            h5 링크가 잘못 입력된 것은 아닌지 다시 한 번 확인해주세요
+            each i in i18n.informationMessages
+                h5= i

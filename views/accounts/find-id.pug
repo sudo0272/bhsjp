@@ -1,10 +1,13 @@
 extends ../layout
 
 block html
-    div 가입 시 입력하신 이메일 주소를 입력해주세요
+    -
+        const i18n = __('accounts').findId;
+
+    div #{i18n.informationMessage}
     form#find-id-form.d-flex.flex-column.input-container
-        input#email(type='email' placeholder='이메일 주소' required)
-        button#submit.submit: span 메일 발송
+        input#email(type='email' placeholder=i18n.emailPlaceholder required)
+        button#submit.submit: span #{i18n.submit}
 
 append js
     script(src='/js/enableWaitButton.min.js')
@@ -23,6 +26,6 @@ append js
             enableWaitButton(submit, submitText);
 
             fetchFindId(email.value, () => {
-                disableWaitButton(submit, submitText, '메일 발송')
+                disableWaitButton(submit, submitText, '#{i18n.submit}')
             });
         });

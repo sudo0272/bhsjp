@@ -99,7 +99,55 @@
       }
     }
   },
+  "accounts": {
+    "findId": {
+      "informationMessage": "Input email address you inputted when you signed up",
+      "emailPlaceholder": "Email address",
+      "submit": "Send email"
+    },
+    "findPassword": {
+      "informationMessage": "Input your username and email address you inputted when you signed up",
+      "usernamePlaceholder": "Username",
+      "emailPlaceholder": "Email address",
+      "submit": "Send email"
+    },
+    "resetPassword": {
+      "passwordPlaceholder": "Password",
+      "passwordConfirmPlaceholder": "Confirm password",
+      "submit": "Change password"
+    },
+    "signIn": {
+      "usernamePlaceholder": "Username",
+      "passwordPlaceholder": "Password",
+      "submit": "Sign in"
+    },
+    "signUp": {
+      "usernamePlaceholder": "Username",
+      "passwordPlaceholder": "Password",
+      "nicknamePlaceholder": "Nickname",
+      "emailPlaceholder": "Email address",
+      "submit": "Sign up"
+    },
+    "verificationFailure": {
+      "informationMessages": [
+        "Sorry, we failed to verify",
+        "Please check verification email again"
+      ]
+    },
+    "verificationSuccess": {
+      "informationMessages": [
+        "We successfully verified you",
+        "I'm really proud of you to being an user of BHSJP"
+      ],
+      "signInMessage": {
+        "front": "Click ",
+        "here": "here",
+        "back": " to sign in"
+      }
+    }
+  },
   "errorMessages": {
-    "notSignedIn": "You did not sign in<br>Redirecting to sign in page"
+    "notSignedIn": "You did not sign in<br>Redirecting to sign in page",
+    "passwordNotMatch": "Your password and confirmation password do not match"
   }
 }
