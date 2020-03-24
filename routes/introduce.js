@@ -6,6 +6,10 @@ const RedisData = require('../models/RedisData');
 const SessionData = require('../models/SessionData');
 const redisClient = new RedisData().getClient();
 const morgan = require('morgan');
+const i18n = require('i18n');
+const cookieParser = require('cookie-parser');
+const I18nData = require('../models/I18nData');
+const i18nData = new I18nData();
 
 const sessionData = new SessionData();
 
@@ -37,6 +41,19 @@ introduceRouter.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :u
 morgan.token('remote-user', (req, res) => {
     return (req.session && req.session.user) ? req.session.user.id : '-';
 });
+
+introduceRouter.use(cookieParser());
+
+i18n.configure({
+    locales:       i18nData.getLocales(),
+    defaultLocale: i18nData.getDefaultLocale(),
+    cookie:        i18nData.getCookieName(),
+    directory:     i18nData.getDirectoryPath(),
+    updateFiles:   i18nData.getUpdateFiles(),
+    register:      i18nData.getRegister()
+});
+
+introduceRouter.use(i18n.init);
 
 introduceRouter.get('/', (req, res) => {
     res.render('introduce/index', {

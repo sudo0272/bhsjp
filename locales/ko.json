@@ -1,0 +1,59 @@
+{
+  "introduce": {
+    "developer": {
+      "name": {
+        "label": "이름",
+        "data": "홍세정"
+      },
+
+      "accounts": {
+        "label": "계정",
+        "github": "깃허브",
+        "twitter": "트위터",
+        "facebook": "페이스북"
+      },
+
+      "age": {
+        "label": "나이",
+        "data": 18
+      },
+
+      "projects": {
+        "label": "프로젝트",
+        "beforeUsingGithub": {
+          "label": "깃허브 사용 전",
+          "data": "날이감"
+        },
+        "afterUsingGitbub": {
+          "label": "깃허브 사용 후"
+        }
+      },
+
+      "prizes": {
+        "label": "상",
+        "2019NationalPublicDataUtilizationCompetitionOfHighSchoolStudents": {
+          "label": "2019 전국 고등학생 공공데이터 활용 경진대회",
+          "team": {
+            "label": "팀"
+          },
+          "rank": {
+            "label": "순위"
+          }
+        }
+      },
+      "mostFavoriteLicense": {
+        "label": "가장 좋아하는 라이선스"
+      }
+    },
+    "project": {
+      "meaning": {
+        "label": "BHSJP의 뜻",
+        "data": "BHSJP는 'By Hong SeJung Project'의 약자입니다"
+      },
+      "direction": {
+        "label": "프로젝트의 진행 방향",
+        "data": "이 프로젝트는 커뮤니티를 주로 하고, 간단히 사용할 수 있는 편리한 온라인 툴을 제공하는 사이트가 될 것입니다"
+      }
+    }
+  }
+}

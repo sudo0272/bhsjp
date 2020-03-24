@@ -13,6 +13,10 @@ const Sha512 = require('../lib/Sha512');
 const Aes256 = require('../lib/Aes256');
 const fetch = require('node-fetch');
 const morgan = require('morgan');
+const i18n = require('i18n');
+const cookieParser = require('cookie-parser');
+const I18nData = require('../models/I18nData');
+const i18nData = new I18nData();
 
 const sessionData = new SessionData();
 
@@ -44,6 +48,19 @@ communityRouter.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :u
 morgan.token('remote-user', (req, res) => {
     return (req.session && req.session.user) ? req.session.user.id : '-';
 });
+
+communityRouter.use(cookieParser());
+
+i18n.configure({
+    locales:       i18nData.getLocales(),
+    defaultLocale: i18nData.getDefaultLocale(),
+    cookie:        i18nData.getCookieName(),
+    directory:     i18nData.getDirectoryPath(),
+    updateFiles:   i18nData.getUpdateFiles(),
+    register:      i18nData.getRegister()
+});
+
+communityRouter.use(i18n.init);
 
 communityRouter.get('/', (req, res) => {
     res.render('community/index', {

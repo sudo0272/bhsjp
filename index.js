@@ -11,6 +11,10 @@ const RedisData = require('./models/RedisData');
 const SessionData = require('./models/SessionData');
 const redisClient = new RedisData().getClient();
 const morgan = require('morgan');
+const i18n = require('i18n');
+const cookieParser = require('cookie-parser');
+const I18nData = require('./models/I18nData');
+const i18nData = new I18nData();
 
 const routes = {
     introduce: require('./routes/introduce').router,
@@ -75,9 +79,29 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(cookieParser());
+
+i18n.configure({
+    locales:       i18nData.getLocales(),
+    defaultLocale: i18nData.getDefaultLocale(),
+    cookie:        i18nData.getCookieName(),
+    directory:     i18nData.getDirectoryPath(),
+    updateFiles:   i18nData.getUpdateFiles(),
+    register:      i18nData.getRegister()
+});
+
+app.use(i18n.init);
+
 app.get('/', (req, res) => {
     res.render('index', {
         title: 'BHSJP 대문',
+        isSignedIn: !!req.session.user
+    });
+});
+
+app.get('/*', (req, res) => {
+    res.render('errors/404', {
+        title: '404 Not Found',
         isSignedIn: !!req.session.user
     });
 });

@@ -1,0 +1,59 @@
+{
+  "introduce": {
+    "developer": {
+      "name": {
+        "label": "Name",
+        "data": "Sejung Hong"
+      },
+
+      "accounts": {
+        "label": "Accounts",
+        "github": "Github",
+        "twitter": "Twitter",
+        "facebook": "Facebook"
+      },
+
+      "age": {
+        "label": "Age",
+        "data": 16
+      },
+
+      "projects": {
+        "label": "Projects",
+        "beforeUsingGithub": {
+          "label": "Before using Github",
+          "data": "Gone"
+        },
+        "afterUsingGitbub": {
+          "label": "After using Github"
+        }
+      },
+
+      "prizes": {
+        "label": "Prizes",
+        "2019NationalPublicDataUtilizationCompetitionOfHighSchoolStudents": {
+          "label": "2019 National Public Data Utilization Competition of High School Students",
+          "team": {
+            "label": "Team"
+          },
+          "rank": {
+            "label": "Rank"
+          }
+        }
+      },
+      "mostFavoriteLicense": {
+        "label": "Most favorite license"
+      }
+    },
+    "project": {
+      "meaning": {
+        "label": "Meaning of BHSJP",
+        "data": "BHSJP stands for 'By Hong SeJung Project'"
+      },
+      "direction": {
+        "label": "Direction of this project",
+        "data": "This project will be a website whose main feature is community and provide convenient and easy-to-use online tools"
+      }
+    }
+  }
+}

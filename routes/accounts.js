@@ -13,6 +13,10 @@ const Sha512 = require('../lib/Sha512');
 const nodemailer = require('nodemailer');
 const NodemailerData = require('../models/NodemailerData');
 const VerificationData = require('../models/VerificationData');
+const i18n = require('i18n');
+const cookieParser = require('cookie-parser');
+const I18nData = require('../models/I18nData');
+const i18nData = new I18nData();
 const corsWhiteList = [
     'https://bhsjp.kro.kr',
     'https://introduce.bhsjp.kro.kr',
@@ -60,6 +64,19 @@ accountsRouter.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :ur
 morgan.token('remote-user', (req, res) => {
     return (req.session && req.session.user) ? req.session.user.id : '-';
 });
+
+accountsRouter.use(cookieParser());
+
+i18n.configure({
+    locales:       i18nData.getLocales(),
+    defaultLocale: i18nData.getDefaultLocale(),
+    cookie:        i18nData.getCookieName(),
+    directory:     i18nData.getDirectoryPath(),
+    updateFiles:   i18nData.getUpdateFiles(),
+    register:      i18nData.getRegister()
+});
+
+accountsRouter.use(i18n.init);
 
 accountsRouter.all('/*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', corsWhiteList);
