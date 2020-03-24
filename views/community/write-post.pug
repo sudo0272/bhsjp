@@ -54,7 +54,7 @@ append js
     else
         script.
             vex.dialog.alert({
-                unsafeMessage: '#{errorMessages.notSignedIn}',
+                unsafeMessage: '!{errorMessages.notSignedIn}',
                 callback: () => {
                     location.href = 'https://accounts.bhsjp.kro.kr/sign-in'
                 }
