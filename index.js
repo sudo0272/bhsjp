@@ -94,7 +94,7 @@ app.use(i18n.init);
 
 app.get('/', (req, res) => {
     res.render('index', {
-        title: 'BHSJP 대문',
+        title: __('index').title,
         isSignedIn: !!req.session.user
     });
 });
