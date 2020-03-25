@@ -1,0 +1,22 @@
+function changeLocale(locale) {
+    document.cookie = `locale=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/`;
+    document.cookie = `locale=${locale}; expires=${(() => {
+        let now = new Date();
+        let time = now.getTime();
+
+        time += 1000 * 60 * 60 * 24 * 365;
+        now.setTime(time);
+        
+        return now;
+    })()}; path=/; domain=.bhsjp.kro.kr; secure`;
+
+    vex.dialog.alert({
+        unsafeMessage: {
+            ko: "한국어로 설정되었습니다<br>설정을 적용하기 위해 새로고침합니다",
+            en: "Locale has been set to English<br>This page will be refreshed to apply changes"
+        }[locale],
+        callback: () => {
+            location.reload();
+        }
+    });
+}

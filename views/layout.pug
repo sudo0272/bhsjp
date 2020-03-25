@@ -74,6 +74,14 @@ html
                                 a(href=PROTOCOL + '://accounts.' + BASE_URL + '/sign-up'): li #{__menu.accounts.signUp}
                                 a(href='https://accounts.bhsjp.kro.kr/find-id'): li #{__menu.accounts.findUsername}
                                 a(href='https://accounts.bhsjp.kro.kr/find-password'): li #{__menu.accounts.findPassword}
+                    li
+                        span.top-menus(data-is-opened='false')
+                            i.material-icons.justify-content-center.top-menu-icons keyboard_arrow_right
+                            span: i.material-icons translate
+
+                            ul.sub-menus
+                                each i in [['한국어', 'ko'], ['English', 'en']]
+                                    a.locales(data-locale=i[1]): li #{i[0]}
 
             #contents.d-flex.flex-column
                 div
@@ -95,6 +103,7 @@ html
         script(src='/js/menu.min.js')
         script(src='/js/fetchSignOut.min.js')
         script(src='/js/fetchDeletePost.min.js')
+        script(src='/js/changeLocale.min.js')
 
         script.
             const messages = !{JSON.stringify(__('messages'))};
@@ -120,6 +129,12 @@ html
 
         script.
             vex.defaultOptions.className = 'vex-theme-plain';
+
+            for (const i of document.getElementsByClassName('locales')) {
+                i.addEventListener('click', () => {
+                    changeLocale(i.dataset.locale);
+                });
+            }
 
         block js
             script.

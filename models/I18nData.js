@@ -16,7 +16,7 @@ module.exports = class {
     }
 
     getCookieName() {
-        return 'language';
+        return 'locale';
     }
 
     getDirectoryPath() {
