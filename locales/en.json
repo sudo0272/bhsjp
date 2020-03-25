@@ -1,4 +1,9 @@
 {
+  "index": {
+    "welcome": [
+      "Welcome to BHSJP"
+    ]
+  },
   "introduce": {
     "developer": {
       "name": {

@@ -1,4 +1,5 @@
 extends layout.pug
 
 block html
-    div BHSJP에 오신 것을 환영합니다
+    each i in __('index').welcome
+        div= i
