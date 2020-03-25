@@ -87,22 +87,28 @@ accountsRouter.all('/*', (req, res, next) => {
 });
 
 accountsRouter.get('/', (req, res) => {
+    const __accounts = __('accounts');
+
     res.render('accounts/index', {
-        title: '계정',
+        title: __accounts.title,
         isSignedIn: !!req.session.user
     });
 });
 
 accountsRouter.get('/sign-in', (req, res) => {
+    const __accounts = __('accounts');
+
     res.render('accounts/sign-in', {
-        title: '로그인',
+        title: __accounts.signIn.title,
         isSignedIn: !!req.session.user
     });
 });
 
 accountsRouter.get('/sign-up', (req, res) => {
+    const __accounts = __('accounts');
+
     res.render('accounts/sign-up', {
-        title: '회원가입',
+        title: __accounts.signUp.title,
         isSignedIn: !!req.session.user
     });
 });
@@ -259,10 +265,8 @@ accountsRouter.get('/auth/:verificationCode', (req, res) => {
     const nodemailerData = new NodemailerData();
     const account = new Account();
     const id = new Aes256(verificationCode, 'encrypted', nodemailerData.getUserCertificationKey(), nodemailerData.getUserCertificationIv()).getPlain();
+    const __accounts = __('accounts');
 
-    console.log(verificationCode);
-    console.log(new Aes256(verificationCode, 'encrypted', nodemailerData.getUserCertificationKey(), nodemailerData.getUserCertificationIv()).getPlain());
-    
     account
         .doIdExist(id)
         .then(() => {
@@ -273,7 +277,7 @@ accountsRouter.get('/auth/:verificationCode', (req, res) => {
                         .setToVerified(index)
                         .then(() => {
                             res.render('accounts/verification-success', {
-                                title: '인증 성공',
+                                title: __accounts.verificationSuccess.title,
                                 isSignedIn: !!req.session.user
                             });
                         }).catch(error => {
@@ -287,7 +291,7 @@ accountsRouter.get('/auth/:verificationCode', (req, res) => {
                     );
                 }, () => {
                     res.render('accounts/verification-failure', {
-                        title: '인증 실패',
+                        title: __accounts.verificationFailure.title,
                         isSignedIn: !!req.session.user
                     });
                 }).catch(error => {
@@ -301,7 +305,7 @@ accountsRouter.get('/auth/:verificationCode', (req, res) => {
             );
         }, () => {
             res.render('accounts/verification-failure', {
-                title: '인증 실패',
+                title: __accounts.verificationFailure.title,
                 isSignedIn: !!req.session.user
             });
         }).catch(error => {
@@ -316,8 +320,10 @@ accountsRouter.get('/auth/:verificationCode', (req, res) => {
 });
 
 accountsRouter.get('/find-id', (req, res) => {
+    const __accounts = __('accounts');
+
     res.render('accounts/find-id', {
-        'title': '아이디 찾기',
+        'title': __accounts.findId.title,
         'isSignedIn': req.session.user
     });
 });
@@ -386,8 +392,10 @@ accountsRouter.post('/id-lookup', (req, res) => {
 });
 
 accountsRouter.get('/find-password', (req, res) => {
+    const __accounts = __('accounts');
+
     res.render('accounts/find-password', {
-        'title': '비밀번호 찾기',
+        'title': __accounts.findPassword.title,
         'isSignedIn': req.session.user
     });
 });
@@ -446,12 +454,14 @@ accountsRouter.get('/reset-password/:verificationCode', (req, res) => {
     const account = new Account();
     const verificationData = new VerificationData();
     let encryptedId;
+
+    const __accounts = __('accounts');
     
     try {
         encryptedId = new Aes256(new Aes256(verificationCode, 'encrypted', verificationData.getEncryptionKey(), verificationData.getEncryptionIv()).getPlain(), 'plain').getEncrypted()
     } catch (e) {
         res.render('accounts/verification-failure', {
-            title: '인증 실패',
+            title: __accounts.verificationFailure.title,
             isSignedIn: !!req.session.user
         });
     }
@@ -461,13 +471,13 @@ accountsRouter.get('/reset-password/:verificationCode', (req, res) => {
             id: encryptedId
         }).then(() => {
             res.render('accounts/reset-password', {
-                title: '비밀번호 변경',
+                title: __accounts.resetPassword.title,
                 isSignedIn: req.session.user,
                 verificationCode: verificationCode
             });
         }, () => {
             res.render('accounts/verification-failure', {
-                title: '인증 실패',
+                title: __accounts.verificationFailure.title,
                 isSignedIn: !!req.session.user
             });
         }).catch(error => {

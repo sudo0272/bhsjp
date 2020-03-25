@@ -113,28 +113,34 @@
     }
   },
   "accounts": {
+    "title": "계정",
     "findId": {
+      "title": "아이디 찾기",
       "informationMessage": "가입 시 입력하신 이메일 주소를 입력해주세요",
       "emailPlaceholder": "이메일",
       "submit": "메일 발송"
     },
     "findPassword": {
+      "title": "비밀번호 찾기",
       "informationMessage": "가입 시 입력하신 아이디와 이메일 주소를 입력해주세요",
       "usernamePlaceholder": "아이디",
       "emailPlaceholder": "이메일",
       "submit": "메일 발송"
     },
     "resetPassword": {
+      "title": "비밀번호 초기화",
       "passwordPlaceholder": "비밀번호",
       "passwordConfirmPlaceholder": "비밀번호 확인",
       "submit": "변경"
     },
     "signIn": {
+      "title": "로그인",
       "usernamePlaceholder": "아이디",
       "passwordPlaceholder": "비밀번호",
       "submit": "로그인"
     },
     "signUp": {
+      "title": "회원가입",
       "usernamePlaceholder": "아이디",
       "passwordPlaceholder": "비밀번호",
       "nicknamePlaceholder": "닉네임",
@@ -142,12 +148,14 @@
       "submit": "회원가입"
     },
     "verificationFailure": {
+      "title": "인증 실패",
       "informationMessages": [
         "인증에 실패했습니다",
         "링크가 잘못 입력된 것은 아닌지 다시 한 번 확인해주세요"
       ]
     },
     "verificationSuccess": {
+      "title": "인증 성공",
       "informationMessages": [
         "인증에 성공했습니다",
         "BHSJP의 회원이 되신 것을 진심으로 축하드립니다"

@@ -113,28 +113,34 @@
     }
   },
   "accounts": {
+    "title": "Account",
     "findId": {
+      "title": "Find username",
       "informationMessage": "Input email address you inputted when you signed up",
       "emailPlaceholder": "Email address",
       "submit": "Send email"
     },
     "findPassword": {
+      "title": "Find password",
       "informationMessage": "Input your username and email address you inputted when you signed up",
       "usernamePlaceholder": "Username",
       "emailPlaceholder": "Email address",
       "submit": "Send email"
     },
     "resetPassword": {
+      "title": "Reset password",
       "passwordPlaceholder": "Password",
       "passwordConfirmPlaceholder": "Confirm password",
       "submit": "Change password"
     },
     "signIn": {
+      "title": "Sign in",
       "usernamePlaceholder": "Username",
       "passwordPlaceholder": "Password",
       "submit": "Sign in"
     },
     "signUp": {
+      "title": "Sign up",
       "usernamePlaceholder": "Username",
       "passwordPlaceholder": "Password",
       "nicknamePlaceholder": "Nickname",
@@ -142,12 +148,14 @@
       "submit": "Sign up"
     },
     "verificationFailure": {
+      "title": "Failed to verify",
       "informationMessages": [
         "Sorry, we failed to verify",
         "Please check verification email again"
       ]
     },
     "verificationSuccess": {
+      "title": "Verified successfully",
       "informationMessages": [
         "We successfully verified you",
         "I'm really proud of you to being an user of BHSJP"
