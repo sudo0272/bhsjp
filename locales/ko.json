@@ -84,6 +84,7 @@
     "readPost": {
       "comment": {
         "private": "비밀댓글",
+        "isPrivate": "비밀 댓글입니다",
         "write": "댓글 작성",
         "edit": "댓글 수정",
         "cancel": "취소",
@@ -191,7 +192,9 @@
   },
   "messages": {
     "static": {
-      "edited": "(수정됨)"
+      "edited": "(수정됨)",
+      "edit": "수정",
+      "delete": "삭제"
     },
     "information": {
       "successfullySignedIn": "로그인이 완료되었습니다<br>메인 페이지로 이동합니다",

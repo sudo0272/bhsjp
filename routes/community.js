@@ -222,6 +222,7 @@ communityRouter.post('/get-post', (req, res) => {
     const increaseViews = req.body.increaseViews;
     const post = new Post();
     const commentList = new CommentList(postId);
+    const __community = __('community');
 
     post
         .getPassword(postId)
@@ -274,7 +275,7 @@ communityRouter.post('/get-post', (req, res) => {
                                                                         <i class="material-icons">
                                                                             lock
                                                                         </i>
-                                                                        비밀 댓글입니다
+                                                                        ${__community.readPost.comment.isPrivate}
                                                                     </div>
                                                                 `;
                                                                 }
@@ -295,7 +296,7 @@ communityRouter.post('/get-post', (req, res) => {
                                                         <i class="material-icons">
                                                             lock
                                                         </i>
-                                                        비밀 댓글입니다
+                                                        ${__community.readPost.comment.isPrivate}
                                                     </div>
                                                 `;
                                                 }

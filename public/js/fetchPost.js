@@ -21,7 +21,7 @@ const fetchPost = (postId, password) => {
                 postContent.innerHTML = obj.data.content;
 
                 if (obj.data.isModified) {
-                    title.innerHTML += `<span class="post-edited">${messages.static.edited}</span>`;
+                    title.innerHTML += `<span class="post-edited">(${messages.static.edited})</span>`;
                 }
 
                 for (let i of obj.data.comments) {
@@ -29,7 +29,7 @@ const fetchPost = (postId, password) => {
                         <div class="comment-form">
                             <div class="comments ${i.isPrivate ? "private-comment" : ""}">
                                 <div>
-                                    ${i.nickname}&#58;&nbsp;${isoDateToKoreanDate(i.date)}${i.isModified ? '&nbsp;(수정됨)' : ''}
+                                    ${i.nickname}&#58;&nbsp;${isoDateToKoreanDate(i.date)}${i.isModified ? `&nbsp;(${messages.static.edited})` : ''}
                                 </div>
                                 
                                 <div>
@@ -42,15 +42,15 @@ const fetchPost = (postId, password) => {
                                     case 'writer':
                                         return `
                                             <span class="configure-comment">
-                                                <button class="edit-comment" data-target="${i.index}">수정</button>
-                                                <button class="delete-comment" data-target="${i.index}">삭제</button>
+                                                <button class="edit-comment" data-target="${i.index}">${messages.static.edit}</button>
+                                                <button class="delete-comment" data-target="${i.index}">${messages.static.delete}</button>
                                             </span>
                                         `;
                                     
                                     case 'postOwner':
                                         return `
                                             <span class="configure-comment">
-                                                <button class="delete-comment" data-target="${i.index}">삭제</button>
+                                                <button class="delete-comment" data-target="${i.index}">${messages.static.delete}</button>
                                             </span>
                                         `;
                                     

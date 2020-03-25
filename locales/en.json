@@ -84,6 +84,7 @@
     "readPost": {
       "comment": {
         "private": "Private Comment",
+        "isPrivate": "This comment is private",
         "write": "Write a new comment",
         "edit": "Edit this comment",
         "cancel": "Cancel",
