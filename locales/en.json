@@ -146,6 +146,29 @@
       }
     }
   },
+  "errors": {
+    "403": [
+      "You do not have permission to access this page"
+    ],
+    "404": [
+      "This page does not exist"
+    ],
+    "500": [
+      "An Unknown error was caused",
+      "Please try to refresh this page",
+      "If this method does not work, please contact administrator",
+      "Error Mail Template:",
+      "Error: 500",
+      "OS: (Your current operating system)",
+      "Browser: (Your current internet browser)",
+      "URL: (Your current address)",
+      "Example of Email:",
+      "Error: 500",
+      "OS: Windows 10 x64",
+      "Browser: Chrome 80.0.3987.132 (Official Build) (64-bit)",
+      "URL: https://community.bhsjp.kro.kr/read-post/500"
+    ]
+  },
   "errorMessages": {
     "notSignedIn": "You did not sign in<br>Redirecting to sign in page",
     "passwordNotMatch": "Your password and confirmation password do not match"

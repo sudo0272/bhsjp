@@ -2,15 +2,5 @@ extends ../layout
 
 block html
     div.d-flex.align-items-center.justify-content-center.flex-column
-        h5 서버에 알 수 없는 에러가 발생했습니다
-        h5 먼저 새로고침을 시도해 보시고 고쳐지지 않으면 관리자에게 연락해주세요
-        h5 에러 메일 형식:
-        h6 Error: 500
-        h6 OS: (현재 사용하고 있는 운영체제)
-        h6 Browser: (현재 사용하고 있는 인터넷 브라우저)
-        h6 URL: (현재 인터넷 주소)
-        h5 에러 메일 예시:
-        h6 Error: 500
-        h6 OS: Windows 10 x64
-        h6 Browser: Firefox 73.0 x64
-        h6 URL: https://community.bhsjp.kro.kr/read-post/500
+        each i in __('errors')['500']
+            h5= i
