@@ -67,15 +67,18 @@
   },
   "community": {
     "index": {
+      "title": "커뮤니티",
       "introducingCommunity": {
         "title": "이 커뮤니티는...",
         "content": "과거 'communitybs.kro.kr'을 계승하는 커뮤니티입니다"
       }
     },
     "newPost": {
+      "title": "새 글 작성",
       "submitText": "글 작성"
     },
     "fixPost": {
+      "title": "글 수정",
       "submitText": "글 수정"
     },
     "readPost": {
@@ -88,6 +91,7 @@
       }
     },
     "viewPosts": {
+      "title": "글 목록",
       "search": {
         "inputKeyword": "검색어 입력",
         "options": {

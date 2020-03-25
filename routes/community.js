@@ -63,8 +63,10 @@ i18n.configure({
 communityRouter.use(i18n.init);
 
 communityRouter.get('/', (req, res) => {
+    const __community = __('community');
+
     res.render('community/index', {
-        title: '커뮤니티',
+        title: __community.index.title,
         isSignedIn: !!req.session.user
     });
 });
@@ -81,6 +83,7 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
 
     if (req.params.postListCount !== undefined) {
         const postListCount = parseInt(req.params.postListCount);
+        const __community = __('community');
 
         if (!isNaN(postListCount)) {
             postList
@@ -90,7 +93,7 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
                         .getCount()
                         .then(postCount => {
                             res.render('community/view-posts', {
-                                title: '글 보기',
+                                title: __community.viewPosts.title,
                                 isSignedIn: !!req.session.user,
                                 postItems: postItems,
                                 postListCount: postListCount,
@@ -110,7 +113,7 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
                     );
                 }, reason => {
                     res.render('community/view-posts', {
-                        title: '글 보기',
+                        title: __community.viewPosts.title,
                         isSignedIn: !!req.session.user,
                         postItems: [],
                         postListCount: postListCount,
@@ -373,8 +376,10 @@ communityRouter.post('/get-post', (req, res) => {
 });
 
 communityRouter.get('/new-post', (req, res) => {
+    const __community = __('community');
+
     res.render('community/new-post', {
-        title: '새 글 작성',
+        title: __community.newPost.title,
         isSignedIn: !!req.session.user
     });
 });
@@ -410,6 +415,7 @@ communityRouter.post('/create-post', (req, res) => {
 communityRouter.get('/fix-post/:postId', (req, res) => {
     const postId = req.params.postId;
     const post = new Post();
+    const __community = __('community');
 
     if (!isNaN(parseInt(postId))) {
         post
@@ -421,7 +427,7 @@ communityRouter.get('/fix-post/:postId', (req, res) => {
                         .then(authorId => {
                             if (authorId === req.session.user.index) {
                                 res.render('community/fix-post', {
-                                    title: '글 수정',
+                                    title: __community.fixPost.title,
                                     isSignedIn: req.session.user,
                                     postId: postId,
                                     owner: true
