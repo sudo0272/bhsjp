@@ -6,7 +6,9 @@
     ]
   },
   "introduce": {
+    "title": "소개",
     "developer": {
+      "title": "개발자 소개",
       "name": {
         "label": "이름",
         "data": "홍세정"
@@ -52,6 +54,7 @@
       }
     },
     "project": {
+      "title": "본 프로젝트 소개",
       "meaning": {
         "label": "BHSJP의 뜻",
         "data": "BHSJP는 'By Hong SeJung Project'의 약자입니다"

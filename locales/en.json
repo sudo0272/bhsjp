@@ -6,7 +6,9 @@
     ]
   },
   "introduce": {
+    "title": "Introduce",
     "developer": {
+      "title": "Introducing Developer",
       "name": {
         "label": "Name",
         "data": "Sejung Hong"
@@ -52,6 +54,7 @@
       }
     },
     "project": {
+      "title": "Introducing This Project",
       "meaning": {
         "title": "Meaning of BHSJP",
         "data": "BHSJP stands for 'By Hong SeJung Project'"
