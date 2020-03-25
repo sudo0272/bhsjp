@@ -311,5 +311,30 @@
         "<h3>Please check your input again</h3>"
       ]
     }
+  },
+  "menu": {
+    "logo": {
+      "text": "Homepage"
+    },
+    "introduce": {
+      "text": "Introduce",
+      "project": "Project",
+      "developer": "Developer"
+    },
+    "community": {
+      "text": "Community",
+      "viewPosts": "View posts list",
+      "writePost": "Write a new post",
+      "editPost": "Edit this post",
+      "deletePost": "Delete this post"
+    },
+    "accounts": {
+      "text": "Accounts",
+      "signOut": "Sign out",
+      "signIn": "Sign in",
+      "signUp": "Sign up",
+      "findUsername": "Find username",
+      "findPassword": "Find password"
+    }
   }
 }

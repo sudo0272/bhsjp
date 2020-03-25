@@ -310,5 +310,30 @@
         "<h3>다시 한 번 확인해주세요</h3>"
       ]
     }
+  },
+  "menu": {
+    "logo": {
+      "text": "홈페이지"
+    },
+    "introduce": {
+      "text": "소개",
+      "project": "프로젝트",
+      "developer": "개발자"
+    },
+    "community": {
+      "text": "커뮤니티",
+      "viewPosts": "글 목록",
+      "writePost": "글 작성",
+      "editPost": "글 수정",
+      "deletePost": "글 삭제"
+    },
+    "accounts": {
+      "text": "계정",
+      "signOut": "로그아웃",
+      "signIn": "로그인",
+      "signUp": "회원가입",
+      "findUsername": "아이디 찾기",
+      "findPassword": "비밀번호 찾기"
+    }
   }
 }

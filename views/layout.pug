@@ -1,6 +1,8 @@
 - const BASE_URL = 'bhsjp.kro.kr';
 - const PROTOCOL = 'https'
+
 html
+    - const __menu = __('menu');
     head
         title #{title} | BHSJP
 
@@ -31,47 +33,47 @@ html
         i#menu-icon.material-icons menu
         #container.d-flex.flex-row
             nav#menu-bar(data-is-opened='false')
-                a#logo(href=PROTOCOL + '://' + BASE_URL title='홈페이지로') BHSJP
+                a#logo(href=PROTOCOL + '://' + BASE_URL title=__menu.logo.text) BHSJP
 
                 ul
                     li
                         span.top-menus(data-is-opened='false')
                             i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right
-                            span 소개
+                            span #{__menu.introduce.text}
 
                         ul.sub-menus
-                            a(href=PROTOCOL + '://introduce.' + BASE_URL + '/project'):   li 프로젝트
-                            a(href=PROTOCOL + '://introduce.' + BASE_URL + '/developer'): li 개발자
+                            a(href=PROTOCOL + '://introduce.' + BASE_URL + '/project'):   li #{__menu.introduce.project}
+                            a(href=PROTOCOL + '://introduce.' + BASE_URL + '/developer'): li #{__menu.introduce.developer}
 
                     li
                         span.top-menus(data-is-opened='false')
                             i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right
-                            span 커뮤니티
+                            span #{__menu.community.text}
 
                         ul.sub-menus
-                            a(href=PROTOCOL + '://community.' + BASE_URL + '/view-posts/0'): li 글 보기
+                            a(href=PROTOCOL + '://community.' + BASE_URL + '/view-posts/0'): li #{__menu.community.viewPosts}
 
                             if isSignedIn
-                                a(href=PROTOCOL + '://community.' + BASE_URL + '/new-post'): li 글 작성
+                                a(href=PROTOCOL + '://community.' + BASE_URL + '/new-post'): li #{__menu.community.writePost}
 
                             if owner !== undefined && owner === true
-                                a(href=PROTOCOL + '://community.' + BASE_URL + '/fix-post/' + postId): li 글 수정
-                                a#delete-post: li 글 삭제
+                                a(href=PROTOCOL + '://community.' + BASE_URL + '/fix-post/' + postId): li #{__menu.community.editPost}
+                                a#delete-post: li #{__menu.community.deletePost}
 
                     li
                         span.top-menus(data-is-opened='false')
                             i.material-icons.justify-content-center.align-text-top.top-menu-icons keyboard_arrow_right
-                            span 계정
+                            span #{__menu.accounts.text}
 
                         if isSignedIn
                             ul.sub-menus
-                                a#sign-out: li 로그아웃
+                                a#sign-out: li #{__menu.accounts.signOut}
                         else
                             ul.sub-menus
-                                a(href=PROTOCOL + '://accounts.' + BASE_URL + '/sign-in'): li 로그인
-                                a(href=PROTOCOL + '://accounts.' + BASE_URL + '/sign-up'): li 회원가입
-                                a(href='https://accounts.bhsjp.kro.kr/find-id'): li 아이디 찾기
-                                a(href='https://accounts.bhsjp.kro.kr/find-password'): li 비밀번호 찾기
+                                a(href=PROTOCOL + '://accounts.' + BASE_URL + '/sign-in'): li #{__menu.accounts.signIn}
+                                a(href=PROTOCOL + '://accounts.' + BASE_URL + '/sign-up'): li #{__menu.accounts.signUp}
+                                a(href='https://accounts.bhsjp.kro.kr/find-id'): li #{__menu.accounts.findUsername}
+                                a(href='https://accounts.bhsjp.kro.kr/find-password'): li #{__menu.accounts.findPassword}
 
             #contents.d-flex.flex-column
                 div
@@ -107,7 +109,7 @@ html
             script.
                 document.getElementById('delete-post').addEventListener('click', () => {
                     vex.dialog.confirm({
-                        message: '정말 삭제하시겠습니까?',
+                        message: messages.confirm.deletePost,
                         callback: value => {
                             if(value) {
                                 fetchDeletePost(postId, '');
