@@ -267,5 +267,49 @@
       "emptyPostTitle": "Title is empty",
       "noPost": "This post does not exist<br>Going back"
     }
+  },
+  "mail": {
+    "signUp": {
+      "subject": "BHSJP Verification Mail",
+      "html": [
+        "<h1>I'm so proud of you to being an user of BHSJP</h1>",
+        "<h3>",
+          "Click <a href=\"%s\">here</a> or go to \"%s\" directly to verify",
+        "</h3>"
+      ]
+    },
+    "usernameFound": {
+      "subject": "BHSJP Find Username",
+      "html": [
+        "<h1>BHSJP Find Username</h1>",
+        "<h3>Your username is \"%s\"</h3>"
+      ]
+    },
+    "usernameNotFound": {
+      "subject": "BHSJP Find Username",
+      "html": [
+        "<h1>BHSJP Find Username</h1>",
+        "<h3>This email address is unregistered</h3>",
+        "<h3>Please check your email address again</h3>"
+      ]
+    },
+    "passwordReset": {
+      "subject": "BHSJP Find Password",
+      "html": [
+        "<h1>BHSJP Find Password</h1>",
+        "<h3>We don't know your password as well</h3>",
+        "<h3>",
+          "Click <a href=\"%s\">here</a> or go to \"<a href=\"%s\">%s</a>\" directly to reset your password",
+        "</h3>"
+      ]
+    },
+    "accountNotFound": {
+      "subject": "BHSJP Find Password",
+      "html": [
+        "<h1>BHSJP Find Password</h1>",
+        "<h3>There's no account which matches the information you input</h3>",
+        "<h3>Please check your input again</h3>"
+      ]
+    }
   }
 }

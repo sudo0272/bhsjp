@@ -17,6 +17,7 @@ const i18n = require('i18n');
 const cookieParser = require('cookie-parser');
 const I18nData = require('../models/I18nData');
 const i18nData = new I18nData();
+const util = require('util');
 const corsWhiteList = [
     'https://bhsjp.kro.kr',
     'https://introduce.bhsjp.kro.kr',
@@ -120,6 +121,8 @@ accountsRouter.post('/create-account', (req, res) => {
     const email = req.body.email;
     const account = new Account();
 
+    const __mail = __('mail');
+
     if (id === undefined) {
         res.send('no-id');
     } else if (id.length < 1) {
@@ -160,11 +163,8 @@ accountsRouter.post('/create-account', (req, res) => {
                         transporter.sendMail({
                             from: nodemailerData.getEmailAddress(),
                             to: email,
-                            subject: 'BHSJP 인증 메일',
-                            html: `
-                                <h1>BHSJP의 회원이 되신 것을 축하드립니다</h1>
-                                <h3><a href="${userCertificationAddress}">여기</a>를 클릭하시거나 "${userCertificationAddress}" 로 직접 들어가서 인증해주시기 바랍니다</h3>
-                            `
+                            subject: __mail.signUp.subject,
+                            html: util.format(__mail.signUp.html.join(''), userCertificationAddress, userCertificationAddress)
                         });
 
                         res.send('ok');
@@ -331,6 +331,7 @@ accountsRouter.get('/find-id', (req, res) => {
 accountsRouter.post('/id-lookup', (req, res) => {
     const account = new Account();
     const email = req.body.email;
+    const __mail = __('mail');
 
     account
         .getIndexByEncryptedEmail(new Aes256(email, 'plain').getEncrypted())
@@ -343,11 +344,8 @@ accountsRouter.post('/id-lookup', (req, res) => {
                     transporter.sendMail({
                         from: nodemailerData.getEmailAddress(),
                         to: email,
-                        subject: 'BHSJP 아이디 찾기',
-                        html: `
-                            <h1>BHSJP 아이디 찾기</h1>
-                            <h3>회원님의 아이디는 "${id}" 입니다</h3>
-                        `
+                        subject: __mail.usernameFound.subject,
+                        html: util.format(__mail.usernameFound.html.join(''), id)
                     });
 
                     res.send('ok');
@@ -355,12 +353,8 @@ accountsRouter.post('/id-lookup', (req, res) => {
                     transporter.sendMail({
                         from: nodemailerData.getEmailAddress(),
                         to: email,
-                        subject: 'BHSJP 아이디 찾기',
-                        html: `
-                    <h1>BHSJP 아이디 찾기</h1>
-                    <h3>등록되지 않은 이메일입니다</h3>
-                    <h3>다시 한 번 확인해주세요</h3>
-                `
+                        subject: __mail.usernameNotFound.subject,
+                        html: __mail.usernameNotFound.html.join('')
                     });
 
                     res.send(reason);
@@ -374,12 +368,8 @@ accountsRouter.post('/id-lookup', (req, res) => {
             transporter.sendMail({
                 from: nodemailerData.getEmailAddress(),
                 to: email,
-                subject: 'BHSJP 아이디 찾기',
-                html: `
-                    <h1>BHSJP 아이디 찾기</h1>
-                    <h3>등록되지 않은 이메일입니다</h3>
-                    <h3>다시 한 번 확인해주세요</h3>
-                `
+                subject: __mail.usernameNotFound.subject,
+                html: __mail.usernameNotFound.html.join('')
             });
 
             res.send(reason);
@@ -410,6 +400,8 @@ accountsRouter.post('/password-lookup', (req, res) => {
     const encryptedEmail = new Aes256(email, 'plain').getEncrypted();
     const resetPasswordAddress = "https://accounts.bhsjp.kro.kr/reset-password/" + verificationEncryptedId;
 
+    const __mail = __('mail');
+
     account
         .getData({
             id: encryptedId,
@@ -418,12 +410,8 @@ accountsRouter.post('/password-lookup', (req, res) => {
             transporter.sendMail({
                 from: nodemailerData.getEmailAddress(),
                 to: email,
-                subject: 'BHSJP 비밀번호 찾기',
-                html: `
-                    <h1>BHSJP 비밀번호 찾기</h1>
-                    <h3>회원님의 비밀번호는 저희도 알 수 없습니다</h3>
-                    <h3><a href="${resetPasswordAddress}">여기</a>를 누르시거나 "<a href="${resetPasswordAddress}">${resetPasswordAddress}</a>"로 이동하셔서 비밀번호를 재설정해주세요</h3>
-                `
+                subject: __mail.passwordReset.subject,
+                html: util.format(__mail.passwordReset.html.join(''), resetPasswordAddress, resetPasswordAddress)
             });
 
             res.send('ok');
@@ -432,12 +420,8 @@ accountsRouter.post('/password-lookup', (req, res) => {
             transporter.sendMail({
                 from: nodemailerData.getEmailAddress(),
                 to: email,
-                subject: 'BHSJP 비밀번호 찾기',
-                html: `
-                    <h1>BHSJP 비밀번호 찾기</h1>
-                    <h3>회원님께서 입력하신 정보와 일치하는 계정이 존재하지 않습니다</h3>
-                    <h3>다시 한 번 확인해주세요</h3>
-                `
+                subject: __mail.accountNotFound.subject,
+                html: __mail.accountNotFound.html.join('')
             });
 
             res.send(reason);
