@@ -168,8 +168,77 @@
       "URL: https://community.bhsjp.kro.kr/read-post/500"
     ]
   },
-  "errorMessages": {
-    "notSignedIn": "로그인되지 않았습니다<br>로그인 페이지로 이동합니다",
-    "passwordNotMatch": "비밀번호가 일치하지 않습니다"
+  "messages": {
+    "static": {
+      "edited": "(수정됨)"
+    },
+    "information": {
+      "successfullySignedIn": "로그인이 완료되었습니다<br>메인 페이지로 이동합니다",
+      "successfullySignedOut": "로그아웃되었습니다<br>홈페이지로 이동합니다",
+      "successfullySignedUp": "회원가입이 완료되었습니다<br>입력하신 메일로 인증메일이 발송되었으니 인증해주시고 로그인해주세요",
+
+      "passwordChanged": "비밀번호가 변경되었습니다<br>로그인해주세요",
+
+      "commentDeleted": "정상적으로 삭제되었습니다",
+      "commentRegistered": "댓글이 등록되었습니다",
+      "commentEdited": "댓글이 수정되었습니다",
+
+      "postDeleted": "글이 삭제되었습니다<br>\"글 보기\" 페이지로 이동합니다",
+      "postDeletionCanceled": "글 삭제가 취소되었습니다",
+      "postRegistered": "글이 등록되었습니다<br>\"글 보기\" 페이지로 이동합니다",
+      "postEdited": "글이 수정되었습니다<br>\"글 보기\" 페이지로 이동합니다",
+
+      "emailSent": "입력하신 이메일 주소로 메일이 발송되었습니다<br>확인해주세요"
+    },
+
+    "request": {
+      "inputPassword": "비밀번호를 입력해주세요"
+    },
+
+    "confirm": {
+      "deleteComment": "정말 삭제하시겠습니까?",
+
+      "deletePost": "정말 삭제하시겠습니까?"
+    },
+
+    "error":{
+      "notSignedIn": "로그인되지 않았습니다<br>로그인 페이지로 이동합니다",
+      "alreadySignedIn": "이미 로그인되어있습니다",
+
+      "cannotSignOut": "로그아웃 할 수 없습니다",
+
+      "noId": "아이디가 비어있습니다",
+      "idLength": "아이디의 길이는 1자리에서 10자리입니다",
+      "idTemplate": "아이디는 영문 혹은 숫자만 가능합니다",
+
+      "idAlreadyJoined": "이미 존재하는 아이디입니다",
+
+      "noPassword": "비밀번호가 비어있습니다",
+      "passwordNotMatch": "비밀번호가 일치하지 않습니다",
+      "passwordLength": "비밀번호는 4글자 이상입니다",
+
+      "idOrPasswordWrong": "아이디 또는 비밀번호가 잘못되었습니다",
+
+      "noNickname": "닉네임이 존재하지 않습니다",
+      "nicknameLength": "닉네임의 길이는 1자리에서 10자리 입니다",
+
+      "noEmail": "이메일이 존재하지 않습니다",
+      "emailLength": "이메일의 길이는 @을 포함하여 3자리에서 320자리입니다",
+      "emailTemplate": "이메일의 형식이 맞지 않습니다",
+
+      "notVerified": "이메일 인증을 해주세요",
+
+      "server": "서버 에러가 발생했습니다<br>다시 시도해주세요",
+      "cannotConnectServer": "서버와 통신할 수 없습니다<br>다시 시도해주세요",
+
+      "commentDeleteNoPermission": "삭제 권한이 없습니다",
+      "noComment": "댓글이 존재하지 않습니다",
+      "emptyComment": "글의 내용이 비어있습니다",
+
+      "notPostOwner": "이 글의 주인이 아닙니다",
+      "emptyPost": "글의 내용이 비어있습니다",
+      "emptyPostTitle": "제목이 비어있습니다",
+      "noPost": "존재하지 않는 글입니다<br>전 페이지로 이동합니다"
+    }
   }
 }

@@ -15,7 +15,7 @@ const fetchUpdateComment = (commentId, callback) => {
         switch (text) {
             case 'ok':
                 vex.dialog.alert({
-                    unsafeMessage: '댓글이 수정되었습니다',
+                    unsafeMessage: messages.information.commentEdited,
                     callback: () => {
                         location.reload();
                     }
@@ -25,12 +25,18 @@ const fetchUpdateComment = (commentId, callback) => {
 
             case 'error':
                 vex.dialog.alert({
-                    unsafeMessage: '서버 에러가 발생했습니다<br>다시 시도해주세요'
+                    unsafeMessage: messages.error.server
                 });
 
                 break;
         }
 
         callback();
-    })
+    }).catch(err => {
+        console.error(err);
+
+        vex.dialog.alert({
+            unsafeMessage: messages.error.cannotConnectServer
+        });
+    });
 };

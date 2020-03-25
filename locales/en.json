@@ -172,5 +172,78 @@
   "errorMessages": {
     "notSignedIn": "You did not sign in<br>Redirecting to sign in page",
     "passwordNotMatch": "Your password and confirmation password do not match"
+  },
+  "messages": {
+    "static": {
+      "edited": "(edited)"
+    },
+    "information": {
+      "successfullySignedIn": "Successfully signed in<br>Redirecting to main page",
+      "successfullySignedOut": "Successfully signed out<br>Redirecting to main page",
+      "successfullySignedUp": "Successfully signed up<br>Please verify via verification email and sign in",
+
+      "passwordChanged": "Your password has been successfully changed<br>Please sign in",
+
+      "commentDeleted": "Your comment has been successfully deleted",
+      "commentRegistered": "Your comment has been successfully registered",
+      "commentEdited": "Your comment has been successfully edited",
+
+      "postDeleted": "Your post has been successfully deleted<br>Redirecting to \"view posts page\"",
+      "postDeletionCanceled": "Deleting post canceled",
+      "postRegistered": "Your post has been successfully registered<br>Redirecting to \"view post page\"",
+      "postEdited": "Your post has been successfully edited<br>Redirecting to \"view post page\"",
+
+      "emailSent": "Email has been sent to your email<br>Please check"
+    },
+
+    "request": {
+      "inputPassword": "Input password"
+    },
+
+    "confirm": {
+      "deleteComment": "Are you sure to delete this comment?",
+
+      "deletePost": "Are you sure to delete this post?"
+    },
+
+    "error":{
+      "notSignedIn": "You did not sign in<br>Redirecting to signing in page",
+      "alreadySignedIn": "You has already signed in",
+
+      "cannotSignOut": "Failed to sign out",
+
+      "noId": "Username is empty",
+      "idLength": "Length of username must be from 1 to 10",
+      "idTemplate": "Username must be formed with only english alphabets and numeric digits",
+
+      "idAlreadyJoined": "This username has already been taken",
+
+      "noPassword": "Password is empty",
+      "passwordNotMatch": "Password is incorrect",
+      "passwordLength": "Length of password must be more than 4",
+
+      "idOrPasswordWrong": "Username or password is incorrect",
+
+      "noNickname": "Nickname is empty",
+      "nicknameLength": "Length of nickname must be from 1 to 10",
+
+      "noEmail": "Email is empty",
+      "emailLength": "Length of email must be from 3 to 320 including '@'",
+      "emailTemplate": "Email format is incorrect",
+
+      "notVerified": "Please verify with your email",
+
+      "server": "Server error was caused<br>Please try again",
+      "cannotConnectServer": "Client cannot connect to server<br>Please try again",
+
+      "commentDeleteNoPermission": "You do not have permission to delete this comment",
+      "noComment": "This comment does not exist",
+      "emptyComment": "Comment is empty",
+
+      "notPostOwner": "You are not the owner of this post",
+      "emptyPost": "Post is empty",
+      "emptyPostTitle": "Title is empty",
+      "noPost": "This post does not exist<br>Going back"
+    }
   }
 }

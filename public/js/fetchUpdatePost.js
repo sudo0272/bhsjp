@@ -17,7 +17,7 @@ const fetchUpdatePost = callback => {
         switch (text) {
             case 'not-signed-in':
                 vex.dialog.alert({
-                    unsafeMessage: '로그인되어있지 않습니다\n로그인 페이지로 이동합니다',
+                    unsafeMessage: messages.error.notSignedIn,
                     callback: () => {
                         location.href = 'https://accounts.bhsjp.kro.kr/sign-in';
                     }
@@ -27,33 +27,39 @@ const fetchUpdatePost = callback => {
 
             case 'empty-content':
                 vex.dialog.alert({
-                    unsafeMessage: '글의 내용이 비어있습니다'
+                    unsafeMessage: messages.error.emptyPost
                 });
 
                 break;
 
             case 'empty-title':
                 vex.dialog.alert({
-                    unsafeMessage: '제목이 비어있습니다'
+                    unsafeMessage: messages.error.emptyPostTitle
                 });
 
                 break;
 
             case 'error':
                 vex.dialog.alert({
-                    unsafeMessage: '서버 에러가 발생했습니다<br>다시 시도해주세요'
+                    unsafeMessage: messages.error.server
                 });
 
                 break;
 
             case 'ok':
                 vex.dialog.alert({
-                    unsafeMessage: '글이 수정되었습니다<br>"글 보기" 페이지로 이동합니다',
+                    unsafeMessage: messages.information.postEdited,
                     callback: () => {
                         location.href = 'https://community.bhsjp.kro.kr/view-posts/0';
                     }
                 });
         }
+    }).catch(err => {
+        console.error(err);
+
+        vex.dialog.alert({
+            unsafeMessage: messages.error.cannotConnectServer
+        });
     });
 
     callback();

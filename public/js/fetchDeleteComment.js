@@ -13,7 +13,7 @@ const fetchDeleteComment = commentId => {
         switch (text) {
             case 'ok':
                 vex.dialog.alert({
-                    unsafeMessage: '정상적으로 삭제되었습니다',
+                    unsafeMessage: messages.information.commentDeleted,
                     callback: () => {
                         location.reload();
                     }
@@ -23,23 +23,29 @@ const fetchDeleteComment = commentId => {
 
             case 'invalid-user':
                 vex.dialog.alert({
-                    unsafeMessage: '삭제 권한이 없습니다'
+                    unsafeMessage: messages.error.commentDeleteNoPermission
                 });
 
                 break;
 
             case 'no-row':
                 vex.dialog.alert({
-                    unsafeMessage: '댓글이 존재하지 않습니다'
+                    unsafeMessage: messages.error.noComment
                 });
 
                 break;
             case 'error':
                 vex.dialog.alert({
-                    unsafeMessage: '서버 에러가 발생했습니다<br>다시 시도해주세요'
+                    unsafeMessage: messages.error.server
                 });
 
                 break;
         }
+    }).catch(err => {
+        console.error(err);
+
+        vex.dialog.alert({
+            unsafeMessage: messages.error.cannotConnectServer
+        });
     });
 };

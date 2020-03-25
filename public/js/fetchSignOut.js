@@ -9,21 +9,24 @@ const fetchSignOut = () => {
         switch (text) {
             case 'cannot-sign-out':
                 vex.dialog.alert({
-                    unsafeMessage: '로그아웃 할 수 없습니다'
+                    unsafeMessage: messages.error.cannotSignOut
                 });
 
                 break;
 
             case 'not-signed-in':
                 vex.dialog.alert({
-                    unsafeMessage: '로그인되어있지 않습니다'
+                    unsafeMessage: messages.error.notSignedIn,
+                    callback: () => {
+                        location.href = "https://accounts.bhsjp.kro.kr/sign-in"
+                    }
                 });
 
                 break;
 
             case 'ok':
                 vex.dialog.alert({
-                    unsafeMessage: '로그아웃되었습니다<br>홈페이지로 이동합니다',
+                    unsafeMessage: messages.information.successfullySignedOut,
                     callback: () => {
                         location.href = 'https://bhsjp.kro.kr';
                     }
@@ -35,7 +38,7 @@ const fetchSignOut = () => {
         console.error(err);
 
         vex.dialog.alert({
-            unsafeMessage: '서버와 통신할 수 없습니다<br>다시 시도해주세요'
+            unsafeMessage: messages.error.cannotConnectServer
         });
     });
 };

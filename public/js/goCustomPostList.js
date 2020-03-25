@@ -16,7 +16,7 @@ const goCustomPostList = targetPostList => {
                 case 'error':
                 case 'no-list':
                     vex.dialog.alert({
-                        unsafeMessage: '에러가 발생했습니다<br>다시 시도해주세요'
+                        unsafeMessage: messages.error.server
                     });
 
                     break;
@@ -24,6 +24,12 @@ const goCustomPostList = targetPostList => {
                     location.href = 'https://community.bhsjp.kro.kr/view-posts/' + targetPostList;
                     break;
             }
+        }).catch(err => {
+            console.error(err);
+
+            vex.dialog.alert({
+                unsafeMessage: messages.error.cannotConnectServer
+            });
         });
     }
 };

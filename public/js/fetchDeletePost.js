@@ -14,7 +14,7 @@ const fetchDeletePost = (postId, password) => {
         switch (text) {
             case 'ok':
                 vex.dialog.alert({
-                    unsafeMessage: '글이 삭제되었습니다\n"글 보기" 페이지로 이동합니다',
+                    unsafeMessage: messages.information.postDeleted,
                     callback: () => {
                         location.href = 'https://community.bhsjp.kro.kr/view-posts/0';
                     }
@@ -24,7 +24,7 @@ const fetchDeletePost = (postId, password) => {
 
             case 'wrong-post':
                 vex.dialog.open({
-                    message: '비밀번호를 입력해주세요',
+                    message: messages.request.inputPassword,
                     input: `
                         <input name="password" type="password">
                     `,
@@ -33,7 +33,7 @@ const fetchDeletePost = (postId, password) => {
                             fetchDeletePost(postId, data.password);
                         } else {
                             vex.dialog.alert({
-                                unsafeMessage: '글 삭제가 취소되었습니다'
+                                unsafeMessage: messages.information.postDeletionCanceled
                             });
                         }
                     }
@@ -43,17 +43,17 @@ const fetchDeletePost = (postId, password) => {
 
             case 'invalid-user':
                 vex.dialog.alert({
-                    unsafeMessage: '이 글의 주인이 아닙니다'
+                    unsafeMessage: messages.error.notPostOwner
                 });
 
                 break;
 
             case 'error':
                 vex.dialog.alert({
-                    unsafeMessage: '서버 에러가 발생했습니다',
+                    unsafeMessage: messages.error.server,
                     callback: () => {
                         vex.dialog.open({
-                            message: '비밀번호를 입력해주세요',
+                            message: messages.request.inputPassword,
                             input: `
                             <input name="password" type="password">
                         `,
@@ -70,5 +70,11 @@ const fetchDeletePost = (postId, password) => {
 
                 break;
         }
+    }).catch(err => {
+        console.error(err);
+
+        vex.dialog.alert({
+            unsafeMessage: messages.error.cannotConnectServer
+        });
     });
 };

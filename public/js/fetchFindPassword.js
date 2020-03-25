@@ -15,7 +15,7 @@ function fetchFindPassword(id, email, callback) {
             case 'ok':
             case 'no-row':
                 vex.dialog.alert({
-                    unsafeMessage: `입력하신 이메일 주소로 메일이 발송되었습니다<br>확인해주세요`,
+                    unsafeMessage: messages.information.emailSent,
                     callback: () => {
                         location.href = 'https://accounts.bhsjp.kro.kr/sign-in';
                     }
@@ -25,11 +25,17 @@ function fetchFindPassword(id, email, callback) {
 
             case 'error':
                 vex.dialog.alert({
-                    unsafeMessage: `서버 에러가 발생했습니다<br>다시 시도해주세요`
+                    unsafeMessage: messages.error.server
                 });
 
                 break;
         }
+    }).catch(err => {
+        console.error(err);
+
+        vex.dialog.alert({
+            unsafeMessage: messages.error.cannotConnectServer
+        });
     });
 
     callback();

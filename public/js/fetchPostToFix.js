@@ -22,7 +22,7 @@ const fetchPostToFix = (postId, password) => {
 
         case 'wrong':
             vex.dialog.open({
-                message: '비밀번호를 입력해주세요',
+                message: messages.request.inputPassword,
                 input: `
                         <input name="password" type="password">
                     `,
@@ -39,7 +39,7 @@ const fetchPostToFix = (postId, password) => {
 
         case 'no-post':
             vex.dialog.alert({
-                unsafeMessage: '존재하지 않는 글입니다\n전 페이지로 이동합니다',
+                unsafeMessage: messages.error.noPost,
                 callback: () => {
                     history.back();
                 }
@@ -49,10 +49,10 @@ const fetchPostToFix = (postId, password) => {
 
         case 'error':
             vex.dialog.alert({
-                unsafeMessage: '서버 에러가 발생했습니다',
+                unsafeMessage: messages.error.server,
                 callback: () => {
                     vex.dialog.open({
-                        message: '비밀번호를 입력해주세요',
+                        message: messages.request.inputPassword,
                         input: `
                             <input name="password" type="password">
                         `,
@@ -69,5 +69,11 @@ const fetchPostToFix = (postId, password) => {
 
             break;
         }
+    }).catch(err => {
+        console.error(err);
+
+        vex.dialog.alert({
+            unsafeMessage: messages.error.cannotConnectServer
+        });
     });
 };

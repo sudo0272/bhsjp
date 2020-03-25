@@ -21,7 +21,7 @@ const fetchPost = (postId, password) => {
                 postContent.innerHTML = obj.data.content;
 
                 if (obj.data.isModified) {
-                    title.innerHTML += `<span class="post-edited">(수정됨)</span>`;
+                    title.innerHTML += `<span class="post-edited">${messages.static.edited}</span>`;
                 }
 
                 for (let i of obj.data.comments) {
@@ -79,7 +79,7 @@ const fetchPost = (postId, password) => {
                 for (const i of document.getElementsByClassName('delete-comment')) {
                     i.addEventListener('click', () => {
                         vex.dialog.confirm({
-                            message: '정말로 삭제하시겠습니까?',
+                            message: messages.confirm.deleteComment,
                             callback: value => {
                                 if (value) {
                                     fetchDeleteComment(i.dataset.target);
@@ -93,7 +93,7 @@ const fetchPost = (postId, password) => {
 
             case 'wrong':
                 vex.dialog.open({
-                    message: '비밀번호를 입력해주세요',
+                    message: messages.request.inputPassword,
                     input: `
                         <input name="password" type="password">
                     `,
@@ -110,7 +110,7 @@ const fetchPost = (postId, password) => {
 
             case 'no-post':
                 vex.dialog.alert({
-                    unsafeMessage: '존재하지 않는 글입니다\n전 페이지로 이동합니다',
+                    unsafeMessage: messages.error.noPost,
                     callback: () => {
                         history.back();
                     }
@@ -120,10 +120,10 @@ const fetchPost = (postId, password) => {
 
             case 'error':
                 vex.dialog.alert({
-                    unsafeMessage: '서버 에러가 발생했습니다',
+                    unsafeMessage: messages.error.server,
                     callback: () => {
                         vex.dialog.open({
-                            message: '비밀번호를 입력해주세요',
+                            message: messages.request.inputPassword,
                             input: `
                                 <input name="password" type="password">
                             `,
@@ -140,5 +140,11 @@ const fetchPost = (postId, password) => {
 
                 break;
         }
+    }).catch(err => {
+        console.error(err);
+
+        vex.dialog.alert({
+            unsafeMessage: messages.error.cannotConnectServer
+        });
     });
 };

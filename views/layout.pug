@@ -94,6 +94,9 @@ html
         script(src='/js/fetchSignOut.min.js')
         script(src='/js/fetchDeletePost.min.js')
 
+        script.
+            const messages = !{JSON.stringify(__('messages'))};
+
         if isSignedIn
             script.
                 document.getElementById('sign-out').addEventListener('click', () => {
