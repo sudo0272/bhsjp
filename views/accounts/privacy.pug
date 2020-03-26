@@ -12,8 +12,8 @@ block html
             button#change-email-button.submit #{i18n.change}
         .d-flex.flex-row
             .d-flex.flex-column
-                input#password(placeholder=i18n.passwordPlaceholder)
-                input#password-confirm(placeholder=i18n.passwordConfirmPlaceholder)
+                input#password(type='password' placeholder=i18n.passwordPlaceholder)
+                input#password-confirm(type='password' placeholder=i18n.passwordConfirmPlaceholder)
             button#change-password-button.submit #{i18n.change}
 
 block js
