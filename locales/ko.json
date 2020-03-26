@@ -166,6 +166,14 @@
         "here": "여기",
         "back": "를 눌러 로그인 해주세요"
       }
+    },
+    "privacy": {
+      "title": "개인정보",
+      "passwordPlaceholder": "비밀번호",
+      "passwordConfirmPlaceholder": "비밀번호 확인",
+      "nicknamePlaceholder": "닉네임",
+      "emailPlaceholder": "이메일",
+      "change": "변경"
     }
   },
   "errors": {
@@ -201,7 +209,9 @@
       "successfullySignedOut": "로그아웃되었습니다<br>홈페이지로 이동합니다",
       "successfullySignedUp": "회원가입이 완료되었습니다<br>입력하신 메일로 인증메일이 발송되었으니 인증해주시고 로그인해주세요",
 
+      "nicknameChanged": "닉네임이 변경되었습니다<br>로그인해주세요",
       "passwordChanged": "비밀번호가 변경되었습니다<br>로그인해주세요",
+      "emailChanged": "이메일 주소가 변경되었습니다<br>로그인해주세요",
 
       "commentDeleted": "정상적으로 삭제되었습니다",
       "commentRegistered": "댓글이 등록되었습니다",
@@ -333,7 +343,8 @@
       "signIn": "로그인",
       "signUp": "회원가입",
       "findUsername": "아이디 찾기",
-      "findPassword": "비밀번호 찾기"
+      "findPassword": "비밀번호 찾기",
+      "privacy": "개인정보"
     }
   }
 }

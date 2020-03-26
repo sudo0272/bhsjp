@@ -166,6 +166,14 @@
         "here": "here",
         "back": " to sign in"
       }
+    },
+    "privacy": {
+      "title": "Privacy",
+      "passwordPlaceholder": "Password",
+      "passwordConfirmPlaceholder": "Confirm Password",
+      "nicknamePlaceholder": "Nickname",
+      "emailPlaceholder": "Email Address",
+      "change": "Modify"
     }
   },
   "errors": {
@@ -204,7 +212,9 @@
       "successfullySignedOut": "Successfully signed out<br>Redirecting to main page",
       "successfullySignedUp": "Successfully signed up<br>Please verify via verification email and sign in",
 
-      "passwordChanged": "Your password has been successfully changed<br>Please sign in",
+      "nicknameChanged": "Your nickname has been changed<br>Please sign in again",
+      "passwordChanged": "Your password has been changed<br>Please sign in again",
+      "emailChanged": "Your email address has been changed<br>Please sign in again",
 
       "commentDeleted": "Your comment has been successfully deleted",
       "commentRegistered": "Your comment has been successfully registered",
@@ -334,7 +344,8 @@
       "signIn": "Sign in",
       "signUp": "Sign up",
       "findUsername": "Find username",
-      "findPassword": "Find password"
+      "findPassword": "Find password",
+      "privacy": "Privacy"
     }
   }
 }

@@ -1,0 +1,40 @@
+extends ../layout
+
+block html
+    - const i18n = __('accounts').privacy;
+
+    .input-container.d-flex.flex-column
+        .d-flex.flex-row
+            input#nickname(placeholder=i18n.nicknamePlaceholder)
+            button#change-nickname-button.submit #{i18n.change}
+        .d-flex.flex-row
+            input#email(placeholder=i18n.emailPlaceholder)
+            button#change-email-button.submit #{i18n.change}
+        .d-flex.flex-row
+            .d-flex.flex-column
+                input#password(placeholder=i18n.passwordPlaceholder)
+                input#password-confirm(placeholder=i18n.passwordConfirmPlaceholder)
+            button#change-password-button.submit #{i18n.change}
+
+block js
+    script(src='/js/changePersonalInformation.min.js')
+    script.
+        const password = document.getElementById('password');
+        const passwordConfirm = document.getElementById('password-confirm');
+        const changePasswordButton = document.getElementById('change-password-button');
+        const nickname = document.getElementById('nickname');
+        const changeNicknameButton = document.getElementById('change-nickname-button');
+        const email = document.getElementById('email');
+        const changeEmailButton = document.getElementById('change-email-button');
+
+        changePasswordButton.addEventListener('click', () => {
+            changePassword(password.value, passwordConfirm.value);
+        });
+
+        changeNicknameButton.addEventListener('click', () => {
+            changeNickname(nickname.value);
+        });
+
+        changeEmailButton.addEventListener('click', () => {
+            changeEmail(email.value);
+        });

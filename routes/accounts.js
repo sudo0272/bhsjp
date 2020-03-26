@@ -525,6 +525,115 @@ accountsRouter.post('/change-password', (req, res) => {
     );
 });
 
+accountsRouter.get('/privacy', (req, res) => {
+    const __accounts = __('accounts');
+
+    res.render('accounts/privacy', {
+        title: __accounts.privacy.title,
+        isSignedIn: !!req.session.user
+    });
+});
+
+accountsRouter.post('/change-personal-information/nickname', (req, res) => {
+    const account = new Account();
+    const nickname = req.body.nickname;
+
+    if (nickname === undefined) {
+        res.send('no-nickname');
+    } else {
+        if (req.session.user) {
+            if (nickname.length < 1) {
+                res.send('short');
+            } else if (nickname.length > 10) {
+                res.send('long')
+            } else {
+                account
+                    .setData({
+                        nickname: new Aes256(nickname, 'plain').getEncrypted()
+                    }, {
+                        'index': req.session.user.index
+                    }).then(() => {
+                        res.send('ok');
+
+                        req.session.destroy();
+                    }).catch(error => {
+                        res.send('error');
+                        console.error(error);
+                    }
+                );
+            }
+        } else {
+            res.send('not-signed-in');
+        }
+    }
+});
+
+accountsRouter.post('/change-personal-information/password', (req, res) => {
+    const account = new Account();
+    const password = req.body.password;
+
+    if (password === undefined) {
+        res.send('no-password');
+    } else {
+        if (req.session.user) {
+            if (password.length < 4) {
+                res.send('short');
+            } else {
+                account
+                    .setData({
+                        password: new Sha512(password).getEncrypted()
+                    }, {
+                        'index': req.session.user.index
+                    }).then(() => {
+                        res.send('ok');
+
+                        req.session.destroy();
+                    }).catch(error => {
+                        res.send('error');
+                        console.error(error);
+                    }
+                );
+            }
+        } else {
+            res.send('not-signed-in');
+        }
+    }
+});
+
+accountsRouter.post('/change-personal-information/email', (req, res) => {
+    const account = new Account();
+    const email = req.body.email;
+
+    if (email === undefined) {
+        res.send('no-email');
+    } else {
+        if (req.session.user) {
+            if (email.length < 3) {
+                res.send('short');
+            } else if (email.match(/^[^@]{1,64}@[^@]{1,255}$/) === null) {
+                res.send('template-not-match')
+            } else {
+                account
+                    .setData({
+                        email: new Aes256(email, 'plain').getEncrypted()
+                    }, {
+                        'index': req.session.user.index
+                    }).then(() => {
+                    res.send('ok');
+
+                    req.session.destroy();
+                }).catch(error => {
+                        res.send('error');
+                        console.error(error);
+                    }
+                );
+            }
+        } else {
+            res.send('not-signed-in');
+        }
+    }
+});
+
 accountsRouter.get('/*', (req, res) => {
     res.render('errors/404', {
         'title': '404 Not Found',

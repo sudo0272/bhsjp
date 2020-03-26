@@ -21,7 +21,7 @@ const fetchPost = (postId, password) => {
                 postContent.innerHTML = obj.data.content;
 
                 if (obj.data.isModified) {
-                    title.innerHTML += `<span class="post-edited">(${messages.static.edited})</span>`;
+                    title.innerHTML += `<span class="post-edited">${messages.static.edited}</span>`;
                 }
 
                 for (let i of obj.data.comments) {
