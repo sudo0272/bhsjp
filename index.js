@@ -16,6 +16,7 @@ const cookieParser = require('cookie-parser');
 const I18nData = require('./models/I18nData');
 const i18nData = new I18nData();
 const log = require('./lib/log');
+const views = require('./models/views');
 
 const routes = {
     introduce: require('./routes/introduce').router,
@@ -98,17 +99,17 @@ i18n.configure({
 app.use(i18n.init);
 
 app.get('/', (req, res) => {
-    res.render('index', {
+    res.end(views.index({
         title: __('index').title,
         isSignedIn: !!req.session.user
-    });
+    }));
 });
 
 app.get('/*', (req, res) => {
-    res.render('errors/404', {
+    res.end(views.errors['404']({
         title: '404 Not Found',
         isSignedIn: !!req.session.user
-    });
+    }));
 });
 
 const httpsServer = https.createServer(certificationData, app);

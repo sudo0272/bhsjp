@@ -19,6 +19,7 @@ const log = require('../lib/log');
 const cookieParser = require('cookie-parser');
 const I18nData = require('../models/I18nData');
 const i18nData = new I18nData();
+const views = require('../models/views');
 
 const sessionData = new SessionData();
 
@@ -71,10 +72,10 @@ communityRouter.use(i18n.init);
 communityRouter.get('/', (req, res) => {
     const __community = __('community');
 
-    res.render('community/index', {
+    res.end(views.community.index({
         title: __community.index.title,
         isSignedIn: !!req.session.user
-    });
+    }));
 });
 
 communityRouter.get('/view-posts/:postListCount', (req, res) => {
@@ -98,7 +99,7 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
                     postList
                         .getCount()
                         .then(postCount => {
-                            res.render('community/view-posts', {
+                            res.end(views.community.viewPosts({
                                 title: __community.viewPosts.title,
                                 isSignedIn: !!req.session.user,
                                 postItems: postItems,
@@ -107,18 +108,18 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
                                 order: order,
                                 previousSearchOption: searchOption,
                                 previousSearchKeyword: searchKeyword
-                            });
+                            }));
                         }).catch(error => {
                             log('error', error.toString());
 
-                            res.render('errors/500', {
+                            res.end(views.errors['500']({
                                 title: '500 Internal Server Error',
                                 isSignedIn: !!req.session.user
-                            });
+                            }));
                         }
                     );
                 }, reason => {
-                    res.render('community/view-posts', {
+                    res.end(views.community.viewPosts({
                         title: __community.viewPosts.title,
                         isSignedIn: !!req.session.user,
                         postItems: [],
@@ -127,27 +128,27 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
                         order: order,
                         previousSearchOption: searchOption,
                         previousSearchKeyword: searchKeyword
-                    });
+                    }));
                 }).catch(error => {
                     log('error', error.toString());
 
-                    res.render('errors/500', {
+                    res.end(views.errors['500']({
                         title: '500 Internal Server Error',
                         isSignedIn: !!req.session.user
-                    });
+                    }));
                 }
             );
         } else {
-            res.render('errors/404', {
+            res.end(views.errors['404']({
                 'title': '404 Not Found',
                 'isSignedIn': req.session.user
-            });
+            }));
         }
     } else {
-        res.render('errors/404', {
+        res.end(views.errors["404"]({
             'title': '404 Not Found',
             'isSignedIn': req.session.user
-        });
+        }));
     }
 });
 
@@ -184,40 +185,40 @@ communityRouter.get('/read-post/:postId', (req, res) => {
                     post
                         .getAuthorId(postId)
                         .then(id => {
-                            res.render('community/read-post', {
+                            res.end(views.community.readPost({
                                 title: title,
                                 isSignedIn: req.session.user,
                                 postId: postId,
                                 owner: req.session.user && req.session.user.index === id
-                            });
+                            }));
                         }
                     );
                 } else {
-                    res.render('community/read-post', {
+                    res.end(views.community.readPost({
                         title: title,
                         isSignedIn: req.session.user,
                         postId: postId
-                    });
+                    }));
                 }
             }, reason => {
-                res.render('errors/404', {
+                res.end(views.errors["404"]({
                     'title': '404 Not Found',
                     'isSignedIn': req.session.user
-                });
+                }));
             }).catch(error => {
                 log('error', error.toString());
 
-                res.render('errors/500', {
+                res.end(views.errors["500"]({
                     title: '500 Internal Server Error',
                     isSignedIn: !!req.session.user
-                });
+                }));
             }
         );
     } else {
-        res.render('errors/404', {
+        res.end(views.errors["404"]({
             'title': '404 Not Found',
             'isSignedIn': req.session.user
-        });
+        }));
     }
 });
 
@@ -385,10 +386,10 @@ communityRouter.post('/get-post', (req, res) => {
 communityRouter.get('/new-post', (req, res) => {
     const __community = __('community');
 
-    res.render('community/new-post', {
+    res.end(views.community.newPost({
         title: __community.newPost.title,
         isSignedIn: !!req.session.user
-    });
+    }));
 });
 
 communityRouter.post('/create-post', (req, res) => {
@@ -433,45 +434,45 @@ communityRouter.get('/fix-post/:postId', (req, res) => {
                         .getAuthorId(postId)
                         .then(authorId => {
                             if (authorId === req.session.user.index) {
-                                res.render('community/fix-post', {
+                                res.end(views.community.fixPost({
                                     title: __community.fixPost.title,
                                     isSignedIn: req.session.user,
                                     postId: postId,
                                     owner: true
-                                });
+                                }));
                             } else {
-                                res.render('errors/403', {
+                                res.end(views.errors["403"]({
                                     title: '403 Forbidden',
                                     isSignedIn: !!req.session.user
-                                });
+                                }));
                             }
                         }
                     );
                 } else {
-                    res.render('errors/403', {
+                    res.end(views.errors["403"]({
                         title: '403 Forbidden',
                         isSignedIn: !!req.session.user
-                    });
+                    }));
                 }
             }, reason => {
-                res.render('errors/404', {
+                res.end(views.errors["404"]({
                     'title': '404 Not Found',
                     'isSignedIn': req.session.user
-                });
+                }));
             }).catch(error => {
                 log('error', error.toString());
 
-                res.render('errors/500', {
+                res.end(views.errors["500"]({
                     title: '500 Internal Server Error',
                     isSignedIn: !!req.session.user
-                });
+                }));
             }
         );
     } else {
-        res.render('errors/404', {
+        res.end(views.errors["404"]({
             'title': '404 Not Found',
             'isSignedIn': req.session.user
-        });
+        }));
     }
 });
 
@@ -604,10 +605,10 @@ communityRouter.post('/delete-comment', (req, res) => {
 });
 
 communityRouter.get('/*', (req, res) => {
-    res.render('errors/404', {
+    res.end(views.errors["404"]({
         'title': '404 Not Found',
         'isSignedIn': req.session.user
-    });
+    }));
 });
 
 module.exports = {

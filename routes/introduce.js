@@ -12,6 +12,7 @@ const log = require('../lib/log');
 const cookieParser = require('cookie-parser');
 const I18nData = require('../models/I18nData');
 const i18nData = new I18nData();
+const views = require('../models/views');
 
 const sessionData = new SessionData();
 
@@ -62,31 +63,31 @@ i18n.configure({
 introduceRouter.use(i18n.init);
 
 introduceRouter.get('/', (req, res) => {
-    res.render('introduce/index', {
+    res.end(views.introduce.index({
         title: __('introduce').title,
         isSignedIn: !!req.session.user
-    });
+    }));
 });
 
 introduceRouter.get('/project', (req, res) => {
-    res.render('introduce/project', {
+    res.end(views.introduce.project({
         title: __('introduce').project.title,
         isSignedIn: !!req.session.user
-    });
+    }));
 });
 
 introduceRouter.get('/developer', (req, res) => {
-    res.render('introduce/developer', {
+    res.end(views.introduce.developer({
         title: __('introduce').developer.title,
         isSignedIn: !!req.session.user
-    });
+    }));
 });
 
 introduceRouter.get('/*', (req, res) => {
-    res.render('errors/404', {
+    res.end(views.errors["404"]({
         'title': '404 Not Found',
         isSignedIn: !!req.session.user
-    });
+    }));
 });
 
 module.exports = {

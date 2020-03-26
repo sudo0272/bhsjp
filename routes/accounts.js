@@ -20,6 +20,7 @@ const i18nData = new I18nData();
 const util = require('util');
 const fs = require('fs');
 const log = require('../lib/log');
+const views = require('../models/views');
 const corsWhiteList = [
     'https://bhsjp.kro.kr',
     'https://introduce.bhsjp.kro.kr',
@@ -96,28 +97,28 @@ accountsRouter.all('/*', (req, res, next) => {
 accountsRouter.get('/', (req, res) => {
     const __accounts = __('accounts');
 
-    res.render('accounts/index', {
+    res.end(views.accounts.index({
         title: __accounts.title,
         isSignedIn: !!req.session.user
-    });
+    }));
 });
 
 accountsRouter.get('/sign-in', (req, res) => {
     const __accounts = __('accounts');
 
-    res.render('accounts/sign-in', {
+    res.end(views.accounts.signIn({
         title: __accounts.signIn.title,
         isSignedIn: !!req.session.user
-    });
+    }));
 });
 
 accountsRouter.get('/sign-up', (req, res) => {
     const __accounts = __('accounts');
 
-    res.render('accounts/sign-up', {
+    res.end(views.accounts.signUp({
         title: __accounts.signUp.title,
         isSignedIn: !!req.session.user
-    });
+    }));
 });
 
 accountsRouter.post('/create-account', (req, res) => {
@@ -309,64 +310,64 @@ accountsRouter.get('/auth/:verificationCode', (req, res) => {
                         account
                             .setToVerified(index)
                             .then(() => {
-                                res.render('accounts/verification-success', {
+                                res.end(views.accounts.verificationSuccess({
                                     title: __accounts.verificationSuccess.title,
                                     isSignedIn: !!req.session.user
-                                });
+                                }));
                             }).catch(error => {
                                 log('error', error.toString());
 
-                                res.render('errors/500', {
+                                res.end(views.errors['500']({
                                     title: '500 Internal Server Error',
                                     isSignedIn: !!req.session.user
-                                });
+                                }));
                             }
                         );
                     }, () => {
-                        res.render('accounts/verification-failure', {
+                        res.end(views.accounts.verificationFailure({
                             title: __accounts.verificationFailure.title,
                             isSignedIn: !!req.session.user
-                        });
+                        }));
                     }).catch(error => {
                         log('error', error.toString());
 
-                        res.render('errors/500', {
+                        res.end(views.errors['500']({
                             title: '500 Internal Server Error',
                             isSignedIn: !!req.session.user
-                        });
+                        }));
                     }
                 );
             }, () => {
-                res.render('accounts/verification-failure', {
+                res.end(views.accounts.verificationFailure({
                     title: __accounts.verificationFailure.title,
                     isSignedIn: !!req.session.user
-                });
+                }));
             }).catch(error => {
                 log('error', error.toString());
 
-                res.render('errors/500', {
+                res.end(views.errors['500']({
                     title: '500 Internal Server Error',
                     isSignedIn: !!req.session.user
-                });
+                }));
             }
         );
     } else {
         log('error', 'Invalid ciphertext size');
 
-        res.render('accounts/verification-failure', {
+        res.end(views.accounts.verificationFailure({
             title: __accounts.verificationFailure.title,
             isSignedIn: !!req.session.user
-        });
+        }));
     }
 });
 
 accountsRouter.get('/find-id', (req, res) => {
     const __accounts = __('accounts');
 
-    res.render('accounts/find-id', {
+    res.end(views.accounts.findId({
         'title': __accounts.findId.title,
         'isSignedIn': req.session.user
-    });
+    }));
 });
 
 accountsRouter.post('/id-lookup', (req, res) => {
@@ -425,10 +426,10 @@ accountsRouter.post('/id-lookup', (req, res) => {
 accountsRouter.get('/find-password', (req, res) => {
     const __accounts = __('accounts');
 
-    res.render('accounts/find-password', {
+    res.end(views.accounts.findPassword({
         'title': __accounts.findPassword.title,
         'isSignedIn': req.session.user
-    });
+    }));
 });
 
 accountsRouter.post('/password-lookup', (req, res) => {
@@ -485,33 +486,33 @@ accountsRouter.get('/reset-password/:verificationCode', (req, res) => {
     try {
         encryptedId = new Aes256(new Aes256(verificationCode, 'encrypted', verificationData.getEncryptionKey(), verificationData.getEncryptionIv()).getPlain(), 'plain').getEncrypted()
     } catch (e) {
-        res.render('accounts/verification-failure', {
+        res.end(views.accounts.verificationFailure({
             title: __accounts.verificationFailure.title,
             isSignedIn: !!req.session.user
-        });
+        }));
     }
 
     account
         .getData({
             id: encryptedId
         }).then(() => {
-            res.render('accounts/reset-password', {
+            res.end(views.accounts.resetPassword({
                 title: __accounts.resetPassword.title,
                 isSignedIn: req.session.user,
                 verificationCode: verificationCode
-            });
+            }));
         }, () => {
-            res.render('accounts/verification-failure', {
+            res.end(views.accounts.verificationFailure({
                 title: __accounts.verificationFailure.title,
                 isSignedIn: !!req.session.user
-            });
+            }));
         }).catch(error => {
             log('error', error.toString());
 
-            res.render('errors/500', {
+            res.end(views.errors['500']({
                 title: '500 Internal Server Error',
                 isSignedIn: !!req.session.user
-            });
+            }));
         }
     );
 });
@@ -567,10 +568,10 @@ accountsRouter.post('/change-password', (req, res) => {
 accountsRouter.get('/privacy', (req, res) => {
     const __accounts = __('accounts');
 
-    res.render('accounts/privacy', {
+    res.end(views.accounts.privacy({
         title: __accounts.privacy.title,
         isSignedIn: !!req.session.user
-    });
+    }));
 });
 
 accountsRouter.post('/change-personal-information/nickname', (req, res) => {
@@ -696,10 +697,10 @@ accountsRouter.post('/change-personal-information/email', (req, res) => {
 });
 
 accountsRouter.get('/*', (req, res) => {
-    res.render('errors/404', {
+    res.end(views.errors['404']({
         'title': '404 Not Found',
         'isSignedIn': req.session.user
-    });
+    }));
 });
 
 module.exports = {
