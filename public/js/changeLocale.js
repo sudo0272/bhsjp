@@ -1,4 +1,4 @@
-function changeLocale(locale) {
+function changeLocale(locale, doAlert=true) {
     document.cookie = `locale=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/`;
     document.cookie = `locale=${locale}; expires=${(() => {
         let now = new Date();
@@ -10,13 +10,17 @@ function changeLocale(locale) {
         return now;
     })()}; path=/; domain=.bhsjp.kro.kr; secure`;
 
-    vex.dialog.alert({
-        unsafeMessage: {
-            ko: "한국어로 설정되었습니다<br>설정을 적용하기 위해 새로고침합니다",
-            en: "Locale has been set to English<br>This page will be refreshed to apply changes"
-        }[locale],
-        callback: () => {
-            location.reload();
-        }
-    });
+    if (doAlert) {
+        vex.dialog.alert({
+            unsafeMessage: {
+                ko: "한국어로 설정되었습니다<br>설정을 적용하기 위해 새로고침합니다",
+                en: "Locale has been set to English<br>This page will be refreshed to apply changes"
+            }[locale],
+            callback: () => {
+                location.reload();
+            }
+        });
+    } else {
+        location.reload();
+    }
 }

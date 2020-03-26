@@ -136,6 +136,20 @@ html
                 });
             }
 
+            let isLocaleSet = false;
+
+            for (const i of document.cookie.split('; ')) {
+                if (i.split('=')[0] === 'locale') {
+                    isLocaleSet = true;
+
+                    break;
+                }
+            }
+
+            if (!isLocaleSet) {
+                changeLocale('ko', false);
+            }
+
         block js
             script.
                 const title = document.getElementById('title');
