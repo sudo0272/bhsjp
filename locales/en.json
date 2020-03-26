@@ -249,6 +249,8 @@
       "idTemplate": "Username must be formed with only english alphabets and numeric digits",
 
       "idAlreadyJoined": "This username has already been taken",
+      "emailAlreadyTaken": "This email address has been already taken",
+      "nicknameAlreadyTaken": "This nickname has been already taken",
 
       "noPassword": "Password is empty",
       "passwordNotMatch": "Password is incorrect",

@@ -60,6 +60,42 @@ module.exports = class Account {
         });
     }
 
+    doEmailExist(email) {
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT COUNT(1) count FROM accounts WHERE `email`=?', [
+                new Aes256(escapeHtml(email), 'plain').getEncrypted()
+            ], (error, results, fields) => {
+                if (error) {
+                    throw error;
+                }
+
+                if (results[0].count) {
+                    resolve('email-not-exist');
+                } else {
+                    reject('email-exist');
+                }
+            });
+        });
+    }
+
+    doNicknameExist(nickname) {
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT COUNT(1) count FROM accounts WHERE `nickname`=?', [
+                new Aes256(escapeHtml(nickname), 'plain').getEncrypted()
+            ], (error, results, fields) => {
+                if (error) {
+                    throw error;
+                }
+
+                if (results[0].count) {
+                    resolve('nickname-not-exist');
+                } else {
+                    reject('nickname-exist');
+                }
+            });
+        });
+    }
+
     isVerified(index) {
         return new Promise((resolve, reject) => {
             connection.query("SELECT `isVerified`\n" +

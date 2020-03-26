@@ -32,6 +32,13 @@ function changeNickname(nickname) {
                         unsafeMessage: messages.error.nicknameLength
                     });
 
+                case 'exist':
+                    vex.dialog.alert({
+                        unsafeMessage: messages.error.nicknameAlreadyTaken
+                    });
+
+                    break;
+
                 case 'error':
                     vex.dialog.alert({
                         unsafeMessage: messages.error.server
@@ -145,6 +152,13 @@ function changeEmail(email) {
                         unsafeMessage: messages.error.emailTemplate
                     });
 
+                    break;
+
+                case 'exist':
+                    vex.dialog.alert({
+                        unsafeMessage: messages.error.emailAlreadyTaken
+                    });
+                    
                     break;
 
                 case 'error':

@@ -156,22 +156,42 @@ accountsRouter.post('/create-account', (req, res) => {
                 res.send('id-already-exists');
             }, () => {
                 account
-                    .create(id, password, nickname, email)
+                    .doEmailExist(email)
                     .then(() => {
-                        const userCertificationAddress = 'https://accounts.bhsjp.kro.kr/auth/' + new Aes256(id, 'plain', nodemailerData.getUserCertificationKey(), nodemailerData.getUserCertificationIv()).getEncrypted();
+                        res.send('email-already-exists');
+                    }, () => {
+                        account
+                            .doNicknameExist(nickname)
+                            .then(() => {
+                                res.send('nickname-already-exists');
+                            }, () => {
+                                account
+                                    .create(id, password, nickname, email)
+                                    .then(() => {
+                                        const userCertificationAddress = 'https://accounts.bhsjp.kro.kr/auth/' + new Aes256(id, 'plain', nodemailerData.getUserCertificationKey(), nodemailerData.getUserCertificationIv()).getEncrypted();
 
-                        transporter.sendMail({
-                            from: nodemailerData.getEmailAddress(),
-                            to: email,
-                            subject: __mail.signUp.subject,
-                            html: util.format(__mail.signUp.html.join(''), userCertificationAddress, userCertificationAddress)
-                        });
+                                        transporter.sendMail({
+                                            from: nodemailerData.getEmailAddress(),
+                                            to: email,
+                                            subject: __mail.signUp.subject,
+                                            html: util.format(__mail.signUp.html.join(''), userCertificationAddress, userCertificationAddress)
+                                        });
 
-                        res.send('ok');
+                                        res.send('ok');
+                                    }).catch(error => {
+                                        console.error(error);
+
+                                        res.send('error');
+                                    }
+                                );
+                            }).catch(error => {
+                                res.send('error');
+                                console.error(error);
+                            }
+                        );
                     }).catch(error => {
-                        console.error(error);
-
                         res.send('error');
+                        console.error(error);
                     }
                 );
             }
@@ -548,16 +568,27 @@ accountsRouter.post('/change-personal-information/nickname', (req, res) => {
                 res.send('long')
             } else {
                 account
-                    .setData({
-                        nickname: new Aes256(nickname, 'plain').getEncrypted()
-                    }, {
-                        'index': req.session.user.index
-                    }).then(() => {
-                        res.send('ok');
+                    .doNicknameExist(nickname)
+                    .then(() => {
+                        res.send('exist');
+                    }, () => {
+                        account
+                            .setData({
+                                nickname: new Aes256(nickname, 'plain').getEncrypted()
+                            }, {
+                                'index': req.session.user.index
+                            }).then(() => {
+                                res.send('ok');
 
-                        req.session.destroy();
+                                req.session.destroy();
+                            }).catch(error => {
+                                res.send('error');
+                                console.error(error);
+                            }
+                        );
                     }).catch(error => {
                         res.send('error');
+
                         console.error(error);
                     }
                 );
@@ -614,16 +645,27 @@ accountsRouter.post('/change-personal-information/email', (req, res) => {
                 res.send('template-not-match')
             } else {
                 account
-                    .setData({
-                        email: new Aes256(email, 'plain').getEncrypted()
-                    }, {
-                        'index': req.session.user.index
-                    }).then(() => {
-                    res.send('ok');
+                    .doEmailExist(email)
+                    .then(() => {
+                        res.send('exist');
+                    }, () => {
+                        account
+                            .setData({
+                                email: new Aes256(email, 'plain').getEncrypted()
+                            }, {
+                                'index': req.session.user.index
+                            }).then(() => {
+                                res.send('ok');
 
-                    req.session.destroy();
-                }).catch(error => {
+                                req.session.destroy();
+                            }).catch(error => {
+                                res.send('error');
+                                console.error(error);
+                            }
+                        );
+                    }).catch(error => {
                         res.send('error');
+
                         console.error(error);
                     }
                 );

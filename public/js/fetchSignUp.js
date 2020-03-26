@@ -92,6 +92,20 @@ const fetchSignUp = callback => {
 
                 break;
 
+            case 'email-already-exists':
+                vex.dialog.alert({
+                    unsafeMessage: messages.error.emailAlreadyTaken
+                });
+
+                break;
+
+            case 'nickname-already-exists':
+                vex.dialog.alert({
+                    unsafeMessage: messages.error.nicknameAlreadyTaken
+                });
+
+                break;
+
             case 'error':
                 vex.dialog.alert({
                     unsafeMessage: messages.error.server

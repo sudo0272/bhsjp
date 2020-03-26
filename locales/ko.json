@@ -246,6 +246,8 @@
       "idTemplate": "아이디는 영문 혹은 숫자만 가능합니다",
 
       "idAlreadyJoined": "이미 존재하는 아이디입니다",
+      "emailAlreadyTaken": "이미 사용된 이메일 주소입니다",
+      "nicknameAlreadyTaken": "이미 사용중인 닉네임입니다",
 
       "noPassword": "비밀번호가 비어있습니다",
       "passwordNotMatch": "비밀번호가 일치하지 않습니다",
