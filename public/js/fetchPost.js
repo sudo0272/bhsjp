@@ -17,7 +17,7 @@ const fetchPost = (postId, password) => {
             case 'right':
                 postNickname.innerText = obj.data.nickname;
                 postViews.innerText = obj.data.views;
-                postDate.innerText = isoDateToKoreanDate(obj.data.date);
+                postDate.innerText = new Date(obj.data.date).toLocaleString();
                 postContent.innerHTML = obj.data.content;
 
                 if (obj.data.isModified) {
@@ -29,7 +29,7 @@ const fetchPost = (postId, password) => {
                         <div class="comment-form">
                             <div class="comments ${i.isPrivate ? "private-comment" : ""}">
                                 <div>
-                                    ${i.nickname}&#58;&nbsp;${isoDateToKoreanDate(i.date)}${i.isModified ? `&nbsp;(${messages.static.edited})` : ''}
+                                    ${i.nickname}&#58;&nbsp;${new Date(i.date).toLocaleString()}${i.isModified ? `&nbsp;(${messages.static.edited})` : ''}
                                 </div>
                                 
                                 <div>
