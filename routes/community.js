@@ -14,6 +14,8 @@ const Aes256 = require('../lib/Aes256');
 const fetch = require('node-fetch');
 const morgan = require('morgan');
 const i18n = require('i18n');
+const fs = require('fs');
+const log = require('../lib/log');
 const cookieParser = require('cookie-parser');
 const I18nData = require('../models/I18nData');
 const i18nData = new I18nData();
@@ -43,7 +45,11 @@ communityRouter.use(expressSession({
     }
 }));
 
-communityRouter.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
+communityRouter.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"', {
+    stream: fs.createWriteStream('/var/log/bhsjp/access.log', {
+        flags: 'a'
+    })
+}));
 
 morgan.token('remote-user', (req, res) => {
     return (req.session && req.session.user) ? req.session.user.id : '-';
@@ -103,7 +109,7 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
                                 previousSearchKeyword: searchKeyword
                             });
                         }).catch(error => {
-                            console.error(error);
+                            log('error', error.toString());
 
                             res.render('errors/500', {
                                 title: '500 Internal Server Error',
@@ -123,7 +129,7 @@ communityRouter.get('/view-posts/:postListCount', (req, res) => {
                         previousSearchKeyword: searchKeyword
                     });
                 }).catch(error => {
-                    console.error(error);
+                    log('error', error.toString());
 
                     res.render('errors/500', {
                         title: '500 Internal Server Error',
@@ -157,7 +163,7 @@ communityRouter.post('/do-post-list-exist', (req, res) => {
             }, () => {
                 res.send('no-list');
             }).catch(error => {
-                console.error(error);
+                log('error', error.toString());
 
                 res.send('error');
             })
@@ -199,7 +205,7 @@ communityRouter.get('/read-post/:postId', (req, res) => {
                     'isSignedIn': req.session.user
                 });
             }).catch(error => {
-                console.error(error);
+                log('error', error.toString());
 
                 res.render('errors/500', {
                     title: '500 Internal Server Error',
@@ -236,7 +242,7 @@ communityRouter.post('/get-post', (req, res) => {
                                 .increaseViews(postId)
                                 .then(() => {
                                 }).catch(error => {
-                                    console.error(error);
+                                    log('error', error.toString());
                                 }
                             );
                         }
@@ -320,14 +326,14 @@ communityRouter.post('/get-post', (req, res) => {
                                             }
                                         });
                                     }).catch(error => {
-                                        console.error(error);
+                                        log('error', error.toString());
 
                                         res.send({
                                             result: 'error'
                                         });
                                     })
                                 }).catch(error => {
-                                    console.error(error);
+                                    log('error', error.toString());
 
                                     res.send('error');
                                 }
@@ -350,7 +356,7 @@ communityRouter.post('/get-post', (req, res) => {
                             result: 'no-post'
                         });
                     }).catch(error => {
-                        console.error(error);
+                        log('error', error.toString());
 
                         res.send({
                             result: 'error'
@@ -367,7 +373,7 @@ communityRouter.post('/get-post', (req, res) => {
                 result: 'no-post'
             });
         }).catch(error => {
-            console.error(error);
+            log('error', error.toString());
 
             res.send({
                 result: 'error'
@@ -402,7 +408,7 @@ communityRouter.post('/create-post', (req, res) => {
                 .then(() => {
                     res.send('ok');
                 }).catch(error => {
-                    console.error(error);
+                    log('error', error.toString());
 
                     res.send('error');
                 }
@@ -453,7 +459,7 @@ communityRouter.get('/fix-post/:postId', (req, res) => {
                     'isSignedIn': req.session.user
                 });
             }).catch(error => {
-                console.error(error);
+                log('error', error.toString());
 
                 res.render('errors/500', {
                     title: '500 Internal Server Error',
@@ -493,7 +499,7 @@ communityRouter.post('/update-post', (req, res) => {
                         case 'invalid-user': res.send('invalid-user'); break;
                     }
                 }).catch(error => {
-                    console.error(error);
+                    log('error', error.toString());
 
                     res.send('error');
                 }
@@ -517,7 +523,7 @@ communityRouter.post('/delete-post', (req, res) => {
             }, reason => {
                 res.send(reason);
             }).catch(error => {
-                console.error(error);
+                log('error', error.toString());
 
                 res.send('error');
             }
@@ -565,7 +571,7 @@ communityRouter.post('/update-comment', (req, res) => {
             }, reason => {
                 res.send(reason);
             }).catch(error => {
-                console.error(error);
+                log('error', error.toString());
 
                 res.send('error');
             }
@@ -587,7 +593,7 @@ communityRouter.post('/delete-comment', (req, res) => {
             }, reason => {
                 res.send(reason);
             }).catch(error => {
-                console.error(error);
+                log('error', error.toString());
 
                 res.send('error');
             }

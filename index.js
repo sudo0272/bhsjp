@@ -15,6 +15,7 @@ const i18n = require('i18n');
 const cookieParser = require('cookie-parser');
 const I18nData = require('./models/I18nData');
 const i18nData = new I18nData();
+const log = require('./lib/log');
 
 const routes = {
     introduce: require('./routes/introduce').router,
@@ -65,7 +66,11 @@ app.use(expressSession({
     }
 }));
 
-app.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
+app.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"', {
+    stream: fs.createWriteStream('/var/log/bhsjp/access.log', {
+        flags: 'a'
+    })
+}));
 
 morgan.token('remote-user', (req, res) => {
     return (req.session && req.session.user) ? req.session.user.id : '-';
@@ -116,9 +121,11 @@ const httpServer = http.createServer((req, res) => {
 });
 
 httpServer.listen(HTTP_PORT, () => {
+    log('server', `HTTP server started on ${HTTP_PORT}`);
     console.log('HTTP server running on', HTTP_PORT);
 });
 
 httpsServer.listen(HTTPS_PORT, () => {
+    log('server', `HTTPS server started on ${HTTPS_PORT}`);
     console.log('HTTPS server running on', HTTPS_PORT);
 });

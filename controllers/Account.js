@@ -235,13 +235,6 @@ module.exports = class Account {
                 whereList.push(where[i]);
             }
 
-            console.log(whereList);
-
-            console.log(mysql.format("UPDATE `accounts`\n" +
-                "    SET ?\n" +
-                "    WHERE " + Array(whereLength).fill('??=?').join(' AND '),
-                [data].concat(whereList)));
-
             connection.query("UPDATE `accounts`\n" +
                 "    SET ?\n" +
                 "    WHERE " + Array(whereLength).fill('??=?').join(' AND '),

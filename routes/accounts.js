@@ -18,6 +18,8 @@ const cookieParser = require('cookie-parser');
 const I18nData = require('../models/I18nData');
 const i18nData = new I18nData();
 const util = require('util');
+const fs = require('fs');
+const log = require('../lib/log');
 const corsWhiteList = [
     'https://bhsjp.kro.kr',
     'https://introduce.bhsjp.kro.kr',
@@ -60,7 +62,11 @@ accountsRouter.use(expressSession({
     }
 }));
 
-accountsRouter.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'));
+accountsRouter.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"', {
+    stream: fs.createWriteStream('/var/log/bhsjp/access.log', {
+        flags: 'a'
+    })
+}));
 
 morgan.token('remote-user', (req, res) => {
     return (req.session && req.session.user) ? req.session.user.id : '-';
@@ -120,6 +126,7 @@ accountsRouter.post('/create-account', (req, res) => {
     const nickname = req.body.nickname;
     const email = req.body.email;
     const account = new Account();
+    const verificationData = new VerificationData();
 
     const __mail = __('mail');
 
@@ -168,7 +175,7 @@ accountsRouter.post('/create-account', (req, res) => {
                                 account
                                     .create(id, password, nickname, email)
                                     .then(() => {
-                                        const userCertificationAddress = 'https://accounts.bhsjp.kro.kr/auth/' + new Aes256(id, 'plain', nodemailerData.getUserCertificationKey(), nodemailerData.getUserCertificationIv()).getEncrypted();
+                                        const userCertificationAddress = 'https://accounts.bhsjp.kro.kr/auth/' + new Aes256(id, 'plain', verificationData.getEncryptionKey(), verificationData.getEncryptionIv()).getEncrypted();
 
                                         transporter.sendMail({
                                             from: nodemailerData.getEmailAddress(),
@@ -179,19 +186,19 @@ accountsRouter.post('/create-account', (req, res) => {
 
                                         res.send('ok');
                                     }).catch(error => {
-                                        console.error(error);
+                                        log('error', error.toString());
 
                                         res.send('error');
                                     }
                                 );
                             }).catch(error => {
                                 res.send('error');
-                                console.error(error);
+                                log('error', error.toString());
                             }
                         );
                     }).catch(error => {
                         res.send('error');
-                        console.error(error);
+                        log('error', error.toString());
                     }
                 );
             }
@@ -239,7 +246,7 @@ accountsRouter.post('/check-account', (req, res) => {
                                 res.send('not-verified');
                             }
                         }).catch(error => {
-                            console.error(error);
+                            log('error', error.toString());
 
                             res.send('error');
                         }
@@ -250,7 +257,7 @@ accountsRouter.post('/check-account', (req, res) => {
                     res.send('wrong');
                 }, 3000);
             }).catch(error => {
-                console.error(error);
+                log('error', error.toString());
 
                 res.send('error');
             }
@@ -282,61 +289,75 @@ accountsRouter.post('/sign-out', cors({
 
 accountsRouter.get('/auth/:verificationCode', (req, res) => {
     const verificationCode = req.params.verificationCode;
-    const nodemailerData = new NodemailerData();
     const account = new Account();
-    const id = new Aes256(verificationCode, 'encrypted', nodemailerData.getUserCertificationKey(), nodemailerData.getUserCertificationIv()).getPlain();
+    const verificationData = new VerificationData();
+    const idAes = new Aes256(verificationCode, 'encrypted', verificationData.getEncryptionKey(), verificationData.getEncryptionIv());
     const __accounts = __('accounts');
 
-    account
-        .doIdExist(id)
-        .then(() => {
-            account
-                .getIndexByEncryptedId(new Aes256(id, 'plain').getEncrypted())
-                .then(index => {
-                    account
-                        .setToVerified(index)
-                        .then(() => {
-                            res.render('accounts/verification-success', {
-                                title: __accounts.verificationSuccess.title,
-                                isSignedIn: !!req.session.user
-                            });
-                        }).catch(error => {
-                            console.error(error);
-                            
-                            res.render('error/500', {
-                                title: '500 Internal Server Error',
-                                isSignedIn: !!req.session.user
-                            });
-                        }
-                    );
-                }, () => {
-                    res.render('accounts/verification-failure', {
-                        title: __accounts.verificationFailure.title,
-                        isSignedIn: !!req.session.user
-                    });
-                }).catch(error => {
-                    console.error(error);
+    if (idAes.getValid()) {
+        const id = idAes.getPlain();
 
-                    res.render('error/500', {
-                        title: '500 Internal Server Error',
-                        isSignedIn: !!req.session.user
-                    });
-                }
-            );
-        }, () => {
-            res.render('accounts/verification-failure', {
-                title: __accounts.verificationFailure.title,
-                isSignedIn: !!req.session.user
-            });
-        }).catch(error => {
-            console.error(error);
+        account
+            .doIdExist(id)
+            .then(() => {
+                account
+                    .getData({
+                        id: new Aes256(id, 'plain').getEncrypted()
+                    }).then(data => {
+                        const index = data.index;
 
-            res.render('error/500', {
-                title: '500 Internal Server Error',
-                isSignedIn: !!req.session.user
-            });
-        }
-    );
+                        account
+                            .setToVerified(index)
+                            .then(() => {
+                                res.render('accounts/verification-success', {
+                                    title: __accounts.verificationSuccess.title,
+                                    isSignedIn: !!req.session.user
+                                });
+                            }).catch(error => {
+                                log('error', error.toString());
+
+                                res.render('errors/500', {
+                                    title: '500 Internal Server Error',
+                                    isSignedIn: !!req.session.user
+                                });
+                            }
+                        );
+                    }, () => {
+                        res.render('accounts/verification-failure', {
+                            title: __accounts.verificationFailure.title,
+                            isSignedIn: !!req.session.user
+                        });
+                    }).catch(error => {
+                        log('error', error.toString());
+
+                        res.render('errors/500', {
+                            title: '500 Internal Server Error',
+                            isSignedIn: !!req.session.user
+                        });
+                    }
+                );
+            }, () => {
+                res.render('accounts/verification-failure', {
+                    title: __accounts.verificationFailure.title,
+                    isSignedIn: !!req.session.user
+                });
+            }).catch(error => {
+                log('error', error.toString());
+
+                res.render('errors/500', {
+                    title: '500 Internal Server Error',
+                    isSignedIn: !!req.session.user
+                });
+            }
+        );
+    } else {
+        log('error', 'Invalid ciphertext size');
+
+        res.render('accounts/verification-failure', {
+            title: __accounts.verificationFailure.title,
+            isSignedIn: !!req.session.user
+        });
+    }
 });
 
 accountsRouter.get('/find-id', (req, res) => {
@@ -379,7 +400,7 @@ accountsRouter.post('/id-lookup', (req, res) => {
 
                     res.send(reason);
                 }).catch(error => {
-                    console.error(error);
+                    log('error', error.toString());
 
                     res.send('error');
                 }
@@ -394,7 +415,7 @@ accountsRouter.post('/id-lookup', (req, res) => {
 
             res.send(reason);
         }).catch(error => {
-            console.error(error);
+            log('error', error.toString());
 
             res.send('error');
         }
@@ -447,7 +468,7 @@ accountsRouter.post('/password-lookup', (req, res) => {
             res.send(reason);
 
         }).catch(error => {
-            console.error(error);
+            log('error', error.toString());
 
             res.send('error');
         }
@@ -485,7 +506,7 @@ accountsRouter.get('/reset-password/:verificationCode', (req, res) => {
                 isSignedIn: !!req.session.user
             });
         }).catch(error => {
-            console.error(error);
+            log('error', error.toString());
 
             res.render('errors/500', {
                 title: '500 Internal Server Error',
@@ -520,8 +541,6 @@ accountsRouter.post('/change-password', (req, res) => {
         .getData({
             id: encryptedId
         }).then(data => {
-            console.log(data);
-
             return account
                 .setData({
                     password: new Sha512(password).getEncrypted()
@@ -532,13 +551,13 @@ accountsRouter.post('/change-password', (req, res) => {
         }, () => {
             res.send('error');
         }).catch(error => {
-            console.error(error);
+            log('error', error.toString());
 
             res.send('error');
         }).then(() => {
             res.send('ok');
         }).catch(error => {
-            console.error(error);
+            log('error', error.toString());
 
             res.send('error');
         }
@@ -583,13 +602,13 @@ accountsRouter.post('/change-personal-information/nickname', (req, res) => {
                                 req.session.destroy();
                             }).catch(error => {
                                 res.send('error');
-                                console.error(error);
+                                log('error', error.toString());
                             }
                         );
                     }).catch(error => {
                         res.send('error');
 
-                        console.error(error);
+                        log('error', error.toString());
                     }
                 );
             }
@@ -621,7 +640,7 @@ accountsRouter.post('/change-personal-information/password', (req, res) => {
                         req.session.destroy();
                     }).catch(error => {
                         res.send('error');
-                        console.error(error);
+                        log('error', error.toString());
                     }
                 );
             }
@@ -660,13 +679,13 @@ accountsRouter.post('/change-personal-information/email', (req, res) => {
                                 req.session.destroy();
                             }).catch(error => {
                                 res.send('error');
-                                console.error(error);
+                                log('error', error.toString());
                             }
                         );
                     }).catch(error => {
                         res.send('error');
 
-                        console.error(error);
+                        log('error', error.toString());
                     }
                 );
             }
