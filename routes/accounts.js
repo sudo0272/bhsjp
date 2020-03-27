@@ -305,7 +305,7 @@ accountsRouter.get('/auth/:verificationCode', (req, res) => {
                     .getData({
                         id: new Aes256(id, 'plain').getEncrypted()
                     }).then(data => {
-                        const index = data.index;
+                        const index = data[0].index;
 
                         account
                             .setToVerified(index)
