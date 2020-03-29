@@ -347,6 +347,10 @@
       "findUsername": "아이디 찾기",
       "findPassword": "비밀번호 찾기",
       "privacy": "개인정보"
+    },
+    "partnership": {
+      "text": "제휴",
+      "pragboard": "플래글판"
     }
   }
 }

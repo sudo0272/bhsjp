@@ -348,6 +348,10 @@
       "findUsername": "Find username",
       "findPassword": "Find password",
       "privacy": "Privacy"
+    },
+    "partnership": {
+      "text": "Partnership",
+      "pragboard": "Pragboard"
     }
   }
 }
