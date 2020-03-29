@@ -123,10 +123,8 @@ const httpServer = http.createServer((req, res) => {
 
 httpServer.listen(HTTP_PORT, () => {
     log('server', `HTTP server started on ${HTTP_PORT}`);
-    console.log('HTTP server running on', HTTP_PORT);
 });
 
 httpsServer.listen(HTTPS_PORT, () => {
     log('server', `HTTPS server started on ${HTTPS_PORT}`);
-    console.log('HTTPS server running on', HTTPS_PORT);
 });
