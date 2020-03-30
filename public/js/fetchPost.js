@@ -15,7 +15,7 @@ const fetchPost = (postId, password) => {
     }).then(obj => {
         switch (obj.result) {
             case 'right':
-                postNickname.innerText = obj.data.nickname;
+                postNickname.innerHTML = obj.data.nickname ? obj.data.nickname : `<span><del>${messages.static.nonExistingUser}</del></span>`;
                 postViews.innerText = obj.data.views;
                 postDate.innerText = new Date(obj.data.date).toLocaleString();
                 postContent.innerHTML = obj.data.content;
@@ -29,7 +29,7 @@ const fetchPost = (postId, password) => {
                         <div class="comment-form">
                             <div class="comments ${i.isPrivate ? "private-comment" : ""}">
                                 <div>
-                                    ${i.nickname}&#58;&nbsp;${new Date(i.date).toLocaleString()}${i.isModified ? `&nbsp;(${messages.static.edited})` : ''}
+                                    ${i.nickname ? i.nickname : `<span><del>${messages.static.nonExistingUser}</del></span>`}&#58;&nbsp;${new Date(i.date).toLocaleString()}${i.isModified ? `&nbsp;(${messages.static.edited})` : ''}
                                 </div>
                                 
                                 <div>
