@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 menuBar.style.width = '0px';
                 menuBar.dataset.isOpened = 'false';
             } else {
-                menuBar.style.width = '200px';
+                menuBar.style.width = window.innerWidth < 500 ? '100vw' : '200px';
                 menuBar.dataset.isOpened = 'true';
             }
         });
