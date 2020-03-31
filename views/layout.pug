@@ -157,17 +157,54 @@ html
             }
 
             let isLocaleSet = false;
+            let isManWooJul = false;
 
             for (const i of document.cookie.split('; ')) {
-                if (i.split('=')[0] === 'locale') {
-                    isLocaleSet = true;
+                const cookieName = i.split('=')[0];
 
-                    break;
+                switch (cookieName) {
+                    case 'locale':
+                        isLocaleSet = true;
+
+                        break;
+
+                    case 'manwoojul':
+                        isManWooJul = true;
+
+                        break;
                 }
             }
 
             if (!isLocaleSet) {
                 changeLocale('ko', false);
+            }
+
+            if (!isManWooJul) {
+                document.cookie = `manwoojul=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/`;
+                document.cookie = `manwoojul=f; expires=${(() => {
+                    let now = new Date();
+                    let time = now.getTime();
+
+                    time += 1000 * 60 * 60 * 24;
+                    now.setTime(time);
+
+                    return now;
+                })()}; path=/; domain=.bhsjp.kro.kr; secure`;
+
+                setTimeout(() => {
+                    document.write(`<div id="manwoojul" style="background-color: red; display: inline-block; width: 100vw; height: 100vh; color: white; font-size: 4rem;">
+                        당신의 컴퓨터는 해킹되었습니다<br>
+                        Q. 왜 이 메시지가 표시됩니까?<br>
+                        A. 당신의 컴퓨터가 해킹되었기 때문입니다<br><br>
+
+                        Q. 어떻게 해야 합니까?<br>
+                        A. 200 비트코인을 d37c2aa27399ca16c66f2b73c899e4b1로 보내십시오<br>
+                    </div>`)
+
+                    setTimeout(() => {
+                        document.getElementById('manwoojul').innerHTML = `<button onclick="location.reload();">오늘은 무슨 날?</button>`
+                    }, 4000);
+                }, 5000);
             }
 
         script.
