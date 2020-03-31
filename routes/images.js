@@ -13,19 +13,20 @@ const cookieParser = require('cookie-parser');
 const I18nData = require('../models/I18nData');
 const i18nData = new I18nData();
 const views = require('../models/views');
+const path = require('path');
 
 const sessionData = new SessionData();
 
-const introduceRouter = express.Router();
+const imagesRouter = express.Router();
 
-introduceRouter.use(bodyParser.urlencoded({
+imagesRouter.use(bodyParser.urlencoded({
     extended: true
 }));
 
-introduceRouter.use(bodyParser.json());
-introduceRouter.use(bodyParser.raw());
+imagesRouter.use(bodyParser.json());
+imagesRouter.use(bodyParser.raw());
 
-introduceRouter.use(expressSession({
+imagesRouter.use(expressSession({
     secret: sessionData.getSecret(),
     resave: sessionData.getResave(),
     saveUninitialized: sessionData.getSaveUninitialized(),
@@ -39,7 +40,7 @@ introduceRouter.use(expressSession({
     }
 }));
 
-introduceRouter.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"', {
+imagesRouter.use(morgan(':remote-addr - :remote-user [:date[iso]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"', {
     stream: fs.createWriteStream('/var/log/bhsjp/access.log', {
         flags: 'a'
     })
@@ -49,7 +50,7 @@ morgan.token('remote-user', (req, res) => {
     return (req.session && req.session.user) ? req.session.user.id : '-';
 });
 
-introduceRouter.use(cookieParser());
+imagesRouter.use(cookieParser());
 
 i18n.configure({
     locales:       i18nData.getLocales(),
@@ -60,34 +61,8 @@ i18n.configure({
     register:      i18nData.getRegister()
 });
 
-introduceRouter.use(i18n.init);
+imagesRouter.use(i18n.init);
 
-introduceRouter.get('/', (req, res) => {
-    res.end(views.introduce.index({
-        title: __('introduce').title,
-        isSignedIn: !!req.session.user
-    }));
-});
+imagesRouter.use(express.static(path.join(__dirname, '..', 'public', 'images')));
 
-introduceRouter.get('/project', (req, res) => {
-    res.end(views.introduce.project({
-        title: __('introduce').project.title,
-        isSignedIn: !!req.session.user
-    }));
-});
-
-introduceRouter.get('/developer', (req, res) => {
-    res.end(views.introduce.developer({
-        title: __('introduce').developer.title,
-        isSignedIn: !!req.session.user
-    }));
-});
-
-introduceRouter.get('/*', (req, res) => {
-    res.end(views.errors["404"]({
-        'title': '404 Not Found',
-        isSignedIn: !!req.session.user
-    }));
-});
-
-module.exports = introduceRouter;
+module.exports = imagesRouter;

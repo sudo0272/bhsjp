@@ -195,6 +195,7 @@
     ]
   },
   "messages": {
+    "locale": "ko",
     "static": {
       "edited": "(수정됨)",
       "edit": "수정",

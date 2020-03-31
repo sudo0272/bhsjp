@@ -611,6 +611,4 @@ communityRouter.get('/*', (req, res) => {
     }));
 });
 
-module.exports = {
-    router: communityRouter
-};
+module.exports = communityRouter;

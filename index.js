@@ -19,9 +19,10 @@ const log = require('./lib/log');
 const views = require('./models/views');
 
 const routes = {
-    introduce: require('./routes/introduce').router,
-    accounts: require('./routes/accounts').router,
-    community: require('./routes/community').router
+    introduce: require('./routes/introduce'),
+    accounts: require('./routes/accounts'),
+    community: require('./routes/community'),
+    images: require('./routes/images')
 };
 
 const certificationDataPath = 'certbot/config/live/bhsjp.kro.kr/';
@@ -45,6 +46,7 @@ app.use(express.static(path.join(__dirname, 'public', 'common')));
 app.use(subdomain('introduce.bhsjp', routes.introduce));
 app.use(subdomain('accounts.bhsjp', routes.accounts));
 app.use(subdomain('community.bhsjp', routes.community));
+app.use(subdomain('images.bhsjp', routes.images));
 
 app.use(bodyParser.urlencoded({
     extended: true

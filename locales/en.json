@@ -196,6 +196,7 @@
     ]
   },
   "messages": {
+    "locale": "en",
     "static": {
       "edited": "(edited)",
       "edit": "Edit",

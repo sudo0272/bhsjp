@@ -25,7 +25,8 @@ const corsWhiteList = [
     'https://bhsjp.kro.kr',
     'https://introduce.bhsjp.kro.kr',
     'https://accounts.bhsjp.kro.kr',
-    'https://community.bhsjp.kro.kr'
+    'https://community.bhsjp.kro.kr',
+    'https://images.bhsjp.kro.kr'
 ];
 
 const nodemailerData = new NodemailerData();
@@ -703,6 +704,4 @@ accountsRouter.get('/*', (req, res) => {
     }));
 });
 
-module.exports = {
-    router: accountsRouter
-};
+module.exports = accountsRouter;
