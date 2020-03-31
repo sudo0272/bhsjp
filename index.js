@@ -41,7 +41,7 @@ const app = express();
 
 app.set('view engine', 'pug');
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public', 'common')));
 app.use(subdomain('introduce.bhsjp', routes.introduce));
 app.use(subdomain('accounts.bhsjp', routes.accounts));
 app.use(subdomain('community.bhsjp', routes.community));
