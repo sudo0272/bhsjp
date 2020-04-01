@@ -4,13 +4,9 @@ dump.rdb
 models/mysqlConnectionData.json
 certbot/
 models/MysqlData.js
-models/MysqlData.min.js
 models/NodemailerData.js
-models/NodemailerData.min.js
 models/SessionData.js
-models/SessionData.min.js
+models/VerificationData.js
 lib/Aes256.js
-lib/Aes256.min.js
 lib/Sha512.js
-lib/Sha512.min.js
 public/txt/bad-words-filter
